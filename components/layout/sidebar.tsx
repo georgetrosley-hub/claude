@@ -3,28 +3,38 @@
 import { cn } from "@/lib/utils";
 import { ClaudeSparkle } from "@/components/ui/claude-logo";
 import {
-  LayoutDashboard,
-  Activity,
-  Network,
-  Crosshair,
-  Shield,
-  Calendar,
-  CheckSquare,
+  BarChart3,
+  BriefcaseBusiness,
+  Bot,
   FileText,
+  Handshake,
+  Network,
   Sparkles,
+  Workflow,
 } from "lucide-react";
 
-const sections = [
-  { id: "command", label: "Command Center", icon: LayoutDashboard },
-  { id: "feed", label: "Agent Activity", icon: Activity },
-  { id: "approval", label: "Approval Queue", icon: CheckSquare },
-  { id: "competitive", label: "Competitive Intel", icon: Crosshair },
-  { id: "architecture", label: "Architecture", icon: Shield },
-  { id: "org", label: "Org Expansion", icon: Network },
-  { id: "timeline", label: "Deal Timeline", icon: Calendar },
-  { id: "narrative", label: "Exec Narrative", icon: FileText },
-  { id: "vision", label: "What's next", icon: Sparkles },
+const sectionGroups = [
+  {
+    label: "Seller work",
+    items: [
+      { id: "myBook", label: "My Book", icon: BriefcaseBusiness },
+      { id: "accountOs", label: "Account OS", icon: Workflow },
+      { id: "dealRoom", label: "Deal Room", icon: Handshake },
+      { id: "execPrep", label: "Exec Prep", icon: FileText },
+      { id: "expansion", label: "Expansion Engine", icon: Network },
+    ],
+  },
+  {
+    label: "Ops and review",
+    items: [
+      { id: "actions", label: "Agent Actions", icon: Bot },
+      { id: "manager", label: "Manager View", icon: BarChart3 },
+      { id: "vision", label: "Roadmap", icon: Sparkles },
+    ],
+  },
 ] as const;
+
+const sections = sectionGroups.flatMap((group) => group.items);
 
 export type SectionId = (typeof sections)[number]["id"];
 
@@ -35,7 +45,7 @@ interface SidebarProps {
 
 export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
   return (
-    <aside className="flex w-56 shrink-0 flex-col border-r border-surface-border/40 bg-surface-elevated/20">
+    <aside className="flex w-64 shrink-0 flex-col border-r border-surface-border/40 bg-surface-elevated/20">
       {/* Brand header */}
       <div className="relative px-5 py-5">
         <div className="flex items-center gap-2">
@@ -47,7 +57,7 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
               Claude
             </h1>
             <p className="text-[11px] text-text-muted">
-              Enterprise Engine
+              Seller OS
             </p>
           </div>
         </div>
@@ -55,34 +65,43 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-3">
-        <div className="space-y-0.5">
-          {sections.map(({ id, label, icon: Icon }) => {
-            const isActive = activeSection === id;
-            return (
-              <button
-                key={id}
-                onClick={() => onSectionChange(id)}
-                className={cn(
-                  "group flex w-full items-center gap-2 rounded-md px-2.5 py-[7px] text-left text-[13px] transition-all duration-150",
-                  isActive
-                    ? "bg-surface-muted/50 text-text-primary"
-                    : "text-text-muted hover:bg-surface-muted/30 hover:text-text-secondary"
-                )}
-              >
-                <Icon
-                  className={cn(
-                    "h-[14px] w-[14px] shrink-0 transition-colors duration-200",
-                    isActive ? "text-claude-coral/70" : "opacity-45 group-hover:opacity-70"
-                  )}
-                  strokeWidth={1.8}
-                />
-                <span className={cn(isActive && "font-medium")}>{label}</span>
-                {isActive && (
-                  <span className="ml-auto h-1 w-1 rounded-full bg-claude-coral/60" />
-                )}
-              </button>
-            );
-          })}
+        <div className="space-y-5">
+          {sectionGroups.map((group) => (
+            <div key={group.label}>
+              <p className="px-2.5 text-[10px] uppercase tracking-[0.16em] text-text-faint">
+                {group.label}
+              </p>
+              <div className="mt-2 space-y-0.5">
+                {group.items.map(({ id, label, icon: Icon }) => {
+                  const isActive = activeSection === id;
+                  return (
+                    <button
+                      key={id}
+                      onClick={() => onSectionChange(id)}
+                      className={cn(
+                        "group flex w-full items-center gap-2 rounded-md px-2.5 py-[7px] text-left text-[13px] transition-all duration-150",
+                        isActive
+                          ? "bg-surface-muted/50 text-text-primary"
+                          : "text-text-muted hover:bg-surface-muted/30 hover:text-text-secondary"
+                      )}
+                    >
+                      <Icon
+                        className={cn(
+                          "h-[14px] w-[14px] shrink-0 transition-colors duration-200",
+                          isActive ? "text-claude-coral/70" : "opacity-45 group-hover:opacity-70"
+                        )}
+                        strokeWidth={1.8}
+                      />
+                      <span className={cn(isActive && "font-medium")}>{label}</span>
+                      {isActive && (
+                        <span className="ml-auto h-1 w-1 rounded-full bg-claude-coral/60" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       </nav>
 
@@ -94,7 +113,7 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
           </div>
           <div className="min-w-0">
             <p className="truncate text-[12px] font-medium text-text-secondary">George Trosley</p>
-            <p className="text-[10px] text-text-faint">Enterprise AE · East</p>
+            <p className="text-[10px] text-text-faint">Enterprise AE · Claude</p>
           </div>
         </div>
       </div>

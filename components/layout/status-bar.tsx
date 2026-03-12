@@ -3,28 +3,31 @@
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ClaudeSparkle } from "@/components/ui/claude-logo";
+import { formatCurrency } from "@/lib/formatters";
 import type { Account } from "@/types";
 
 interface StatusBarProps {
   account: Account;
   accounts: Account[];
   onAccountChange: (id: string) => void;
-  pipelineTarget: number;
-  estimatedArr: number;
-  dealStage: string;
+  pipelineValue: number;
+  whitespaceValue: number;
+  nextMeeting: string;
+  connectedSources: number;
   activeAgents: number;
-  oversightStatus: "active" | "idle";
+  openApprovals: number;
 }
 
 export function StatusBar({
   account,
   accounts,
   onAccountChange,
-  pipelineTarget,
-  estimatedArr,
-  dealStage,
+  pipelineValue,
+  whitespaceValue,
+  nextMeeting,
+  connectedSources,
   activeAgents,
-  oversightStatus,
+  openApprovals,
 }: StatusBarProps) {
   return (
     <header className="flex h-11 shrink-0 items-center justify-between border-b border-surface-border/35 bg-surface/40 px-6">
@@ -51,31 +54,35 @@ export function StatusBar({
         {/* Metrics */}
         <div className="flex items-center gap-4 text-[12px]">
           <span className="text-text-muted">
-            <span className="tabular-nums text-text-primary">${pipelineTarget.toFixed(2)}M</span>
+            <span className="tabular-nums text-text-primary">{formatCurrency(pipelineValue)}</span>
             {" "}pipeline
           </span>
           <span className="text-text-muted">
-            <span className="tabular-nums text-claude-coral/90">${estimatedArr.toFixed(2)}M</span>
-            {" "}ARR
+            <span className="tabular-nums text-claude-coral/90">{formatCurrency(whitespaceValue)}</span>
+            {" "}whitespace
           </span>
-          <span className="hidden text-text-muted lg:inline">{dealStage}</span>
+          <span className="hidden text-text-muted lg:inline">{nextMeeting}</span>
           <span className="text-text-muted">
             <span className="tabular-nums text-text-secondary">{activeAgents}</span>
             {" "}agents
+          </span>
+          <span className="hidden text-text-muted xl:inline">
+            <span className="tabular-nums text-text-secondary">{connectedSources}</span>
+            {" "}systems
           </span>
         </div>
       </div>
 
       {/* Status indicator */}
       <div className="flex items-center gap-2 text-[11px]">
-        {oversightStatus === "active" ? (
+        {openApprovals > 0 ? (
           <>
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-claude-coral/40" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-claude-coral/70" />
             </span>
             <span className="text-claude-coral/80">
-              Approval required
+              {openApprovals} approval{openApprovals === 1 ? "" : "s"} open
             </span>
           </>
         ) : (
