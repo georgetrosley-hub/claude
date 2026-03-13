@@ -1,52 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  Search,
-  Users,
-  Mail,
-  MessageSquare,
-  LayoutTemplate,
-  Zap,
-  ArrowRight,
-} from "lucide-react";
-import { ClaudeSparkle } from "@/components/ui/claude-logo";
+import { Zap } from "lucide-react";
+import { ClaudeActionBar } from "@/components/ui/claude-action-bar";
 import { SectionHeader } from "@/components/ui/section-header";
+import type { Account, Competitor } from "@/types";
 
-const steps = [
-  {
-    id: "1",
-    icon: Search,
-    title: "Claude scans job postings for AI adoption signals",
-    body: "Identify accounts with active AI initiatives, digital transformation mandates, and developer/ops hiring.",
-  },
-  {
-    id: "2",
-    icon: Users,
-    title: "Claude maps likely champions",
-    body: "Use org structure, LinkedIn signals, and account research to identify functional buyers and executive sponsors.",
-  },
-  {
-    id: "3",
-    icon: Mail,
-    title: "Claude generates outreach",
-    body: "Contextual emails and internal-style briefs tailored to the account, wedge, and stakeholder.",
-  },
-  {
-    id: "4",
-    icon: MessageSquare,
-    title: "Claude simulates objections",
-    body: "Prep for security, legal, procurement, and competitive pushback before the meeting.",
-  },
-  {
-    id: "5",
-    icon: LayoutTemplate,
-    title: "Claude designs pilot structure",
-    body: "Scope, success metrics, security path, and expansion thesis — the materials I use to move the deal.",
-  },
-];
+interface TerritoryEngineProps {
+  account: Account;
+  competitors: Competitor[];
+}
 
-export function TerritoryEngine() {
+export function TerritoryEngine({ account, competitors }: TerritoryEngineProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -56,62 +21,49 @@ export function TerritoryEngine() {
     >
       <SectionHeader
         title="Claude-powered territory engine"
-        subtitle="Claude isn't just the product. It's the tool I use to run territory."
+        subtitle="Run the engine to create pipeline and move deals. Each action below uses AI to generate real outputs."
       />
 
-      <div className="rounded-[22px] border border-accent/25 bg-accent/[0.04] p-4 sm:p-6">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/15">
-            <ClaudeSparkle size={20} className="text-accent" />
-          </div>
-          <div>
-            <p className="text-[14px] font-medium text-text-primary">
-              This site is powered by AI.
-            </p>
-            <p className="mt-0.5 text-[12px] text-text-muted">
-              Ask it how I would land enterprise accounts. Ask about objections, champion strategy, or pilot design.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        <p className="text-[13px] text-text-muted">
-          The engine I run to create pipeline and move deals:
-        </p>
-        {steps.map((step, idx) => {
-          const Icon = step.icon;
-          return (
-            <motion.div
-              key={step.id}
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: idx * 0.06, duration: 0.3 }}
-              className="flex gap-4 rounded-xl border border-surface-border/40 bg-surface-elevated/30 px-4 py-4"
-            >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent/10">
-                <Icon className="h-4 w-4 text-accent" strokeWidth={1.8} />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-[13px] font-medium text-text-primary">
-                  Step {step.id}: {step.title}
-                </p>
-                <p className="mt-1 text-[12px] text-text-secondary">{step.body}</p>
-              </div>
-              {idx < steps.length - 1 && (
-                <ArrowRight className="hidden h-4 w-4 shrink-0 text-text-faint sm:block" />
-              )}
-            </motion.div>
-          );
-        })}
-      </div>
-
       <div className="flex items-center gap-2 rounded-lg border border-emerald-400/20 bg-emerald-400/[0.05] px-4 py-3">
-        <Zap className="h-4 w-4 text-emerald-400" strokeWidth={1.8} />
+        <Zap className="h-4 w-4 shrink-0 text-emerald-400" strokeWidth={1.8} />
         <p className="text-[13px] text-text-primary">
-          This is how AI-native companies think: use the product to sell the product.
+          Use the product to sell the product. Pick an action for {account.name} or ask a custom question.
         </p>
       </div>
+
+      <ClaudeActionBar
+        title="Territory engine"
+        subtitle="Generate pipeline, champion maps, outreach, objection prep, and pilot designs for your selected account."
+        account={account}
+        competitors={competitors}
+        actions={[
+          {
+            id: "scan-ai-signals",
+            label: "Scan for AI adoption signals",
+            prompt: `For ${account.name} (${account.employeeCount.toLocaleString()} employees, ${account.developerPopulation.toLocaleString()} developers, AI maturity ${account.aiMaturityScore}/100): What signals would indicate they're actively adopting AI? Consider job postings, digital transformation mandates, vendor footprint (${account.existingVendorFootprint.join(", ")}), and executive priorities. Give me 5–7 concrete signals to look for and where to find them.`,
+          },
+          {
+            id: "map-champions",
+            label: "Map likely champions",
+            prompt: `For ${account.name}, who are the most likely champions for a first wedge around "${account.firstWedge}"? Use their executive sponsors (${account.executiveSponsors.join("; ")}), org structure, and the wedge. Give me 3–5 likely champion profiles: role, title, what they care about, and how to identify/reach them. Be specific to this account.`,
+          },
+          {
+            id: "generate-outreach",
+            label: "Generate outreach",
+            prompt: `Write a short, punchy outreach email (under 150 words) to a potential champion at ${account.name}. The wedge is: ${account.firstWedge}. Their existing vendors include ${account.existingVendorFootprint.join(", ")}. Make it specific to their context—not generic. Include a clear, low-friction ask.`,
+          },
+          {
+            id: "simulate-objections",
+            label: "Simulate objections",
+            prompt: `For ${account.name}, what are the top 5 objections I'll hear from security, legal, procurement, or the incumbent (${account.existingVendorFootprint.join(", ")})? For each, give me: the objection, why they'll say it, and a 2–3 sentence response I can use in the room. Account blockers: ${account.topBlockers.join("; ")}.`,
+          },
+          {
+            id: "design-pilot",
+            label: "Design pilot structure",
+            prompt: `Design a 90-day pilot structure for ${account.name} around "${account.firstWedge}". Include: scope (who, what systems, what success looks like), success metrics (3–5 measurable), security/governance path (they're ${account.securitySensitivity}% security-sensitive), and expansion thesis. Make it something I could present to the champion and economic buyer.`,
+          },
+        ]}
+      />
     </motion.div>
   );
 }

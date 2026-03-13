@@ -175,7 +175,12 @@ function MainContent() {
         competitors={competitors}
       />
     ),
-    territoryEngine: <TerritoryEngine />,
+    territoryEngine: (
+      <TerritoryEngine
+        account={account}
+        competitors={competitors}
+      />
+    ),
     enterpriseComparison: <EnterpriseComparison />,
   };
 
