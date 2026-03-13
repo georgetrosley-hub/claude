@@ -69,10 +69,10 @@ export function ClaudeActionBar({
             type="button"
             onClick={() => runAction(action)}
             className={cn(
-              "rounded-lg border-2 px-4 py-2.5 text-[13px] font-medium transition-colors",
+              "rounded-lg border-2 px-4 py-2.5 text-[13px] font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-claude-coral/40 focus-visible:ring-offset-2",
               activeActionId === action.id
-                ? "border-claude-coral/40 bg-claude-coral/[0.15] text-claude-coral shadow-sm"
-                : "border-white/20 bg-white/[0.06] text-text-primary hover:border-claude-coral/25 hover:bg-claude-coral/[0.08] hover:text-claude-coral/90"
+                ? "border-claude-coral bg-claude-coral/[0.12] text-claude-coral shadow-sm"
+                : "border-surface-border bg-surface-muted/40 text-text-primary hover:border-claude-coral/50 hover:bg-claude-coral/[0.06] hover:text-claude-coral/90"
             )}
           >
             {action.label}
