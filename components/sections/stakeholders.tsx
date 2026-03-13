@@ -146,7 +146,7 @@ export function Stakeholders({
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.04, duration: 0.35 }}
-            className="rounded-[28px] bg-white/[0.02] p-5"
+            className="rounded-[28px] border border-claude-coral/20 bg-white/[0.02] p-5"
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
