@@ -98,23 +98,23 @@ export function ClaudeActionBar({
         ))}
       </div>
 
-      <div className="mt-5 space-y-2">
-        <label className="block text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint/80">
+      <div className="mt-5">
+        <label className="mb-2 block text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint/80">
           Or ask Claude something else
         </label>
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+        <div className="relative rounded-[22px] border border-surface-border/40 bg-surface-muted/20 transition-colors focus-within:border-claude-coral/30 focus-within:bg-surface-muted/30">
           <textarea
             value={customText}
             onChange={(event) => setCustomText(event.target.value)}
-            rows={5}
+            rows={4}
             placeholder="e.g. Pressure-test this update, write follow-up messaging, or ask for a different angle on the deal..."
-            className="min-h-[120px] w-full resize-y rounded-[18px] border border-surface-border/40 bg-surface px-4 py-3 text-[13px] leading-relaxed text-text-primary placeholder:text-text-muted/60 focus:border-claude-coral/40 focus:outline-none sm:min-h-[100px]"
+            className="w-full resize-none rounded-[22px] border-0 bg-transparent px-4 pt-4 pb-12 pr-28 text-[13px] leading-relaxed text-text-primary placeholder:text-text-muted/60 focus:outline-none focus:ring-0"
           />
           <button
             type="button"
             onClick={runCustom}
             disabled={!customText.trim()}
-            className="shrink-0 self-end rounded-lg border border-claude-coral/25 bg-transparent px-3 py-2 text-[12px] font-medium text-claude-coral transition hover:bg-claude-coral/10 hover:border-claude-coral/40 disabled:opacity-40 disabled:hover:bg-transparent sm:self-auto"
+            className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-medium text-claude-coral transition-colors hover:bg-claude-coral/10 disabled:pointer-events-none disabled:opacity-40"
           >
             Ask Claude
           </button>
