@@ -3,15 +3,23 @@
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, Clock3, PauseCircle, PlayCircle, ShieldCheck } from "lucide-react";
+import { ClaudeActionBar } from "@/components/ui/claude-action-bar";
 import { SectionHeader } from "@/components/ui/section-header";
-import type { ExecutionItem } from "@/types";
+import { cn } from "@/lib/utils";
+import type { Account, Competitor, ExecutionItem } from "@/types";
 
 interface ExecutionProps {
+  account: Account;
+  competitors: Competitor[];
   executionItems: ExecutionItem[];
   lastDecisionTitle: string | null;
   clearLastDecision: () => void;
   onApproveDecision: (itemId: string) => void;
   onDeferDecision: (itemId: string) => void;
+  onUpdateExecutionStatus: (
+    itemId: string,
+    status: ExecutionItem["status"]
+  ) => void;
 }
 
 const statusStyles: Record<ExecutionItem["status"], string> = {
@@ -22,11 +30,14 @@ const statusStyles: Record<ExecutionItem["status"], string> = {
 };
 
 export function Execution({
+  account,
+  competitors,
   executionItems,
   lastDecisionTitle,
   clearLastDecision,
   onApproveDecision,
   onDeferDecision,
+  onUpdateExecutionStatus,
 }: ExecutionProps) {
   const pendingDecisions = executionItems.filter(
     (item) => item.decisionRequired && item.decisionStatus === "pending"
@@ -51,6 +62,30 @@ export function Execution({
       <SectionHeader
         title="Deal plan"
         subtitle="The sequence I would run: land the pilot, clear governance, tighten the executive story, start commercial work early, then expand."
+      />
+
+      <ClaudeActionBar
+        title="Ask Claude from inside the deal plan"
+        subtitle="Use Claude for mutual action planning, pilot design, and unblockers while you are actively running the deal."
+        account={account}
+        competitors={competitors}
+        actions={[
+          {
+            id: "map",
+            label: "Build MAP",
+            prompt: `Build a mutual action plan for ${account.name} based on this first wedge: ${account.firstWedge}. Include pilot scope, security review, executive check-ins, commercial milestones, and expansion sequencing.`,
+          },
+          {
+            id: "success-criteria",
+            label: "Success criteria",
+            prompt: `Write pilot success criteria for ${account.name} around ${account.firstWedge}. I need measurable outcomes, executive framing, and what proof points will unlock expansion.`,
+          },
+          {
+            id: "unblock-plan",
+            label: "Unblock risks",
+            prompt: `Given these blockers at ${account.name}: ${account.topBlockers.join("; ")}, tell me how I should sequence conversations and materials to keep the deal moving.`,
+          },
+        ]}
       />
 
       <AnimatePresence>
@@ -138,6 +173,23 @@ export function Execution({
             <p className="mt-4 text-[13px] leading-relaxed text-text-secondary">
               {item.detail}
             </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {(["ready", "in_progress", "blocked", "complete"] as const).map((status) => (
+                <button
+                  key={status}
+                  type="button"
+                  onClick={() => onUpdateExecutionStatus(item.id, status)}
+                  className={cn(
+                    "rounded-full border px-3 py-1.5 text-[12px] transition-colors",
+                    item.status === status
+                      ? "border-claude-coral/20 bg-claude-coral/[0.10] text-claude-coral"
+                      : "border-white/10 bg-white/[0.04] text-text-secondary hover:bg-white/[0.06]"
+                  )}
+                >
+                  {status.replace("_", " ")}
+                </button>
+              ))}
+            </div>
             {item.decisionStatus === "approved" && (
               <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[12px] text-text-secondary">
                 <PlayCircle className="h-3.5 w-3.5" strokeWidth={1.8} />

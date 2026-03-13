@@ -2,11 +2,19 @@
 
 import { motion } from "framer-motion";
 import { Activity, Radar, ShieldCheck } from "lucide-react";
+import { ClaudeActionBar } from "@/components/ui/claude-action-bar";
 import { SectionHeader } from "@/components/ui/section-header";
-import type { AccountSignal } from "@/types";
+import { cn } from "@/lib/utils";
+import type { Account, AccountSignal, Competitor } from "@/types";
 
 interface SignalsProps {
+  account: Account;
+  competitors: Competitor[];
   signals: AccountSignal[];
+  onUpdateSignalDisposition: (
+    signalId: string,
+    disposition: AccountSignal["disposition"]
+  ) => void;
 }
 
 const priorityStyles = {
@@ -16,7 +24,18 @@ const priorityStyles = {
   low: "border-white/10 bg-white/[0.04] text-text-secondary",
 } as const;
 
-export function Signals({ signals }: SignalsProps) {
+const dispositionStyles: Record<AccountSignal["disposition"], string> = {
+  watch: "border-white/10 bg-white/[0.04] text-text-secondary",
+  validated: "border-emerald-400/20 bg-emerald-400/[0.08] text-emerald-300",
+  challenged: "border-amber-400/20 bg-amber-400/[0.08] text-amber-300",
+};
+
+export function Signals({
+  account,
+  competitors,
+  signals,
+  onUpdateSignalDisposition,
+}: SignalsProps) {
   const averageConfidence = Math.round(
     signals.reduce((total, signal) => total + signal.confidence, 0) / signals.length
   );
@@ -31,6 +50,30 @@ export function Signals({ signals }: SignalsProps) {
       <SectionHeader
         title="Deal signals"
         subtitle="The hypotheses I would pressure-test in discovery, pilot design, security review, and executive conversations."
+      />
+
+      <ClaudeActionBar
+        title="Ask Claude from inside the signal desk"
+        subtitle="Use Claude to challenge assumptions, generate discovery questions, and sharpen the competitive point of view."
+        account={account}
+        competitors={competitors}
+        actions={[
+          {
+            id: "pressure-test",
+            label: "Pressure-test assumptions",
+            prompt: `Challenge my current deal assumptions for ${account.name}. Tell me which hypotheses are weak, what evidence I need, and what questions I should ask next.`,
+          },
+          {
+            id: "discovery-questions",
+            label: "Discovery questions",
+            prompt: `Give me the best discovery questions to validate the current deal hypotheses for ${account.name}, especially around champion strength, pilot value, competitive threat, and security blockers.`,
+          },
+          {
+            id: "competitor-memo",
+            label: "Competitor memo",
+            prompt: `Write a concise competitor memo for ${account.name}: who the most dangerous competitor is, how they will position, and how I should keep the deal focused on where Claude wins.`,
+          },
+        ]}
       />
 
       <div className="grid gap-4 sm:grid-cols-3">
@@ -86,6 +129,11 @@ export function Signals({ signals }: SignalsProps) {
                   >
                     {signal.priority}
                   </span>
+                  <span
+                    className={`rounded-full border px-2.5 py-1 text-[10px] uppercase tracking-[0.08em] ${dispositionStyles[signal.disposition]}`}
+                  >
+                    {signal.disposition}
+                  </span>
                   <span className="text-[11px] text-text-faint">
                     {signal.sourceType} · {signal.sourceLabel} · {signal.sourceFreshness}
                   </span>
@@ -113,6 +161,23 @@ export function Signals({ signals }: SignalsProps) {
                 <p className="mt-4 text-[10px] uppercase tracking-[0.12em] text-text-faint">Impact</p>
                 <p className="mt-2 text-[13px] leading-relaxed text-text-secondary">{signal.impact}</p>
               </div>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {(["watch", "validated", "challenged"] as const).map((disposition) => (
+                <button
+                  key={disposition}
+                  type="button"
+                  onClick={() => onUpdateSignalDisposition(signal.id, disposition)}
+                  className={cn(
+                    "rounded-full border px-3 py-1.5 text-[12px] transition-colors",
+                    signal.disposition === disposition
+                      ? "border-claude-coral/20 bg-claude-coral/[0.10] text-claude-coral"
+                      : "border-white/10 bg-white/[0.04] text-text-secondary hover:bg-white/[0.06]"
+                  )}
+                >
+                  Mark {disposition}
+                </button>
+              ))}
             </div>
           </motion.article>
         ))}

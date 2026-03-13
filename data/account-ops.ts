@@ -5,6 +5,7 @@ import type {
   ExecutionItem,
   PriorityLevel,
   Stakeholder,
+  WorkspaceDraft,
 } from "@/types";
 
 const priorityRank: Record<PriorityLevel, number> = {
@@ -130,6 +131,7 @@ export function buildAccountSignals(
       sourceType: "relationship",
       sourceLabel: "Account thesis",
       sourceFreshness: "Working hypothesis",
+      disposition: "watch",
     },
     {
       id: `${account.id}-security`,
@@ -143,6 +145,7 @@ export function buildAccountSignals(
       sourceType: "document",
       sourceLabel: "Blocker mapping",
       sourceFreshness: "Working hypothesis",
+      disposition: "watch",
     },
     {
       id: `${account.id}-competition`,
@@ -158,6 +161,7 @@ export function buildAccountSignals(
       sourceType: "market",
       sourceLabel: "Competitive watchlist",
       sourceFreshness: "Working hypothesis",
+      disposition: "watch",
     },
     {
       id: `${account.id}-expansion`,
@@ -171,6 +175,7 @@ export function buildAccountSignals(
       sourceType: "relationship",
       sourceLabel: "Account plan",
       sourceFreshness: "Working hypothesis",
+      disposition: "watch",
     },
     {
       id: `${account.id}-executive`,
@@ -184,6 +189,7 @@ export function buildAccountSignals(
       sourceType: "crm",
       sourceLabel: "Executive account summary",
       sourceFreshness: "Working hypothesis",
+      disposition: "watch",
     },
   ];
 
@@ -320,6 +326,20 @@ export function buildExecutionItems(account: Account): ExecutionItem[] {
       detail: "Keep expansion visible in the account story, but sequence it after the first wedge is secure.",
     },
   ];
+}
+
+export function buildWorkspaceDraft(
+  account: Account,
+  competitors: Competitor[]
+): WorkspaceDraft {
+  const topCompetitor = getTopCompetitor(competitors);
+
+  return {
+    dealThesis: `Land ${account.firstWedge.toLowerCase()} first, prove a controlled win quickly, then use that proof to open ${account.topExpansionPaths[0].toLowerCase()}.`,
+    winTheme: `Do not let ${topCompetitor?.name ?? "the incumbent"} turn this into a bundled platform decision. Keep the evaluation focused on model quality, governance, and the workflow where Claude clearly wins.`,
+    thisWeekFocus: `Lock the pilot sponsor, define success criteria, and schedule the governance workstream before momentum stalls.`,
+    operatorNotes: `Use executive alignment to create urgency, but keep the first ask narrow. This account should feel like a disciplined land-and-expand motion, not a broad transformation pitch.`,
+  };
 }
 
 export function getCurrentPhaseLabel(items: ExecutionItem[]) {

@@ -8,6 +8,7 @@ import {
   buildAccountSignals,
   buildExecutionItems,
   buildStakeholders,
+  buildWorkspaceDraft,
   getCurrentPhaseLabel,
 } from "@/data/account-ops";
 import type {
@@ -16,6 +17,7 @@ import type {
   AccountSignal,
   ExecutionItem,
   Stakeholder,
+  WorkspaceDraft,
 } from "@/types";
 
 interface AppState {
@@ -25,6 +27,7 @@ interface AppState {
   signals: AccountSignal[];
   stakeholders: Stakeholder[];
   executionItems: ExecutionItem[];
+  workspaceDraft: WorkspaceDraft;
   currentPhase: string;
   currentRecommendation: string;
   pipelineTarget: number;
@@ -39,6 +42,13 @@ interface AppContextValue extends AppState {
   clearLastDecision: () => void;
   handleApproveDecision: (itemId: string) => void;
   handleDeferDecision: (itemId: string) => void;
+  updateWorkspaceField: (field: keyof WorkspaceDraft, value: string) => void;
+  updateStakeholderStance: (stakeholderId: string, stance: Stakeholder["stance"]) => void;
+  updateExecutionStatus: (itemId: string, status: ExecutionItem["status"]) => void;
+  updateSignalDisposition: (
+    signalId: string,
+    disposition: AccountSignal["disposition"]
+  ) => void;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -48,32 +58,73 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [agents, setAgents] = useState<Agent[]>(() =>
     createInitialAgents()
   );
-  const [executionItems, setExecutionItems] = useState<ExecutionItem[]>(() => {
-    const account = accounts.find((item) => item.id === defaultAccountId) ?? accounts[0];
-    return buildExecutionItems(account);
-  });
+  const [signalsByAccount, setSignalsByAccount] = useState<Record<string, AccountSignal[]>>(
+    () =>
+      Object.fromEntries(
+        accounts.map((account) => [
+          account.id,
+          buildAccountSignals(account, getCompetitorsByAccount(account.id)),
+        ])
+      )
+  );
+  const [stakeholdersByAccount, setStakeholdersByAccount] = useState<
+    Record<string, Stakeholder[]>
+  >(() =>
+    Object.fromEntries(
+      accounts.map((account) => [account.id, buildStakeholders(account)])
+    )
+  );
+  const [executionItemsByAccount, setExecutionItemsByAccount] = useState<
+    Record<string, ExecutionItem[]>
+  >(() =>
+    Object.fromEntries(
+      accounts.map((account) => [account.id, buildExecutionItems(account)])
+    )
+  );
+  const [workspaceDraftsByAccount, setWorkspaceDraftsByAccount] = useState<
+    Record<string, WorkspaceDraft>
+  >(() =>
+    Object.fromEntries(
+      accounts.map((account) => [
+        account.id,
+        buildWorkspaceDraft(account, getCompetitorsByAccount(account.id)),
+      ])
+    )
+  );
   const [lastDecisionTitle, setLastDecisionTitle] = useState<string | null>(null);
 
   const account = accounts.find((a) => a.id === accountId) ?? accounts[0];
   const competitors = getCompetitorsByAccount(accountId);
   const signals = useMemo(
-    () => buildAccountSignals(account, competitors),
-    [account, competitors]
+    () => signalsByAccount[accountId] ?? buildAccountSignals(account, competitors),
+    [account, accountId, competitors, signalsByAccount]
   );
-  const stakeholders = useMemo(() => buildStakeholders(account), [account]);
+  const stakeholders = useMemo(
+    () => stakeholdersByAccount[accountId] ?? buildStakeholders(account),
+    [account, accountId, stakeholdersByAccount]
+  );
+  const executionItems = useMemo(
+    () => executionItemsByAccount[accountId] ?? buildExecutionItems(account),
+    [account, accountId, executionItemsByAccount]
+  );
+  const workspaceDraft = useMemo(
+    () =>
+      workspaceDraftsByAccount[accountId] ??
+      buildWorkspaceDraft(account, competitors),
+    [account, accountId, competitors, workspaceDraftsByAccount]
+  );
 
   const setAccountId = useCallback((id: string) => {
     setAccountIdState(id);
     setAgents(createInitialAgents());
-    const nextAccount = accounts.find((item) => item.id === id) ?? accounts[0];
-    setExecutionItems(buildExecutionItems(nextAccount));
     setLastDecisionTitle(null);
   }, []);
 
   const clearLastDecision = useCallback(() => setLastDecisionTitle(null), []);
   const handleApproveDecision = useCallback((itemId: string) => {
-    setExecutionItems((prev) =>
-      prev.map((item) =>
+    setExecutionItemsByAccount((prev) => ({
+      ...prev,
+      [accountId]: (prev[accountId] ?? executionItems).map((item) =>
         item.id === itemId
           ? {
               ...item,
@@ -81,24 +132,76 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
               status: "in_progress" as const,
             }
           : item
-      )
-    );
+      ),
+    }));
     const approvedItem = executionItems.find((item) => item.id === itemId);
     setLastDecisionTitle(approvedItem?.title ?? "Decision recorded");
-  }, [executionItems]);
+  }, [accountId, executionItems]);
 
   const handleDeferDecision = useCallback((itemId: string) => {
-    setExecutionItems((prev) =>
-      prev.map((item) =>
+    setExecutionItemsByAccount((prev) => ({
+      ...prev,
+      [accountId]: (prev[accountId] ?? executionItems).map((item) =>
         item.id === itemId
           ? {
               ...item,
               decisionStatus: "deferred" as const,
             }
           : item
-      )
-    );
-  }, []);
+      ),
+    }));
+  }, [accountId, executionItems]);
+
+  const updateWorkspaceField = useCallback(
+    (field: keyof WorkspaceDraft, value: string) => {
+      setWorkspaceDraftsByAccount((prev) => ({
+        ...prev,
+        [accountId]: {
+          ...(prev[accountId] ?? workspaceDraft),
+          [field]: value,
+        },
+      }));
+    },
+    [accountId, workspaceDraft]
+  );
+
+  const updateStakeholderStance = useCallback(
+    (stakeholderId: string, stance: Stakeholder["stance"]) => {
+      setStakeholdersByAccount((prev) => ({
+        ...prev,
+        [accountId]: (prev[accountId] ?? stakeholders).map((stakeholder) =>
+          stakeholder.id === stakeholderId
+            ? { ...stakeholder, stance }
+            : stakeholder
+        ),
+      }));
+    },
+    [accountId, stakeholders]
+  );
+
+  const updateExecutionStatus = useCallback(
+    (itemId: string, status: ExecutionItem["status"]) => {
+      setExecutionItemsByAccount((prev) => ({
+        ...prev,
+        [accountId]: (prev[accountId] ?? executionItems).map((item) =>
+          item.id === itemId ? { ...item, status } : item
+        ),
+      }));
+    },
+    [accountId, executionItems]
+  );
+
+  const updateSignalDisposition = useCallback(
+    (signalId: string, disposition: AccountSignal["disposition"]) => {
+      setSignalsByAccount((prev) => ({
+        ...prev,
+        [accountId]: (prev[accountId] ?? signals).map((signal) =>
+          signal.id === signalId ? { ...signal, disposition } : signal
+        ),
+      }));
+    },
+    [accountId, signals]
+  );
 
   const currentPhase = getCurrentPhaseLabel(executionItems);
   const pendingDecisionCount = executionItems.filter(
@@ -114,6 +217,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     signals,
     stakeholders,
     executionItems,
+    workspaceDraft,
     currentPhase,
     currentRecommendation,
     pipelineTarget,
@@ -125,6 +229,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     clearLastDecision,
     handleApproveDecision,
     handleDeferDecision,
+    updateWorkspaceField,
+    updateStakeholderStance,
+    updateExecutionStatus,
+    updateSignalDisposition,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

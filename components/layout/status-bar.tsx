@@ -187,16 +187,16 @@ export function StatusBar({
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] sm:text-[12px]">
             <span className="text-text-muted">
               <span className="tabular-nums text-text-primary">${pipelineTarget.toFixed(2)}M</span>
-              {" "}modeled pipeline
+              {" "}in play
             </span>
             <span className="text-text-muted">
               <span className="tabular-nums text-claude-coral/90">${estimatedArr.toFixed(2)}M</span>
-              {" "}modeled ARR
+              {" "}at stake
             </span>
             <span className="hidden text-text-muted md:inline">{currentPhase}</span>
             <span className="text-text-muted">
               <span className="tabular-nums text-text-secondary">{signalCount}</span>
-              {" "}hypotheses
+              {" "}live calls
             </span>
           </div>
         </div>

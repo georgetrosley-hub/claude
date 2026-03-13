@@ -24,6 +24,7 @@ function MainContent() {
     signals,
     stakeholders,
     executionItems,
+    workspaceDraft,
     currentRecommendation,
     pipelineTarget,
     currentPhase,
@@ -33,6 +34,10 @@ function MainContent() {
     clearLastDecision,
     handleApproveDecision,
     handleDeferDecision,
+    updateWorkspaceField,
+    updateStakeholderStance,
+    updateExecutionStatus,
+    updateSignalDisposition,
   } = useApp();
 
   const handleSectionChange = (section: SectionId) => {
@@ -61,27 +66,38 @@ function MainContent() {
         signals={signals}
         stakeholders={stakeholders}
         executionItems={executionItems}
+        workspaceDraft={workspaceDraft}
         pipelineTarget={pipelineTarget}
         currentRecommendation={currentRecommendation}
+        onUpdateWorkspaceField={updateWorkspaceField}
       />
     ),
     stakeholders: (
       <Stakeholders
+        account={account}
+        competitors={competitors}
         stakeholders={stakeholders}
+        onUpdateStakeholderStance={updateStakeholderStance}
       />
     ),
     execution: (
       <Execution
+        account={account}
+        competitors={competitors}
         executionItems={executionItems}
         lastDecisionTitle={lastDecisionTitle}
         clearLastDecision={clearLastDecision}
         onApproveDecision={handleApproveDecision}
         onDeferDecision={handleDeferDecision}
+        onUpdateExecutionStatus={updateExecutionStatus}
       />
     ),
     signals: (
       <Signals
+        account={account}
+        competitors={competitors}
         signals={signals}
+        onUpdateSignalDisposition={updateSignalDisposition}
       />
     ),
     artifacts: (

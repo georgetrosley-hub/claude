@@ -2,10 +2,18 @@
 
 import { motion } from "framer-motion";
 import { AlertTriangle, ArrowRight, BriefcaseBusiness, Crosshair, Users } from "lucide-react";
+import { ClaudeActionBar } from "@/components/ui/claude-action-bar";
 import { SectionHeader } from "@/components/ui/section-header";
 import { MetricCard } from "@/components/ui/metric-card";
 import { ClaudeSparkle } from "@/components/ui/claude-logo";
-import type { Account, AccountSignal, Competitor, ExecutionItem, Stakeholder } from "@/types";
+import type {
+  Account,
+  AccountSignal,
+  Competitor,
+  ExecutionItem,
+  Stakeholder,
+  WorkspaceDraft,
+} from "@/types";
 
 interface OverviewProps {
   account: Account;
@@ -13,8 +21,10 @@ interface OverviewProps {
   signals: AccountSignal[];
   stakeholders: Stakeholder[];
   executionItems: ExecutionItem[];
+  workspaceDraft: WorkspaceDraft;
   pipelineTarget: number;
   currentRecommendation: string;
+  onUpdateWorkspaceField: (field: keyof WorkspaceDraft, value: string) => void;
 }
 
 export function Overview({
@@ -23,8 +33,10 @@ export function Overview({
   signals,
   stakeholders,
   executionItems,
+  workspaceDraft,
   pipelineTarget,
   currentRecommendation,
+  onUpdateWorkspaceField,
 }: OverviewProps) {
   const topCompetitor = [...competitors].sort((a, b) => b.accountRiskLevel - a.accountRiskLevel)[0];
   const champion = stakeholders.find((stakeholder) => stakeholder.stance === "champion");
@@ -165,6 +177,93 @@ export function Overview({
             </p>
           </div>
         </aside>
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+        <section className="rounded-[28px] border border-white/8 bg-white/[0.03] p-5 sm:p-6">
+          <SectionHeader
+            title="AE control board"
+            subtitle="This is the editable layer: the account thesis, the win theme, the weekly focus, and the notes the rep actually lives in."
+          />
+          <div className="grid gap-4">
+            <div>
+              <label className="mb-2 block text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
+                Deal thesis
+              </label>
+              <textarea
+                value={workspaceDraft.dealThesis}
+                onChange={(event) => onUpdateWorkspaceField("dealThesis", event.target.value)}
+                rows={3}
+                className="w-full resize-none rounded-[22px] border border-white/10 bg-black/10 px-4 py-3 text-[13px] leading-relaxed text-text-primary placeholder:text-text-muted/50 focus:border-claude-coral/30 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
+                Win theme
+              </label>
+              <textarea
+                value={workspaceDraft.winTheme}
+                onChange={(event) => onUpdateWorkspaceField("winTheme", event.target.value)}
+                rows={3}
+                className="w-full resize-none rounded-[22px] border border-white/10 bg-black/10 px-4 py-3 text-[13px] leading-relaxed text-text-primary placeholder:text-text-muted/50 focus:border-claude-coral/30 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
+                This week
+              </label>
+              <textarea
+                value={workspaceDraft.thisWeekFocus}
+                onChange={(event) => onUpdateWorkspaceField("thisWeekFocus", event.target.value)}
+                rows={2}
+                className="w-full resize-none rounded-[22px] border border-white/10 bg-black/10 px-4 py-3 text-[13px] leading-relaxed text-text-primary placeholder:text-text-muted/50 focus:border-claude-coral/30 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
+                Operator notes
+              </label>
+              <textarea
+                value={workspaceDraft.operatorNotes}
+                onChange={(event) => onUpdateWorkspaceField("operatorNotes", event.target.value)}
+                rows={4}
+                className="w-full resize-none rounded-[22px] border border-white/10 bg-black/10 px-4 py-3 text-[13px] leading-relaxed text-text-primary placeholder:text-text-muted/50 focus:border-claude-coral/30 focus:outline-none"
+              />
+            </div>
+          </div>
+        </section>
+
+        <ClaudeActionBar
+          title="Ask Claude inside the capture plan"
+          subtitle="Use Claude as the AE&apos;s live operator, not just a separate utility. These requests are specific to the deal you&apos;re in."
+          account={account}
+          competitors={competitors}
+          actions={[
+            {
+              id: "sharpen-thesis",
+              label: "Sharpen thesis",
+              prompt: `Rewrite my current deal thesis for ${account.name} so it sounds like a top enterprise AE's account strategy. Current thesis: ${workspaceDraft.dealThesis}`,
+            },
+            {
+              id: "pilot-plan",
+              label: "Write pilot plan",
+              prompt: `Write a concrete first-pilot plan for ${account.name} around ${account.firstWedge}. Include sponsor, scope, success criteria, security path, and next executive step.`,
+            },
+            {
+              id: "competitive-plan",
+              label: "Pressure-test competitor",
+              prompt: `Pressure-test my win theme for ${account.name}. Win theme: ${workspaceDraft.winTheme}. Tell me where it is weak, what the top competitor will say, and how I should tighten it.`,
+            },
+            {
+              id: "weekly-attack-plan",
+              label: "Build weekly attack plan",
+              prompt: `Turn my current weekly focus into a practical attack plan for ${account.name}. Weekly focus: ${workspaceDraft.thisWeekFocus}. I want owners, sequence, and suggested messaging.`,
+            },
+          ]}
+        />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">

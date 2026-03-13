@@ -2,11 +2,16 @@
 
 import { motion } from "framer-motion";
 import { Handshake, ShieldAlert, Star, Users } from "lucide-react";
+import { ClaudeActionBar } from "@/components/ui/claude-action-bar";
 import { SectionHeader } from "@/components/ui/section-header";
-import type { Stakeholder } from "@/types";
+import { cn } from "@/lib/utils";
+import type { Account, Competitor, Stakeholder } from "@/types";
 
 interface StakeholdersProps {
+  account: Account;
+  competitors: Competitor[];
   stakeholders: Stakeholder[];
+  onUpdateStakeholderStance: (stakeholderId: string, stance: Stakeholder["stance"]) => void;
 }
 
 const stanceStyles: Record<Stakeholder["stance"], string> = {
@@ -17,7 +22,12 @@ const stanceStyles: Record<Stakeholder["stance"], string> = {
   executive: "border-claude-coral/20 bg-claude-coral/[0.08] text-claude-coral/90",
 };
 
-export function Stakeholders({ stakeholders }: StakeholdersProps) {
+export function Stakeholders({
+  account,
+  competitors,
+  stakeholders,
+  onUpdateStakeholderStance,
+}: StakeholdersProps) {
   const champions = stakeholders.filter((stakeholder) => stakeholder.stance === "champion" || stakeholder.stance === "ally");
   const blockers = stakeholders.filter((stakeholder) => stakeholder.stance === "blocker");
   const executiveCount = stakeholders.filter((stakeholder) => stakeholder.stance === "executive").length;
@@ -32,6 +42,30 @@ export function Stakeholders({ stakeholders }: StakeholdersProps) {
       <SectionHeader
         title="Stakeholder map"
         subtitle="The relationship plan I would build around the first wedge. This is a working map, not a claimed source-of-truth org chart."
+      />
+
+      <ClaudeActionBar
+        title="Ask Claude from inside the stakeholder map"
+        subtitle="Use Claude to help multi-thread the account, coach the champion, and prep internal influence paths."
+        account={account}
+        competitors={competitors}
+        actions={[
+          {
+            id: "champion-plan",
+            label: "Champion plan",
+            prompt: `Based on the current stakeholder map for ${account.name}, tell me how I should build and coach the likely champion, what proof they need, and what they should say internally.`,
+          },
+          {
+            id: "multi-thread",
+            label: "Multi-thread strategy",
+            prompt: `For ${account.name}, tell me who I should multi-thread next beyond the current stakeholder map and how I should sequence those conversations.`,
+          },
+          {
+            id: "sponsor-note",
+            label: "Write sponsor note",
+            prompt: `Draft an internal-style note I could send to an executive sponsor at ${account.name} to summarize the first wedge, the pilot logic, and the business case for moving now.`,
+          },
+        ]}
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -124,6 +158,24 @@ export function Stakeholders({ stakeholders }: StakeholdersProps) {
               <p className="mt-2 text-[13px] leading-relaxed text-text-secondary">
                 {stakeholder.nextStep}
               </p>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              {(["champion", "ally", "neutral", "blocker"] as const).map((stance) => (
+                <button
+                  key={stance}
+                  type="button"
+                  onClick={() => onUpdateStakeholderStance(stakeholder.id, stance)}
+                  className={cn(
+                    "rounded-full border px-3 py-1.5 text-[12px] transition-colors",
+                    stakeholder.stance === stance
+                      ? "border-claude-coral/20 bg-claude-coral/[0.10] text-claude-coral"
+                      : "border-white/10 bg-white/[0.04] text-text-secondary hover:bg-white/[0.06]"
+                  )}
+                >
+                  {stance}
+                </button>
+              ))}
             </div>
 
             <p className="mt-4 text-[13px] leading-relaxed text-text-muted">

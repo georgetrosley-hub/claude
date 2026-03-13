@@ -105,6 +105,7 @@ export interface AccountSignal {
   sourceType: SignalSourceType;
   sourceLabel: string;
   sourceFreshness: string;
+  disposition: "watch" | "validated" | "challenged";
 }
 
 export interface Stakeholder {
@@ -129,6 +130,13 @@ export interface ExecutionItem {
   detail: string;
   decisionRequired?: boolean;
   decisionStatus?: "pending" | "approved" | "deferred";
+}
+
+export interface WorkspaceDraft {
+  dealThesis: string;
+  winTheme: string;
+  thisWeekFocus: string;
+  operatorNotes: string;
 }
 
 export type DealStage =

@@ -19,7 +19,7 @@ const sectionGroups = [
   {
     label: "Deal Strategy",
     items: [
-      { id: "overview", label: "Capture Plan", icon: LayoutDashboard },
+      { id: "overview", label: "War Room", icon: LayoutDashboard },
       { id: "stakeholders", label: "Stakeholder Map", icon: Users },
       { id: "execution", label: "Deal Plan", icon: Workflow },
     ],
@@ -82,7 +82,7 @@ function SidebarBody({
                   Claude
                 </h1>
                 <p className="text-[11px] text-text-muted">
-                  Enterprise GTM
+                  GTM War Room
                 </p>
               </div>
             )}
