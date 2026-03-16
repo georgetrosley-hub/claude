@@ -27,8 +27,8 @@ export const metadata: Metadata = {
   title: "Enterprise GTM | OpenAI-Style War Room",
   description: "How I'd build pipeline and expansion for enterprise AI — built to feel like an OpenAI product.",
   icons: {
-    icon: "/openai-logo.png",
-    apple: "/openai-logo.png",
+    icon: "/openai-logo-dark.png",
+    apple: "/openai-logo-dark.png",
   },
 };
 

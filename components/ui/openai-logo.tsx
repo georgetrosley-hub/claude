@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useTheme } from "@/app/context/theme-context";
 import { cn } from "@/lib/utils";
 
 interface OpenAILogoProps {
@@ -8,13 +9,16 @@ interface OpenAILogoProps {
   size?: number;
 }
 
-const LOGO_PATH = "/openai-logo.png";
+const LOGO_LIGHT = "/openai-logo.png";       // black logo on light bg
+const LOGO_DARK = "/openai-logo-dark.png";  // white logo on dark bg
 
-/** Official OpenAI logo (black/white knot) — favicon, sidebar, headers */
+/** Official OpenAI logo — light theme: black knot; dark theme: white knot */
 export function OpenAILogoImage({ className, size = 20 }: OpenAILogoProps) {
+  const { isDark } = useTheme();
+  const src = isDark ? LOGO_DARK : LOGO_LIGHT;
   return (
     <Image
-      src={LOGO_PATH}
+      src={src}
       alt="OpenAI"
       width={size}
       height={size}
