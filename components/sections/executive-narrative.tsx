@@ -159,7 +159,7 @@ export function ExecutiveNarrative({ account, competitors }: ExecutiveNarrativeP
         ))}
         <div className="pt-3 border-t border-surface-border/40">
           <div className="flex items-center gap-2 mb-2">
-            <OpenAILogo size={10} className="text-accent/40" />
+            <AdaptiveLogo size={10} className="text-accent/40" />
             <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-accent/50">Value · Sponsors</p>
           </div>
           <p className="text-[13px] text-text-secondary leading-relaxed">
@@ -175,7 +175,7 @@ export function ExecutiveNarrative({ account, competitors }: ExecutiveNarrativeP
           disabled={narrative.isStreaming}
           className="flex items-center gap-2 rounded-lg border border-accent/20 bg-accent/[0.06] px-4 py-2.5 text-[13px] font-medium text-accent/90 hover:bg-accent/10 transition-colors disabled:opacity-50"
         >
-          <OpenAILogo size={14} />
+          <AdaptiveLogo size={14} />
           {narrativeLoaded ? "Refresh Full Narrative" : "Generate Full Narrative"}
         </button>
         <button

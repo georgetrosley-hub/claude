@@ -69,10 +69,10 @@ export function WhyGeorge() {
       {/* Hero one-liner */}
       <div className="rounded-2xl border border-accent/25 bg-accent/[0.08] p-5 sm:p-6">
         <p className="text-base font-medium leading-relaxed text-text-primary sm:text-lg">
-          I've already sold the playbook you're building: security awareness and risk reduction that displaces legacy training vendors, into the same regulated enterprises (healthcare, finance, pharma) where Adaptive wins.
+          I&apos;ve already sold the playbook you&apos;re building: security awareness and risk reduction that displaces legacy training vendors, into the same regulated enterprises (healthcare, finance, pharma) where Adaptive wins.
         </p>
         <p className="mt-3 text-[13px] text-text-muted">
-          This page is why the fit isn't a stretch — it's a shortcut.
+          This page is why the fit isn&apos;t a stretch — it&apos;s a shortcut.
         </p>
       </div>
 
@@ -111,7 +111,7 @@ export function WhyGeorge() {
           — {QUOTE.author}, {QUOTE.source}
         </p>
         <p className="mt-3 text-[12px] text-text-faint">
-          I've read your site and case studies. I want to be the AE who brings that "holy shit" moment to more enterprises — with the same deepfake and AI-threat training that makes Adaptive different.
+          I&apos;ve read your site and case studies. I want to be the AE who brings that &quot;holy shit&quot; moment to more enterprises — with the same deepfake and AI-threat training that makes Adaptive different.
         </p>
       </div>
 
@@ -152,7 +152,7 @@ export function WhyGeorge() {
           <div>
             <p className="font-semibold text-text-primary">Ready to talk?</p>
             <p className="text-[13px] text-text-muted">
-              Let's discuss how I'd build pipeline and expansion for Adaptive.
+              Let&apos;s discuss how I&apos;d build pipeline and expansion for Adaptive.
             </p>
           </div>
         </div>
