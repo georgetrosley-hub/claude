@@ -17,35 +17,16 @@ export function AdaptiveLogoImage({ className, size = 24 }: AdaptiveLogoProps) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const s = size ?? 24;
-
-  if (isDark) {
-    return (
-      <Image
-        src={LOGO_WHITE}
-        alt="Adaptive Security"
-        width={s}
-        height={s}
-        className={cn("shrink-0 object-contain", className)}
-        unoptimized
-      />
-    );
-  }
+  const src = isDark ? LOGO_WHITE : LOGO_DARK;
 
   return (
-    <span
-      role="img"
-      aria-label="Adaptive Security"
-      className={cn("shrink-0 inline-block text-black", className)}
-      style={{
-        width: s,
-        height: s,
-        maskImage: `url(${LOGO_DARK})`,
-        WebkitMaskImage: `url(${LOGO_DARK})`,
-        maskSize: "contain",
-        maskRepeat: "no-repeat",
-        maskPosition: "center",
-        backgroundColor: "currentColor",
-      }}
+    <Image
+      src={src}
+      alt="Adaptive Security"
+      width={s}
+      height={s}
+      className={cn("shrink-0 object-contain", className)}
+      unoptimized
     />
   );
 }
@@ -55,35 +36,17 @@ export function AdaptiveLogo({ className, size = 20 }: AdaptiveLogoProps) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
   const s = size ?? 20;
-
-  if (isDark) {
-    return (
-      <Image
-        src={LOGO_WHITE}
-        alt=""
-        width={s}
-        height={s}
-        className={cn("shrink-0 object-contain", className)}
-        aria-hidden
-        unoptimized
-      />
-    );
-  }
+  const src = isDark ? LOGO_WHITE : LOGO_DARK;
 
   return (
-    <span
-      className={cn("shrink-0 inline-block text-black", className)}
-      style={{
-        width: s,
-        height: s,
-        maskImage: `url(${LOGO_DARK})`,
-        WebkitMaskImage: `url(${LOGO_DARK})`,
-        maskSize: "contain",
-        maskRepeat: "no-repeat",
-        maskPosition: "center",
-        backgroundColor: "currentColor",
-      }}
+    <Image
+      src={src}
+      alt=""
+      width={s}
+      height={s}
+      className={cn("shrink-0 object-contain", className)}
       aria-hidden
+      unoptimized
     />
   );
 }
