@@ -1,12 +1,12 @@
 import type { Account } from "@/types";
 
 /**
- * Accounts: N/A for now. Internal GTM AE hub is account-agnostic until accounts are configured.
+ * Accounts: single-account mode for ADP.
  */
 export const accounts: Account[] = [
   {
-    id: "na",
-    name: "N/A",
+    id: "adp",
+    name: "ADP",
     tam: 0,
     employeeCount: 0,
     developerPopulation: 0,
@@ -14,15 +14,20 @@ export const accounts: Account[] = [
     securitySensitivity: 0,
     complianceComplexity: 0,
     competitivePressure: 0,
-    existingVendorFootprint: [],
+    existingVendorFootprint: ["Databricks (publicly referenced)", "Snowflake (publicly referenced)"],
     executiveSponsors: [],
-    firstWedge: "",
+    firstWedge: "Governed serving layer + external data distribution",
     estimatedLandValue: 0,
     estimatedExpansionValue: 0,
-    topBlockers: [],
-    topExpansionPaths: [],
+    topBlockers: ["Databricks engineering entrenchment", "Platform standardization politics", "Governance/PII risk review"],
+    topExpansionPaths: [
+      "Governed BI/SQL serving layer consolidation",
+      "External data products (benchmarks/licensing) distribution",
+      "Compliance analytics + audit-grade reporting",
+      "AI-ready governed data foundation for broad access",
+    ],
   },
 ];
 
-/** Default account — N/A until accounts are set up */
-export const defaultAccountId = "na";
+/** Default account */
+export const defaultAccountId = "adp";
