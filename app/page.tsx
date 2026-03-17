@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AppProvider, useApp } from "@/app/context/app-context";
 import { Sidebar, type SectionId } from "@/components/layout/sidebar";
 import { StatusBar } from "@/components/layout/status-bar";
@@ -19,6 +19,7 @@ function MainContent() {
   const [chatOpen, setChatOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const mainScrollRef = useRef<HTMLElement | null>(null);
   const {
     account,
     accounts,
@@ -49,6 +50,11 @@ function MainContent() {
     setActiveSection(section);
     setMobileNavOpen(false);
   };
+
+  useEffect(() => {
+    // Ensure each section loads from the top of the scroll container.
+    mainScrollRef.current?.scrollTo({ top: 0, behavior: "auto" });
+  }, [activeSection]);
 
   const handleOpenChat = () => {
     setChatOpen(true);
@@ -119,7 +125,10 @@ function MainContent() {
           sidebarCollapsed={sidebarCollapsed}
           onToggleSidebar={() => setSidebarCollapsed((prev) => !prev)}
         />
-        <main className="relative flex-1 overflow-y-auto overflow-x-hidden px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8 xl:px-10 xl:py-10">
+        <main
+          ref={mainScrollRef as unknown as React.RefObject<HTMLElement>}
+          className="relative flex-1 overflow-y-auto overflow-x-hidden px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8 xl:px-10 xl:py-10"
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={activeSection}
