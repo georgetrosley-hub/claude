@@ -15,6 +15,15 @@ import type {
 } from "@/types";
 import type { DealHealthSummary } from "@/lib/deal-health";
 
+const SECTION_ANCHOR_BY_NAV: Record<SectionId, string> = {
+  territoryPriorities: "territory-priorities",
+  dailyBriefing: "daily-account-briefing",
+  accountDossiers: "account-dossiers",
+  operatingPriorities: "operating-priorities",
+  executionFramework: "execution-framework",
+  briefingEngine: "briefing-engine",
+};
+
 function formatUpdatedAt(iso?: string): string {
   if (!iso) return "Not refreshed yet";
   const d = new Date(iso);
@@ -50,14 +59,6 @@ interface OverviewProps {
 export function Overview({
   activeSection,
 }: OverviewProps) {
-  const sectionAnchorByNav: Record<SectionId, string> = {
-    territoryPriorities: "territory-priorities",
-    dailyBriefing: "daily-account-briefing",
-    accountDossiers: "account-dossiers",
-    operatingPriorities: "operating-priorities",
-    executionFramework: "execution-framework",
-    briefingEngine: "briefing-engine",
-  };
   const dossierTabs = [
     "Business Overview",
     "Financial Snapshot",
@@ -69,7 +70,7 @@ export function Overview({
   ] as const;
   type DossierTab = (typeof dossierTabs)[number];
 
-  const territoryPriorityAccounts = [
+  const territoryPriorityAccounts = useMemo(() => [
     {
       id: "t1-01",
       name: "Tier 1 Account 01",
@@ -130,7 +131,7 @@ export function Overview({
       hypothesis: "Initial hypothesis: support increases once governance is shown without slowing delivery. To validate post-onboarding: current vendor footprint.",
       nextMove: "Launch multi-threaded stakeholder plan and convert current interest into pilot commitment.",
     },
-  ] as const;
+  ] as const, []);
   type PriorityAccount = (typeof territoryPriorityAccounts)[number];
 
   const [activeDossierId, setActiveDossierId] = useState<PriorityAccount["id"]>(
@@ -180,7 +181,7 @@ export function Overview({
         nextBestMove: string;
       }
     >
-  > = {
+  > = useMemo(() => ({
     "t1-01": {
       "24h": {
         keySignals: "Leadership team aligning on near-term operating priorities; data reliability surfaced in internal planning rhythm.",
@@ -351,7 +352,7 @@ export function Overview({
         nextBestMove: "Map 12-month expansion sequencing and executive sponsors before launch.",
       },
     },
-  };
+  }), []);
   const activeBriefing = briefingByAccount[activeBriefingAccount.id][activeBriefingWindow];
   const buildAccountBrief = useCallback(() => {
     setBriefingOutputTitle(`${activeBriefingAccount.name} · ${activeBriefingWindow} Account Brief`);
@@ -421,7 +422,7 @@ export function Overview({
   const exportPdf = useCallback(() => {
     window.print();
   }, []);
-  const weeklyOperatingPriorities = [
+  const weeklyOperatingPriorities = useMemo(() => [
     {
       title: "Secure Tier 1 pilot scope and sponsor alignment",
       whyNow: "Decision criteria are still being shaped this week.",
@@ -452,7 +453,7 @@ export function Overview({
       targetAccount: "Tier 1 Account 05",
       expectedOutcome: "Evaluation rubric aligned to governance and business outcomes.",
     },
-  ] as const;
+  ] as const, []);
   const dossierInsights = useMemo(() => {
     const p = activeDossierAccount;
     return {
@@ -588,7 +589,6 @@ export function Overview({
       const nowIso = new Date().toISOString();
       setAccountLastUpdated((prev) => ({ ...prev, [accountId]: nowIso }));
       setRefreshingAccountId(null);
-      showToast("Account intelligence refreshed");
     },
     []
   );
@@ -622,7 +622,7 @@ export function Overview({
 
   useEffect(() => {
     if (!activeSection) return;
-    const anchor = sectionAnchorByNav[activeSection];
+    const anchor = SECTION_ANCHOR_BY_NAV[activeSection];
     document.getElementById(anchor)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [activeSection]);
 
