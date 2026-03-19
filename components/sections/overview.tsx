@@ -67,6 +67,69 @@ export function Overview({
   onAddAccountUpdate,
   onSectionChange,
 }: OverviewProps) {
+  const territoryPriorityAccounts = [
+    {
+      id: "t1-01",
+      name: "Tier 1 Account 01",
+      industry: "Industry Placeholder",
+      why: "Large data estate with high cross-functional demand and executive pressure to improve speed-to-insight.",
+      likelyLand: "Governed data serving foundation for a high-visibility business workflow.",
+      expansionPath: "Expand into AI-assisted analytics, operational decisioning, and data-sharing products.",
+      pressure: "Databricks footprint plus cloud-native status-quo momentum.",
+      personas: "CDAO, VP Data Platform, Head of Analytics, Security lead, Procurement.",
+      hypothesis: "Team will sponsor a narrow pilot if governance and measurable impact are clear up front.",
+      nextMove: "Run executive alignment call and lock 90-day pilot success metrics.",
+    },
+    {
+      id: "t1-02",
+      name: "Tier 1 Account 02",
+      industry: "Industry Placeholder",
+      why: "Clear modernization mandate and fragmented analytics stack creating urgent operational friction.",
+      likelyLand: "Unified governed data layer for one mission-critical reporting and planning motion.",
+      expansionPath: "Broaden to enterprise-wide data products, AI workloads, and departmental self-service.",
+      pressure: "Databricks evaluation active with cloud partner influence.",
+      personas: "CIO, Data Engineering Director, Finance analytics leader, Security architect.",
+      hypothesis: "Economic buyer will move quickly if we prove consolidation and faster delivery.",
+      nextMove: "Secure technical workshop with decision-makers and map incumbent displacement path.",
+    },
+    {
+      id: "t1-03",
+      name: "Tier 1 Account 03",
+      industry: "Industry Placeholder",
+      why: "High-value data assets and strong executive appetite for governed AI deployment at scale.",
+      likelyLand: "First workload around governed AI-ready data access for a priority domain team.",
+      expansionPath: "Scale to additional domains, partner data exchange, and enterprise AI applications.",
+      pressure: "Databricks incumbent plus cloud credits shaping procurement behavior.",
+      personas: "Chief Digital Officer, Head of Data Science, Platform owner, Risk and Compliance.",
+      hypothesis: "Champion exists if we anchor on risk-controlled speed rather than broad transformation.",
+      nextMove: "Identify champion and co-author pilot narrative for steering committee review.",
+    },
+    {
+      id: "t1-04",
+      name: "Tier 1 Account 04",
+      industry: "Industry Placeholder",
+      why: "Large downstream business impact tied to analytics latency and inconsistent governance standards.",
+      likelyLand: "Governed performance reporting and workload consolidation for a priority business unit.",
+      expansionPath: "Expand into predictive analytics, AI-powered operations, and cross-region data collaboration.",
+      pressure: "Databricks technical champions and cloud-native procurement default.",
+      personas: "BU President, Head of Data, Enterprise Architect, Information Security, Sourcing.",
+      hypothesis: "A tightly scoped business-case pilot can bypass platform politics and accelerate approval.",
+      nextMove: "Present value case with timeline, owners, and go-live criteria in next exec readout.",
+    },
+    {
+      id: "t1-05",
+      name: "Tier 1 Account 05",
+      industry: "Industry Placeholder",
+      why: "Active transformation program with budget available but no clear governed platform standard yet.",
+      likelyLand: "Initial deployment for secure, shared analytics across key operating teams.",
+      expansionPath: "Move into AI productization, external data distribution, and enterprise workload standardization.",
+      pressure: "Databricks preferred by engineering and cloud vendor co-sell pressure.",
+      personas: "CTO, VP Engineering, Data Governance lead, Line-of-business analytics sponsor.",
+      hypothesis: "Cross-functional support increases once we prove governance without slowing delivery.",
+      nextMove: "Launch multi-threaded stakeholder plan and convert current interest into pilot commitment.",
+    },
+  ] as const;
+
   const saveToastRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { showToast } = useToast();
 
@@ -137,7 +200,55 @@ export function Overview({
       <section className="space-y-4">
         <SectionHeader
           title="Territory priorities"
-          subtitle="What I would own now: landable wedge, expansion path, stakeholder coverage, and near-term revenue focus."
+          subtitle="Top five Tier 1 accounts I would run immediately, with clear land motion, expansion thesis, and next move."
+        />
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          {territoryPriorityAccounts.map((priority) => (
+            <article
+              key={priority.id}
+              className="rounded-2xl border border-surface-border/50 bg-surface-elevated/30 p-4 sm:p-5"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-[15px] font-semibold text-text-primary">{priority.name}</h3>
+                  <p className="mt-0.5 text-[12px] text-text-muted">{priority.industry}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full border border-accent/30 bg-accent/[0.08] px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.08em] text-accent">
+                    Tier 1
+                  </span>
+                  <span className="rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.08em] text-text-faint">
+                    Immediate Focus
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-4 space-y-2.5 text-[12px] leading-relaxed">
+                <p><span className="font-semibold text-text-primary">Why This Account Matters:</span> <span className="text-text-secondary">{priority.why}</span></p>
+                <p><span className="font-semibold text-text-primary">Likely Land:</span> <span className="text-text-secondary">{priority.likelyLand}</span></p>
+                <p><span className="font-semibold text-text-primary">Expansion Path:</span> <span className="text-text-secondary">{priority.expansionPath}</span></p>
+                <p><span className="font-semibold text-text-primary">Competitive Pressure:</span> <span className="text-text-secondary">{priority.pressure}</span></p>
+                <p><span className="font-semibold text-text-primary">Key Personas:</span> <span className="text-text-secondary">{priority.personas}</span></p>
+                <p><span className="font-semibold text-text-primary">Current Hypothesis:</span> <span className="text-text-secondary">{priority.hypothesis}</span></p>
+                <p><span className="font-semibold text-text-primary">Next Best Move:</span> <span className="text-text-secondary">{priority.nextMove}</span></p>
+              </div>
+
+              <button
+                type="button"
+                className="mt-4 rounded-lg border border-accent/30 bg-accent/[0.08] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-accent transition-colors hover:bg-accent/[0.14]"
+              >
+                Open Account Dossier
+              </button>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* Territory execution snapshot */}
+      <section className="space-y-4">
+        <SectionHeader
+          title="Territory execution snapshot"
+          subtitle="Current wedge economics, stakeholder coverage, and expansion posture across the patch."
         />
         <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <MetricCard
