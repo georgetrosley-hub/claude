@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BookOpenCheck, RefreshCcw } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
 import type {
@@ -46,6 +46,7 @@ interface OverviewProps {
 }
 
 export function Overview({
+  account,
 }: OverviewProps) {
   const dossierTabs = [
     "Business Overview",
@@ -137,6 +138,33 @@ export function Overview({
   const [refreshingAccountId, setRefreshingAccountId] = useState<PriorityAccount["id"] | null>(null);
   const [refreshingDossier, setRefreshingDossier] = useState(false);
   const [refreshingTerritory, setRefreshingTerritory] = useState(false);
+  const [dossierFocus, setDossierFocus] = useState(false);
+  const dossierFocusTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const nextId = territoryPriorityAccounts.find((p) => p.id === account.id)?.id;
+    if (!nextId) return;
+
+    setActiveDossierId(nextId);
+    setActiveBriefingAccountId(nextId);
+
+    // Optional: subtle focus effect on the dossier section.
+    setDossierFocus(true);
+    if (dossierFocusTimeoutRef.current) {
+      window.clearTimeout(dossierFocusTimeoutRef.current);
+    }
+    dossierFocusTimeoutRef.current = window.setTimeout(() => {
+      setDossierFocus(false);
+    }, 650);
+  }, [account.id, territoryPriorityAccounts]);
+
+  useEffect(() => {
+    return () => {
+      if (dossierFocusTimeoutRef.current) {
+        window.clearTimeout(dossierFocusTimeoutRef.current);
+      }
+    };
+  }, []);
   const activeDossierAccount =
     territoryPriorityAccounts.find((priority) => priority.id === activeDossierId) ??
     territoryPriorityAccounts[0];
@@ -558,7 +586,13 @@ export function Overview({
           subtitle="These are the first three existing Snowflake accounts I would focus on expanding."
         />
         <div className="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-3">
-          <article className="rounded-xl border border-accent/35 bg-accent/[0.06] p-3 lg:col-span-2">
+          <article
+            className={`rounded-xl p-3 lg:col-span-2 ${
+              activeDossierId === "us-financial-technology"
+                ? "border border-accent/45 bg-accent/[0.08]"
+                : "border border-accent/25 bg-accent/[0.03] opacity-85"
+            }`}
+          >
             <div className="flex flex-wrap items-start justify-between gap-2">
               <p className="text-[14px] font-semibold text-text-primary">U.S. Financial Technology</p>
               <span className="rounded-full border border-accent/35 bg-accent/[0.10] px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.08em] text-accent">
@@ -570,12 +604,24 @@ export function Overview({
               Expansion focus: make Snowflake the governed shared layer across risk, compliance, and analytics teams — then widen adoption into adjacent workflows.
             </p>
           </article>
-          <article className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3 lg:col-span-1">
+          <article
+            className={`rounded-xl border bg-surface-muted/30 p-3 lg:col-span-1 ${
+              activeDossierId === "sagent-lending"
+                ? "border-accent/30"
+                : "border-surface-border/50 opacity-85"
+            }`}
+          >
             <p className="text-[14px] font-semibold text-text-primary">Sagent Lending</p>
             <p className="mt-1 text-[11px] uppercase tracking-[0.08em] text-text-faint">Status: active account with expansion opportunity</p>
             <p className="mt-2 text-[12px] text-text-secondary">Expansion focus: win one ops-owned workflow, then expand team coverage off the credibility of that result.</p>
           </article>
-          <article className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3 lg:col-span-1">
+          <article
+            className={`rounded-xl border bg-surface-muted/30 p-3 lg:col-span-1 ${
+              activeDossierId === "ciena-corp"
+                ? "border-accent/30"
+                : "border-surface-border/50 opacity-85"
+            }`}
+          >
             <p className="text-[14px] font-semibold text-text-primary">Ciena Corp</p>
             <p className="mt-1 text-[11px] uppercase tracking-[0.08em] text-text-faint">Status: existing deployment, scope to be mapped</p>
             <p className="mt-2 text-[12px] text-text-secondary">Expansion focus: platformize Snowflake across domains by reducing cross-team friction via shared data products and governance.</p>
@@ -634,10 +680,12 @@ export function Overview({
           {territoryPriorityAccounts.map((priority) => (
             <article
               key={priority.id}
-              className={`rounded-2xl border p-4 sm:p-5 ${
-                priority.isPrimary
+              className={`rounded-2xl border p-4 sm:p-5 transition-colors ${
+                activeDossierId === priority.id
                   ? "border-accent/35 bg-accent/[0.05]"
-                  : "border-surface-border/50 bg-surface-elevated/30"
+                  : priority.isPrimary
+                    ? "border-accent/25 bg-accent/[0.03] opacity-90"
+                    : "border-surface-border/50 bg-surface-elevated/30 opacity-90"
               }`}
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
@@ -793,7 +841,11 @@ export function Overview({
       </section>
       <section
         id="account-dossiers"
-        className="scroll-mt-24 rounded-2xl border border-surface-border/50 bg-surface-elevated/30 p-4 sm:p-6"
+        className={`scroll-mt-24 rounded-2xl border bg-surface-elevated/30 p-4 sm:p-6 transition-colors ${
+          dossierFocus
+            ? "border-accent/35"
+            : "border-surface-border/50"
+        }`}
       >
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
