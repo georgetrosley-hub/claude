@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useCallback } from "react";
+import { useMemo, useRef, useCallback, useState } from "react";
 import { ArrowRight, Crosshair, CircleDot, Zap, Target } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
 import type { SectionId } from "@/components/layout/sidebar";
@@ -67,6 +67,17 @@ export function Overview({
   onAddAccountUpdate,
   onSectionChange,
 }: OverviewProps) {
+  const dossierTabs = [
+    "Business Overview",
+    "Financial Snapshot",
+    "10-K / Earnings Signals",
+    "Cloud & AI Posture",
+    "Competitive Landscape",
+    "Snowflake POV",
+    "Action Plan",
+  ] as const;
+  type DossierTab = (typeof dossierTabs)[number];
+
   const territoryPriorityAccounts = [
     {
       id: "t1-01",
@@ -129,6 +140,12 @@ export function Overview({
       nextMove: "Launch multi-threaded stakeholder plan and convert current interest into pilot commitment.",
     },
   ] as const;
+  type PriorityAccount = (typeof territoryPriorityAccounts)[number];
+
+  const [activeDossierId, setActiveDossierId] = useState<PriorityAccount["id"]>(
+    territoryPriorityAccounts[0].id
+  );
+  const [activeDossierTab, setActiveDossierTab] = useState<DossierTab>("Business Overview");
 
   const saveToastRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { showToast } = useToast();
@@ -173,6 +190,9 @@ export function Overview({
   const firstPilotValue = formatMillionCurrency(account.estimatedLandValue);
   const expansionPathValue = formatMillionCurrency(account.estimatedExpansionValue);
   const inPlayValue = formatMillionCurrency(pipelineTarget);
+  const activeDossierAccount =
+    territoryPriorityAccounts.find((priority) => priority.id === activeDossierId) ??
+    territoryPriorityAccounts[0];
 
   return (
     <div className="space-y-10 sm:space-y-12">
@@ -235,6 +255,13 @@ export function Overview({
 
               <button
                 type="button"
+                onClick={() => {
+                  setActiveDossierId(priority.id);
+                  setActiveDossierTab("Business Overview");
+                  document
+                    .getElementById("account-dossier-view")
+                    ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
                 className="mt-4 rounded-lg border border-accent/30 bg-accent/[0.08] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-accent transition-colors hover:bg-accent/[0.14]"
               >
                 Open Account Dossier
@@ -242,6 +269,145 @@ export function Overview({
             </article>
           ))}
         </div>
+      </section>
+
+      <section
+        id="account-dossier-view"
+        className="rounded-2xl border border-surface-border/50 bg-surface-elevated/30 p-4 sm:p-6"
+      >
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
+              Account Dossier
+            </p>
+            <h2 className="mt-1 text-[18px] font-semibold tracking-tight text-text-primary">
+              {activeDossierAccount.name}
+            </h2>
+            <p className="mt-1 text-[12px] text-text-muted">
+              {activeDossierAccount.industry} · Tier 1 · Immediate Focus
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-2">
+          {dossierTabs.map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setActiveDossierTab(tab)}
+              className={`rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors ${
+                activeDossierTab === tab
+                  ? "border border-accent/30 bg-accent/[0.10] text-accent"
+                  : "border border-surface-border/50 bg-surface-muted/40 text-text-muted hover:border-accent/20 hover:text-text-secondary"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {activeDossierTab === "Business Overview" && (
+          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Operating Context</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Enterprise transformation program in motion with high visibility and strict governance expectations.</p>
+            </div>
+            <div className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Commercial Objective</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Land a measurable initial workload and establish platform credibility with executive buyers.</p>
+            </div>
+          </div>
+        )}
+
+        {activeDossierTab === "Financial Snapshot" && (
+          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <div className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Budget Climate</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Selective spend with preference for initiatives tied to measurable business outcomes.</p>
+            </div>
+            <div className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Investment Trigger</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Consolidation, faster analytics delivery, and lower governance risk in one motion.</p>
+            </div>
+            <div className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Buying Motion</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Cross-functional approval path led by data platform leadership and finance oversight.</p>
+            </div>
+          </div>
+        )}
+
+        {activeDossierTab === "10-K / Earnings Signals" && (
+          <div className="mt-5 space-y-3">
+            <div className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Strategic Signal</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Leadership messaging emphasizes productivity, operational resilience, and AI-driven efficiency.</p>
+            </div>
+            <div className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Execution Signal</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Recent disclosures suggest demand for governed data access and accelerated analytics cycles.</p>
+            </div>
+          </div>
+        )}
+
+        {activeDossierTab === "Cloud & AI Posture" && (
+          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Cloud Posture</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Multi-cloud and partner-influenced architecture with active modernization workstreams.</p>
+            </div>
+            <div className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">AI Readiness</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Strong demand for AI use cases, constrained by governance, reliability, and platform fragmentation.</p>
+            </div>
+          </div>
+        )}
+
+        {activeDossierTab === "Competitive Landscape" && (
+          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <div className="rounded-xl border border-rose-400/20 bg-rose-400/[0.05] p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-rose-300/90">Primary Incumbent</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Databricks technical preference in core engineering teams.</p>
+            </div>
+            <div className="rounded-xl border border-amber-400/20 bg-amber-400/[0.05] p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-amber-300/90">Cloud Influence</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Cloud-native defaults and credit structures shape short-term decisions.</p>
+            </div>
+            <div className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Win Condition</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Narrowly defined business workflow where governance and time-to-value are non-negotiable.</p>
+            </div>
+          </div>
+        )}
+
+        {activeDossierTab === "Snowflake POV" && (
+          <div className="mt-5 space-y-3">
+            <div className="rounded-xl border border-accent/25 bg-accent/[0.06] p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-accent/90">Core POV</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Position Snowflake as the governed enterprise execution layer for analytics and AI expansion.</p>
+            </div>
+            <div className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Commercial Narrative</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Lead with measurable business impact, then scale via adjacent workloads and broader stakeholder sponsorship.</p>
+            </div>
+          </div>
+        )}
+
+        {activeDossierTab === "Action Plan" && (
+          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <div className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Next 7 Days</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Confirm champion, align success metrics, and schedule technical validation session.</p>
+            </div>
+            <div className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Next 30 Days</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Launch pilot with clear governance gates and executive update cadence.</p>
+            </div>
+            <div className="rounded-xl border border-surface-border/50 bg-surface-muted/30 p-3">
+              <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Expansion Trigger</p>
+              <p className="mt-1.5 text-[12px] text-text-secondary">Use pilot outcomes to open second workload and formalize expansion plan.</p>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Territory execution snapshot */}
