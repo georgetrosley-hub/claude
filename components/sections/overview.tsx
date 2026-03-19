@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { BookOpenCheck, RefreshCcw } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
-import type { SectionId } from "@/components/layout/sidebar";
 import type {
   Account,
   Competitor,
@@ -14,15 +13,6 @@ import type {
   WorkspaceDraft
 } from "@/types";
 import type { DealHealthSummary } from "@/lib/deal-health";
-
-const SECTION_ANCHOR_BY_NAV: Record<SectionId, string> = {
-  territoryPriorities: "territory-priorities",
-  dailyBriefing: "daily-account-briefing",
-  accountDossiers: "account-dossiers",
-  operatingPriorities: "operating-priorities",
-  executionFramework: "execution-framework",
-  briefingEngine: "briefing-engine",
-};
 
 function formatUpdatedAt(iso?: string): string {
   if (!iso) return "Not refreshed yet";
@@ -53,11 +43,9 @@ interface OverviewProps {
     note: string,
     tag: AccountUpdate["tag"]
   ) => void;
-  activeSection?: SectionId;
 }
 
 export function Overview({
-  activeSection,
 }: OverviewProps) {
   const dossierTabs = [
     "Business Overview",
@@ -619,12 +607,6 @@ export function Overview({
     setDossierLastUpdated(nowIso);
     setRefreshingDossier(false);
   }, []);
-
-  useEffect(() => {
-    if (!activeSection) return;
-    const anchor = SECTION_ANCHOR_BY_NAV[activeSection];
-    document.getElementById(anchor)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, [activeSection]);
 
   return (
     <div className="space-y-10 sm:space-y-12">

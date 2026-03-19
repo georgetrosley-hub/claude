@@ -40,6 +40,7 @@ interface SidebarProps {
   onSectionChange: (id: SectionId) => void;
   onOpenChat: () => void;
   collapsed: boolean;
+  scrollProgress: number;
   mobileOpen: boolean;
   onCloseMobile: () => void;
   onToggleCollapsed: () => void;
@@ -49,6 +50,7 @@ interface SidebarBodyProps {
   activeSection: SectionId;
   onSectionChange: (id: SectionId) => void;
   onOpenChat: () => void;
+  scrollProgress: number;
   compact?: boolean;
   onToggleCollapsed?: () => void;
   onCloseMobile?: () => void;
@@ -58,6 +60,7 @@ function SidebarBody({
   activeSection,
   onSectionChange,
   onOpenChat,
+  scrollProgress,
   compact = false,
   onToggleCollapsed,
   onCloseMobile,
@@ -131,7 +134,16 @@ function SidebarBody({
         </button>
       </div>
 
-      <nav className={cn("flex-1 overflow-y-auto px-3 py-1", compact && "px-2")}>
+      <nav className={cn("relative flex-1 overflow-y-auto px-3 py-1", compact && "px-2")}>
+        {!compact && (
+          <div className="pointer-events-none absolute bottom-5 left-2 top-2 w-px rounded-full bg-surface-border/50">
+            <div
+              className="w-full origin-top rounded-full bg-text-muted/70 transition-[height] duration-100 ease-linear"
+              style={{ height: `${Math.max(0, Math.min(scrollProgress, 1)) * 100}%` }}
+              aria-hidden
+            />
+          </div>
+        )}
         {sectionGroups.map((group) => (
           <div key={group.label} className="mb-4">
             {!compact && (
@@ -151,7 +163,7 @@ function SidebarBody({
                       "group flex w-full min-h-[44px] items-center gap-2 rounded-md px-3 py-3 text-left text-[13px] transition-all duration-150 active:bg-surface-muted/40",
                       compact && "justify-center px-0 py-2 min-h-[40px]",
                       isActive
-                        ? "bg-surface-muted/50 text-text-primary"
+                        ? "bg-surface-muted/60 text-accent font-semibold"
                         : "text-text-muted hover:bg-surface-muted/30 hover:text-text-secondary"
                     )}
                     aria-label={label}
@@ -165,7 +177,7 @@ function SidebarBody({
                       strokeWidth={1.8}
                     />
                     {!compact && (
-                      <span className={cn(isActive && "font-medium")}>{label}</span>
+                      <span>{label}</span>
                     )}
                     {isActive && !compact && (
                       <span className="ml-auto h-1 w-1 rounded-full bg-accent" />
@@ -214,6 +226,7 @@ export function Sidebar({
   onSectionChange,
   onOpenChat,
   collapsed,
+  scrollProgress,
   mobileOpen,
   onCloseMobile,
   onToggleCollapsed,
@@ -230,6 +243,7 @@ export function Sidebar({
           activeSection={activeSection}
           onSectionChange={onSectionChange}
           onOpenChat={onOpenChat}
+          scrollProgress={scrollProgress}
           compact={collapsed}
           onToggleCollapsed={onToggleCollapsed}
         />
@@ -259,6 +273,7 @@ export function Sidebar({
                 activeSection={activeSection}
                 onSectionChange={onSectionChange}
                 onOpenChat={onOpenChat}
+                scrollProgress={scrollProgress}
                 onCloseMobile={onCloseMobile}
               />
             </motion.aside>
