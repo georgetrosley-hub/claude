@@ -38,8 +38,8 @@ const sectionGroups = [
   {
     label: "Execution & Reference",
     items: [
-      { id: "crashCourse", label: "3-Day Crash Course", icon: GraduationCap },
       { id: "first90AndFieldKit", label: "First 90 Days & Field Kit", icon: FileText },
+      { id: "crashCourse", label: "3-Day Crash Course", icon: GraduationCap },
       { id: "useCasesAndCompetitive", label: "Use Cases & Positioning", icon: Lightbulb },
     ],
   },

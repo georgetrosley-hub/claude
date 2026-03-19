@@ -163,7 +163,7 @@ export function Overview({
         </div>
       </section>
 
-      {/* Daily account briefing */}
+      {/* Account execution */}
       <section className="rounded-2xl border border-surface-border bg-surface-elevated p-4 sm:p-6 shadow-elevated">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -171,7 +171,7 @@ export function Overview({
               {todayLabel} · {account.name}
             </p>
             <h1 className="mt-0.5 text-lg font-semibold tracking-tight text-text-primary sm:text-xl">
-              Daily account briefing
+              Account execution
             </h1>
           </div>
         </div>
@@ -283,10 +283,10 @@ export function Overview({
         </div>
       </section>
 
-      {/* Competitive and AI market signals */}
+      {/* Action-oriented insights */}
       <section className="space-y-4">
         <SectionHeader
-          title="Competitive and AI market signals"
+          title="Action-oriented insights"
           subtitle="Signals and competitive context that shape account strategy, urgency, and next actions."
         />
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
