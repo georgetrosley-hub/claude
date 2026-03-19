@@ -750,7 +750,7 @@ export function Overview({
                 <p><span className="font-semibold text-text-primary">Competitive Pressure:</span> <span className="text-text-secondary">{priority.pressure}</span></p>
                 <p><span className="font-semibold text-text-primary">Key Personas:</span> <span className="text-text-secondary">{priority.personas}</span></p>
                 <p><span className="font-semibold text-text-primary">Current Hypothesis:</span> <span className="text-text-secondary">{priority.hypothesis}</span></p>
-                <p><span className="font-semibold text-text-primary">What I'd Validate First:</span> <span className="text-text-secondary">{priority.validateFirst}</span></p>
+                <p><span className="font-semibold text-text-primary">What I&apos;d Validate First:</span> <span className="text-text-secondary">{priority.validateFirst}</span></p>
                 <p><span className="font-semibold text-text-primary">Next Best Move:</span> <span className="text-text-secondary">{priority.nextMove}</span></p>
               </div>
 
