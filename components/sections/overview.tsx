@@ -332,6 +332,56 @@ export function Overview({
     updateDiscoveryDraft({ signalIds: next });
   };
 
+  const [discoverySessionOpen, setDiscoverySessionOpen] = useState(false);
+
+  const recommendedDiscoveryDefaults = useMemo<
+    Partial<Record<PriorityAccount["id"], { scenarioId: DiscoveryScenarioId; personaId: DiscoveryPersonaId }>>
+  >(
+    () => ({
+      "us-financial-technology": {
+        scenarioId: "databricks-stronghold",
+        personaId: "vp-executive",
+      },
+      "sagent-lending": {
+        scenarioId: "fragmented-enterprise",
+        personaId: "finance-cost-stakeholder",
+      },
+      "ciena-corp": {
+        scenarioId: "shadow-it",
+        personaId: "head-data-engineering",
+      },
+    }),
+    []
+  );
+
+  useEffect(() => {
+    if (!discoverySessionOpen) return;
+
+    const rec = recommendedDiscoveryDefaults[selectedAccountId];
+    if (!rec) return;
+
+    const isAtDefaults =
+      discoveryDraft.scenarioId === defaultDiscoveryDraft.scenarioId &&
+      discoveryDraft.personaId === defaultDiscoveryDraft.personaId &&
+      discoveryDraft.signalIds.length === 0 &&
+      !discoveryDraft.liveNotes.trim();
+
+    if (!isAtDefaults) return;
+
+    updateDiscoveryDraft({ scenarioId: rec.scenarioId, personaId: rec.personaId });
+  }, [
+    discoveryDraft.liveNotes,
+    discoveryDraft.personaId,
+    discoveryDraft.scenarioId,
+    discoveryDraft.signalIds.length,
+    discoverySessionOpen,
+    defaultDiscoveryDraft.personaId,
+    defaultDiscoveryDraft.scenarioId,
+    recommendedDiscoveryDefaults,
+    selectedAccountId,
+    updateDiscoveryDraft,
+  ]);
+
   useEffect(() => {
     // Clear derived briefing content when selected account changes
     // so the panel reflects the current global account context.
@@ -1031,6 +1081,7 @@ export function Overview({
     }));
     setDossierLastUpdated(nowIso);
     setActiveDossierTab("Snowflake POV");
+    setDiscoverySessionOpen(false);
 
     setDossierFocus(true);
     if (dossierFocusTimeoutRef.current) {
@@ -1054,9 +1105,12 @@ export function Overview({
       },
     }));
 
-    setBriefingOutputTitleOverride(`${activeBriefingAccount.name} · ${activeBriefingWindow} · Live Discovery Lab`);
+    setBriefingOutputTitleOverride(
+      `${activeBriefingAccount.name} · ${activeBriefingWindow} · Discovery Session`
+    );
     setBriefingOutput(discoveryWeeklyBriefOutput);
     setTerritoryLastUpdated(nowIso);
+    setDiscoverySessionOpen(false);
 
     document.getElementById("briefing-engine")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [
@@ -1435,6 +1489,17 @@ export function Overview({
                 >
                   Open Account Dossier
                 </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onSelectAccount(priority.id);
+                    setActiveDossierTab("Snowflake POV");
+                    window.setTimeout(() => setDiscoverySessionOpen(true), 0);
+                  }}
+                  className="rounded-lg border border-surface-border/60 bg-surface-muted/40 px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-text-secondary transition-colors hover:border-accent/20 hover:text-text-primary"
+                >
+                  Run Discovery Session
+                </button>
               </div>
               <p className="mt-2 text-[10px] text-text-faint">
                 Last updated: {formatUpdatedAt(accountLastUpdated[priority.id])}
@@ -1444,18 +1509,31 @@ export function Overview({
         </div>
       </section>
 
-      {/* SECTION 3: LIVE DISCOVERY LAB */}
-      <section
-        id="live-discovery-lab"
-        className="scroll-mt-24 rounded-2xl border border-surface-border/50 bg-surface-elevated/30 p-4 sm:p-6"
-      >
-        <SectionHeader
-          title="Live Discovery Lab"
-          subtitle="Preparation -> Discovery -> POV -> Action. This is the call guide I use to prep for discovery on the selected account."
-        />
+      {discoverySessionOpen && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 p-4 sm:p-6">
+          <section
+            id="live-discovery-lab"
+            className="relative w-full max-w-6xl max-h-[90vh] scroll-mt-24 overflow-y-auto rounded-2xl border border-surface-border/50 bg-surface-elevated/30 p-4 sm:p-6"
+          >
+            <button
+              type="button"
+              onClick={() => setDiscoverySessionOpen(false)}
+              className="absolute right-4 top-4 rounded-lg border border-surface-border/60 bg-surface-muted/40 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.08em] text-text-secondary transition-colors hover:border-accent/20 hover:text-text-primary"
+            >
+              Close
+            </button>
+
+            <SectionHeader
+              title="Discovery Session"
+              subtitle="Account -> Discover -> Decide -> Act. A call guide tied to the selected Snowflake account."
+            />
 
         <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <div className="space-y-4">
+          <details className="rounded-xl border border-surface-border/50 bg-surface-muted/20 p-3">
+            <summary className="cursor-pointer list-none text-[10px] uppercase tracking-[0.1em] text-text-faint">
+              Tune call guide (scenario + persona)
+            </summary>
+            <div className="mt-3 space-y-4">
             <div>
               <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Scenario Selection</p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -1495,15 +1573,20 @@ export function Overview({
                 ))}
               </div>
             </div>
-          </div>
+            </div>
+          </details>
 
           <div className="space-y-4">
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Signal Capture</p>
-              <p className="mt-1.5 text-[12px] text-text-secondary">
-                Select what best matches the account behavior. These choices directly shape the POV builder below.
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
+            <details className="rounded-xl border border-surface-border/50 bg-surface-muted/20 p-3">
+              <summary className="cursor-pointer list-none text-[10px] uppercase tracking-[0.1em] text-text-faint">
+                Tune call guide (signals)
+              </summary>
+              <div className="mt-3">
+                <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Signal Capture</p>
+                <p className="mt-1.5 text-[12px] text-text-secondary">
+                  Select what best matches the account behavior. These choices directly shape the POV builder below.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
                 {discoverySignalOptions.map((sig) => {
                   const selected = discoveryDraft.signalIds.includes(sig.id);
                   return (
@@ -1523,7 +1606,8 @@ export function Overview({
                   );
                 })}
               </div>
-            </div>
+              </div>
+            </details>
 
             <div className="rounded-xl border border-surface-border/50 bg-surface-muted/20 p-3">
               <p className="text-[10px] uppercase tracking-[0.1em] text-text-faint">Live Notes</p>
@@ -1708,7 +1792,9 @@ export function Overview({
             </div>
           )}
         </div>
-      </section>
+          </section>
+        </div>
+      )}
 
       {/* SECTION 3: DAILY ACCOUNT BRIEFING */}
       <section id="daily-account-briefing" className="scroll-mt-24 rounded-2xl border border-surface-border/50 bg-surface-elevated/30 p-4 sm:p-6">
@@ -1877,6 +1963,16 @@ export function Overview({
             className="rounded-lg border border-accent/30 bg-accent/[0.08] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-accent transition-colors hover:bg-accent/[0.14]"
           >
             Generate Account Brief
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveDossierTab("Snowflake POV");
+              setDiscoverySessionOpen(true);
+            }}
+            className="rounded-lg border border-accent/30 bg-accent/[0.08] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-accent transition-colors hover:bg-accent/[0.14]"
+          >
+            Run Discovery Session
           </button>
           <button
             type="button"
