@@ -187,7 +187,7 @@ export function Overview({
       {/* SECTION 2: PRIORITY ACCOUNTS */}
       <section id="priority-accounts" className="scroll-mt-24 space-y-4">
         <SectionHeader title="Priority Accounts" subtitle="Three accounts. Same core problem: data complexity outpacing decision-making." />
-        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {priorityAccounts.map((pa) => (
             <AccountCard
               key={pa.id}
