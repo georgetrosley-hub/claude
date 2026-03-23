@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { AppProvider, useApp } from "@/app/context/app-context";
 import { useTerritoryData } from "@/app/context/territory-data-context";
 import { Sidebar, type SectionId } from "@/components/layout/sidebar";
@@ -17,6 +18,7 @@ const ORDERED_SECTIONS: ReadonlyArray<{ sectionId: SectionId; anchorId: string }
 const ACTIVATION_OFFSET_PX = 120;
 
 function MainContent() {
+  const { data: session, status } = useSession();
   const [activeSection, setActiveSection] = useState<SectionId>("overview");
   const [chatOpen, setChatOpen] = useState(false);
   const [strategyPrompt, setStrategyPrompt] = useState<string | null>(null);
@@ -67,6 +69,34 @@ function MainContent() {
       onOpenStrategyWithPrompt={handleOpenChatWithPrompt}
     />
   );
+
+  if (status === "loading") {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-surface px-6 text-center text-sm text-content-secondary">
+        Checking your sign-in status...
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-surface px-6">
+        <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.02] p-8 text-center shadow-xl backdrop-blur">
+          <h1 className="text-xl font-semibold text-content-primary">Sign in required</h1>
+          <p className="mt-2 text-sm text-content-secondary">
+            Continue with Google to open your territory workspace.
+          </p>
+          <button
+            type="button"
+            onClick={() => signIn("google")}
+            className="mt-6 inline-flex items-center justify-center rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-sky-400"
+          >
+            Continue with Google
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     const scrollContainer = mainScrollRef.current;
@@ -182,6 +212,15 @@ function MainContent() {
           sidebarCollapsed={sidebarCollapsed}
           onToggleSidebar={() => setSidebarCollapsed((prev) => !prev)}
         />
+        <div className="absolute right-4 top-3 z-20 sm:right-6 sm:top-4">
+          <button
+            type="button"
+            onClick={() => signOut()}
+            className="rounded-md border border-white/20 bg-white/5 px-3 py-1.5 text-xs font-medium text-content-primary transition hover:bg-white/10"
+          >
+            Sign out
+          </button>
+        </div>
         <main
           ref={mainScrollRef as unknown as React.RefObject<HTMLElement>}
           className="relative flex-1 overflow-y-auto overflow-x-hidden px-6 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12 xl:px-16 xl:py-14"

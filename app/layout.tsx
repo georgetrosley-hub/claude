@@ -5,6 +5,7 @@ import { ApiKeyProvider } from "@/app/context/api-key-context";
 import { ThemeProvider } from "@/app/context/theme-context";
 import { ToastProvider } from "@/app/context/toast-context";
 import { TerritoryDataProvider } from "@/app/context/territory-data-context";
+import { Providers } from "@/app/providers";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -84,13 +85,15 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
-        <ThemeProvider>
-          <ApiKeyProvider>
-            <TerritoryDataProvider>
-              <ToastProvider>{children}</ToastProvider>
-            </TerritoryDataProvider>
-          </ApiKeyProvider>
-        </ThemeProvider>
+        <Providers>
+          <ThemeProvider>
+            <ApiKeyProvider>
+              <TerritoryDataProvider>
+                <ToastProvider>{children}</ToastProvider>
+              </TerritoryDataProvider>
+            </ApiKeyProvider>
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );

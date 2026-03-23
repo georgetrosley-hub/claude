@@ -31,11 +31,6 @@ type Task = {
   status: "open" | "in_progress" | "done";
 };
 
-type IntegrationStatusResponse = {
-  generatedAt: string;
-  integrations: Record<string, { configured: boolean; mode: string; required: string[] }>;
-};
-
 const CONTACTS_KEY = "ops-hub-contacts-v1";
 const NOTES_KEY = "ops-hub-notes-v1";
 const TASKS_KEY = "ops-hub-tasks-v1";
@@ -77,7 +72,6 @@ export function OperationsHub({
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [integrationStatus, setIntegrationStatus] = useState<IntegrationStatusResponse | null>(null);
 
   const [contactForm, setContactForm] = useState({
     name: "",
@@ -101,21 +95,6 @@ export function OperationsHub({
   useEffect(() => writeLocal(CONTACTS_KEY, contacts), [contacts]);
   useEffect(() => writeLocal(NOTES_KEY, notes), [notes]);
   useEffect(() => writeLocal(TASKS_KEY, tasks), [tasks]);
-
-  useEffect(() => {
-    let isMounted = true;
-    fetch("/api/integrations/status")
-      .then((r) => r.json())
-      .then((data: IntegrationStatusResponse) => {
-        if (isMounted) setIntegrationStatus(data);
-      })
-      .catch(() => {
-        if (isMounted) setIntegrationStatus(null);
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   const accountContacts = useMemo(
     () => contacts.filter((c) => c.accountId === accountId),
@@ -331,7 +310,7 @@ export function OperationsHub({
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div className="mt-4">
         <div className="rounded-xl border border-surface-border/50 bg-surface-muted/20 p-3">
           <p className="text-[11px] font-semibold uppercase text-text-faint">Unified execution feed</p>
           <ul className="mt-2 space-y-1.5 text-[12px] text-text-secondary">
@@ -342,26 +321,6 @@ export function OperationsHub({
               </li>
             ))}
             {!feed.length && <li className="text-text-faint">No activity yet.</li>}
-          </ul>
-        </div>
-
-        <div className="rounded-xl border border-surface-border/50 bg-surface-muted/20 p-3">
-          <p className="text-[11px] font-semibold uppercase text-text-faint">Integration status</p>
-          <p className="mt-1 text-[11px] text-text-faint">
-            Connector APIs are live. Add credentials as env vars to activate.
-          </p>
-          <ul className="mt-2 space-y-1.5 text-[12px] text-text-secondary">
-            {(integrationStatus ? Object.entries(integrationStatus.integrations) : []).map(
-              ([name, config]) => (
-                <li key={name} className="flex items-center justify-between rounded border border-surface-border/30 px-2 py-1.5">
-                  <span>{name}</span>
-                  <span className={config.configured ? "text-emerald-300" : "text-amber-300"}>
-                    {config.configured ? "configured" : "not configured"}
-                  </span>
-                </li>
-              )
-            )}
-            {!integrationStatus && <li className="text-text-faint">Status unavailable.</li>}
           </ul>
         </div>
       </div>
