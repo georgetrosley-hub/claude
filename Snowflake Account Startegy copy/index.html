@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Territory Operating System | Snowflake Enterprise AE</title>
+  <meta name="description" content="Snowflake Territory Operating System — Enterprise AE account command center for CIENA, Sagent, and U.S. Financial Technology.">
+  <link rel="icon" type="image/png" href="assets/snowflake-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Cortex AI Sidebar -->
+  <aside class="cortex-sidebar" id="cortexSidebar" aria-hidden="true">
+    <div class="sidebar-header">
+      <img src="assets/snowflake-logo.png" alt="Snowflake" class="sidebar-logo">
+      <h2 class="sidebar-title">Cortex AI</h2>
+      <button type="button" class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">&times;</button>
+    </div>
+
+    <div class="sidebar-content">
+      <div class="api-key-section">
+        <label for="claudeApiKey" class="api-key-label">Claude API Key</label>
+        <p class="api-key-hint">Store locally to enable AI-powered strategy suggestions.</p>
+        <div class="api-key-input-wrap">
+          <input type="password" id="claudeApiKey" class="api-key-input" placeholder="sk-ant-..." autocomplete="off">
+          <button type="button" class="btn-save-key" id="saveApiKey">Save</button>
+        </div>
+        <p class="api-key-status" id="apiKeyStatus"></p>
+      </div>
+
+      <div class="strategy-section">
+        <h3 class="strategy-heading">Strategy Assistant</h3>
+        <p class="strategy-desc">Ask Claude to help strategize based on your territory data.</p>
+        <textarea id="strategyPrompt" class="strategy-input" placeholder="e.g., What's the best approach to prioritize outreach to Ciena this week based on recent signals? Or: Suggest next actions for Sagent given their Dara rollout." rows="4"></textarea>
+        <button type="button" class="btn-primary btn-strategy" id="askStrategy">
+          <img src="assets/snowflake-logo.png" alt="" class="btn-strategy-icon">
+          Get Strategy
+        </button>
+        <div class="strategy-output" id="strategyOutput"></div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <div class="app">
+    <!-- Cortex-style top nav -->
+    <nav class="top-nav">
+      <div class="nav-inner">
+        <a href="https://www.snowflake.com" target="_blank" rel="noopener" class="logo">
+          <img src="assets/snowflake-logo.png" alt="Snowflake" class="logo-img">
+          <span class="logo-text">Snowflake<sup>®</sup></span>
+        </a>
+        <div class="nav-links">
+          <span class="nav-label">Territory</span>
+          <a href="#accounts" class="nav-link">Priority Accounts</a>
+          <a href="#briefing" class="nav-link">Briefing</a>
+          <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode" title="Toggle theme">
+            <span class="theme-icon light-icon" aria-hidden="true">☀️</span>
+            <span class="theme-icon dark-icon" aria-hidden="true">🌙</span>
+          </button>
+          <button type="button" class="btn-sidebar-toggle" id="sidebarToggle" aria-label="Open Cortex AI sidebar">
+            <img src="assets/snowflake-logo.png" alt="" class="toggle-logo">
+            <span>Cortex AI</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero - Cortex style -->
+    <header class="hero">
+      <p class="hero-label">Feature</p>
+      <h1 class="hero-title">Territory Operating System</h1>
+      <p class="hero-desc">Track activity, signals, and next actions across three priority accounts. Land expansion workloads, prove value quickly, and expand based on what the business actually needs—all within a single command center.</p>
+      <p class="hero-meta">Enterprise AE · CIENA · Sagent · U.S. Financial Technology · Last updated: <span id="lastUpdated"></span></p>
+    </header>
+
+    <!-- Easy | Connected | Trusted - Cortex three-column -->
+    <section class="value-props">
+      <div class="value-card">
+        <div class="value-icon"><img src="assets/snowflake-logo.png" alt="" aria-hidden="true"></div>
+        <h3 class="value-title">Focused</h3>
+        <p class="value-desc">One narrow workload per account. Proof points achievable in days, not months.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon"><img src="assets/snowflake-logo.png" alt="" aria-hidden="true"></div>
+        <h3 class="value-title">Execution-driven</h3>
+        <p class="value-desc">Use Snowflake data and direct conversations to identify where to expand.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon"><img src="assets/snowflake-logo.png" alt="" aria-hidden="true"></div>
+        <h3 class="value-title">Hypothesis-led</h3>
+        <p class="value-desc">Every motion validates a hypothesis quickly—not assume one.</p>
+      </div>
+    </section>
+
+    <!-- Priority Accounts - Cortex feature cards -->
+    <section class="section" id="accounts">
+      <h2 class="section-label">Priority Accounts</h2>
+      <h3 class="section-headline">Three accounts. Same core problem: data complexity outpacing decision-making.</h3>
+      <div class="feature-cards" id="accountCards"></div>
+    </section>
+
+    <!-- This Week's Priorities -->
+    <section class="section" id="briefing">
+      <h2 class="section-label">This Week's Operating Priorities</h2>
+      <div class="action-cards">
+        <ul class="action-list" id="next7Days"></ul>
+      </div>
+    </section>
+
+    <!-- Activity & Signals - Cortex feature grid -->
+    <section class="section">
+      <h2 class="section-label">Activity & Signals</h2>
+      <div class="two-col">
+        <div class="feature-block">
+          <h4 class="block-title">Activity Feed</h4>
+          <p class="block-desc">Log outreach, meetings, and milestones. Connect to CRM post-onboarding.</p>
+          <div class="activity-feed" id="activityFeed"></div>
+          <form class="add-activity" id="addActivityForm">
+            <input type="text" placeholder="Log activity (e.g., Email sent to Ciena CFO...)" id="activityInput" required>
+            <select id="activityAccount">
+              <option value="ciena">Ciena</option>
+              <option value="sagent">Sagent</option>
+              <option value="usfintech">U.S. Fin Tech</option>
+            </select>
+            <button type="submit" class="btn-primary">Add</button>
+          </form>
+        </div>
+        <div class="feature-block">
+          <h4 class="block-title">Signal Tracker</h4>
+          <p class="block-desc">Curated news: executive moves, earnings, product launches.</p>
+          <div class="signal-tracker" id="signalTracker"></div>
+          <form class="add-signal" id="addSignalForm">
+            <input type="text" placeholder="Add signal (e.g., Ciena raised Q3 guidance...)" id="signalInput" required>
+            <select id="signalAccount">
+              <option value="ciena">Ciena</option>
+              <option value="sagent">Sagent</option>
+              <option value="usfintech">U.S. Fin Tech</option>
+            </select>
+            <button type="submit" class="btn-primary">Add</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Consumption Snapshot -->
+    <section class="section">
+      <h2 class="section-label">Consumption Snapshot</h2>
+      <p class="section-desc">Snowflake usage trends—connect to internal APIs post-onboarding.</p>
+      <div class="consumption-cards" id="consumptionSnapshot"></div>
+    </section>
+
+    <!-- Resources - Cortex style -->
+    <section class="resources">
+      <h2 class="section-label">Resources</h2>
+      <div class="resource-links">
+        <a href="https://www.snowflake.com/en/product/features/cortex/" target="_blank" rel="noopener" class="resource-link">Snowflake Cortex AI</a>
+        <a href="https://www.snowflake.com/brand-guidelines/" target="_blank" rel="noopener" class="resource-link">Brand Guidelines</a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="assets/snowflake-logo.png" alt="Snowflake" class="footer-logo">
+          <span class="footer-copy">© 2025 Snowflake Inc. All Rights Reserved</span>
+        </div>
+        <nav class="footer-links">
+          <a href="https://www.snowflake.com" target="_blank" rel="noopener">snowflake.com</a>
+          <a href="https://www.snowflake.com/en/legal/privacy/privacy-policy/" target="_blank" rel="noopener">Privacy</a>
+        </nav>
+      </div>
+    </footer>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
