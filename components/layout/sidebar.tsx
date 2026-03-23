@@ -10,13 +10,10 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   X,
-  Newspaper,
-  ClipboardCheck,
+  CircleDot,
   BookOpenCheck,
-  Users,
-  ClipboardList,
-  BarChart3,
-  History,
+  ListChecks,
+  Sparkles,
 } from "lucide-react";
 
 const sectionGroups = [
@@ -24,14 +21,14 @@ const sectionGroups = [
     label: "Territory execution",
     items: [
       { id: "overview", label: "Overview", icon: LayoutDashboard },
-      { id: "accountIntelligence", label: "Account Intelligence", icon: Users },
       { id: "priorityAccounts", label: "Priority Accounts", icon: Target },
+      { id: "accountHeader", label: "Account Header", icon: CircleDot },
+      { id: "whyThisAccountMatters", label: "Why This Account Matters", icon: ListChecks },
+      { id: "recommendedMotion", label: "Recommended Motion", icon: Sparkles },
+      { id: "whatToConfirmFirst", label: "What to Confirm First", icon: ListChecks },
       { id: "povPlan", label: "POV Plan", icon: BookOpenCheck },
-      { id: "thisWeeksPriorities", label: "Weekly Briefing", icon: Newspaper },
-      { id: "dealProgression", label: "Deal Progress", icon: ClipboardList },
-      { id: "pipeline", label: "Pipeline", icon: BarChart3 },
-      { id: "accountLog", label: "Account Log", icon: History },
-      { id: "recentSignals", label: "Recent Signals", icon: ClipboardCheck },
+      { id: "executionActions", label: "Execution Actions", icon: Sparkles },
+      { id: "recommendedNextAction", label: "Recommended Next Action", icon: CircleDot },
     ],
   },
 ] as const;

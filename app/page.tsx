@@ -10,14 +10,14 @@ import { Overview } from "@/components/sections/overview";
 
 const ORDERED_SECTIONS: ReadonlyArray<{ sectionId: SectionId; anchorId: string }> = [
   { sectionId: "overview", anchorId: "overview" },
-  { sectionId: "accountIntelligence", anchorId: "account-intelligence" },
   { sectionId: "priorityAccounts", anchorId: "priority-accounts" },
+  { sectionId: "accountHeader", anchorId: "account-header" },
+  { sectionId: "whyThisAccountMatters", anchorId: "why-this-account-matters" },
+  { sectionId: "recommendedMotion", anchorId: "recommended-motion" },
+  { sectionId: "whatToConfirmFirst", anchorId: "what-to-confirm-first" },
   { sectionId: "povPlan", anchorId: "pov-plan" },
-  { sectionId: "thisWeeksPriorities", anchorId: "this-weeks-priorities" },
-  { sectionId: "dealProgression", anchorId: "deal-progression" },
-  { sectionId: "pipeline", anchorId: "pipeline" },
-  { sectionId: "accountLog", anchorId: "account-log" },
-  { sectionId: "recentSignals", anchorId: "recent-signals" },
+  { sectionId: "executionActions", anchorId: "execution-actions" },
+  { sectionId: "recommendedNextAction", anchorId: "recommended-next-action" },
 ] as const;
 const ACTIVATION_OFFSET_PX = 120;
 
@@ -69,8 +69,6 @@ function MainContent() {
     <Overview
       account={account}
       onSelectAccount={handleAccountChange}
-      onOpenStrategy={handleOpenChat}
-      onOpenStrategyWithPrompt={handleOpenChatWithPrompt}
     />
   );
 
