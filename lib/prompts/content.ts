@@ -179,4 +179,72 @@ Generate a targeted expansion pitch for a specific department within the account
 **Expected ARR:** What this expansion is worth
 
 Make it specific to the department and account. Generic pitches don't expand footprint.`,
+
+  ae_account_brief: `${BASE_SYSTEM_PROMPT}
+
+Produce an **Account Brief** for internal AE use during a live review. This is not customer-facing.
+
+Requirements:
+- Keep it tight: aim for ~180–260 words total.
+- Use markdown with clear section headings.
+- Separate **Facts we believe** vs **Open questions to validate** vs **Recommended next moves (7 days)**.
+- Name stakeholders only as roles if names are unknown.
+- Tie recommendations to Snowflake expansion mechanics: governed workloads, consumption expansion, procurement/security cadence.
+- Call out Databricks or incumbent risk explicitly when relevant.
+
+Do not use marketing language. Write like a territory operator.`,
+
+  ae_discovery_questions: `${BASE_SYSTEM_PROMPT}
+
+Generate **Discovery Questions** for the next executive or technical conversation.
+
+Requirements:
+- Output markdown.
+- Provide **6–8 questions**, grouped by intent: Business outcome · Governance & risk · Technical reality · Expansion criteria.
+- Each question should be one line, specific to this account, and hard to answer with a generic vendor pitch.
+- Add a short **Listening guide** (4 bullets): what good vs bad answers imply for the deal.
+- No filler intros.`,
+
+  ae_pov_plan: `${BASE_SYSTEM_PROMPT}
+
+Create a **POV Plan** (proof of value) that turns hypothesis into a sequenced execution path.
+
+Requirements:
+- Markdown with sections: **Hypothesis · Success metrics · Scope boundaries · 30/60/90 checkpoints · Exit criteria · Competitive landmines**.
+- Keep each section concise (bullets preferred).
+- Include **explicit decision points** (who decides, what evidence unlocks the next phase).
+- Reference Snowflake capabilities only where they map to measurable outcomes.
+
+This should read like a working plan, not a slide outline.`,
+
+  ae_signals_summary: `${BASE_SYSTEM_PROMPT}
+
+Summarize **recent signals** into an operator briefing.
+
+Requirements:
+- The user message will include a timeline of signals and activities; treat them as unverified inputs.
+- Output markdown: **Signal themes · What changed · Implications for Snowflake · Suggested actions (next 48–72h) · Risks if ignored**.
+- Prioritize signal density over completeness.
+- If inputs are thin, say what you need to collect and where to look (CRM, earnings, public filings) without inventing facts.`,
+
+  ae_exec_followup: `${BASE_SYSTEM_PROMPT}
+
+Draft an **Executive follow-up** the AE can send after a meeting.
+
+Requirements:
+- Output markdown with **Subject line** and **Body**.
+- Tone: crisp, respectful, action-oriented. No hype.
+- Reflect account context: restate 1–2 shared priorities, propose a concrete next step with owner + date, and include a single ask.
+- Keep under ~220 words in the body.
+- Offer an optional **Internal note** block (3 bullets) for the rep only: risks to monitor.`,
+
+  ae_stakeholder_map: `${BASE_SYSTEM_PROMPT}
+
+Map **likely stakeholders** for this opportunity.
+
+Requirements:
+- Markdown table or bullet matrix with columns: **Role · Likely stance (ally/neutral/blocker/unknown) · What they optimize for · What they need to hear · Next touch**.
+- Provide **6–10 rows** prioritized by influence on the buying decision.
+- Be explicit about unknowns and how to validate quickly (who to ask, what artifact to request).
+- Avoid generic personas; tie to this account’s industry and stated blockers.`,
 };
