@@ -8,6 +8,8 @@ import {
   Check,
   Clipboard,
   Loader2,
+  Play,
+  RefreshCw,
   Workflow,
 } from "lucide-react";
 import { useApiKey } from "@/app/context/api-key-context";
@@ -37,43 +39,56 @@ const PROMPT_TYPE: Record<ActionId, string> = {
   stakeholder_map: "ae_stakeholder_map",
 };
 
-type PhaseConfig = {
-  id: PhaseId;
+type ActionDef = {
+  id: ActionId;
   label: string;
-  hint: string;
-  actions: { id: ActionId; label: string }[];
+  tab: string;
+  phase: PhaseId;
 };
 
-const PHASES: PhaseConfig[] = [
+const ACTIONS: ActionDef[] = [
+  { id: "account_brief", label: "Generate Account Brief", tab: "Brief", phase: "brief" },
   {
-    id: "brief",
-    label: "Brief",
-    hint: "Orientation",
-    actions: [{ id: "account_brief", label: "Generate Account Brief" }],
+    id: "discovery_questions",
+    label: "Generate Discovery Questions",
+    tab: "Discovery",
+    phase: "discovery",
+  },
+  { id: "pov_plan", label: "Generate POV Plan", tab: "POV", phase: "pov" },
+  {
+    id: "signals_summary",
+    label: "Summarize Recent Signals",
+    tab: "Signals",
+    phase: "expansion",
   },
   {
-    id: "discovery",
-    label: "Discovery",
-    hint: "Qualification",
-    actions: [{ id: "discovery_questions", label: "Generate Discovery Questions" }],
+    id: "exec_followup",
+    label: "Draft Executive Follow Up",
+    tab: "Follow-up",
+    phase: "expansion",
   },
   {
-    id: "pov",
-    label: "POV",
-    hint: "Proof path",
-    actions: [{ id: "pov_plan", label: "Generate POV Plan" }],
-  },
-  {
-    id: "expansion",
-    label: "Expansion",
-    hint: "Momentum",
-    actions: [
-      { id: "signals_summary", label: "Summarize Recent Signals" },
-      { id: "exec_followup", label: "Draft Executive Follow Up" },
-      { id: "stakeholder_map", label: "Map Likely Stakeholders" },
-    ],
+    id: "stakeholder_map",
+    label: "Map Likely Stakeholders",
+    tab: "Stakeholders",
+    phase: "expansion",
   },
 ];
+
+const PHASE_ORDER: { id: PhaseId; label: string }[] = [
+  { id: "brief", label: "Brief" },
+  { id: "discovery", label: "Discovery" },
+  { id: "pov", label: "POV" },
+  { id: "expansion", label: "Expansion" },
+];
+
+function phaseComplete(
+  phase: PhaseId,
+  outputs: Partial<Record<ActionId, string>>
+): boolean {
+  const ids = ACTIONS.filter((a) => a.phase === phase).map((a) => a.id);
+  return ids.every((id) => Boolean(outputs[id]?.trim()));
+}
 
 function buildTerritoryContext(
   priority: PriorityAccount | undefined,
@@ -127,7 +142,10 @@ const mdComponents = {
     <h1 className="mt-3 first:mt-0 text-[13px] font-semibold text-text-primary" {...props} />
   ),
   h2: (props: React.ComponentPropsWithoutRef<"h2">) => (
-    <h2 className="mt-3 first:mt-0 text-[12px] font-semibold uppercase tracking-[0.08em] text-text-faint" {...props} />
+    <h2
+      className="mt-3 first:mt-0 text-[11px] font-semibold uppercase tracking-[0.1em] text-text-faint"
+      {...props}
+    />
   ),
   h3: (props: React.ComponentPropsWithoutRef<"h3">) => (
     <h3 className="mt-2 first:mt-0 text-[12px] font-semibold text-text-primary" {...props} />
@@ -182,8 +200,7 @@ export function AccountExecutionPanel() {
     [priority, account.id, signals, activities]
   );
 
-  const [phase, setPhase] = useState<PhaseId>("brief");
-  const [activeAction, setActiveAction] = useState<ActionId | null>(null);
+  const [viewing, setViewing] = useState<ActionId | null>(null);
   const [outputs, setOutputs] = useState<Partial<Record<ActionId, string>>>({});
   const [loading, setLoading] = useState<ActionId | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -192,20 +209,19 @@ export function AccountExecutionPanel() {
   useEffect(() => {
     abortRef.current?.abort();
     setOutputs({});
-    setActiveAction(null);
+    setViewing(null);
     setLoading(null);
     setError(null);
-    setPhase("brief");
   }, [account.id]);
 
-  const phaseActions = useMemo(
-    () => PHASES.find((p) => p.id === phase)?.actions ?? [],
-    [phase]
+  const readyCount = useMemo(
+    () => ACTIONS.filter((a) => Boolean(outputs[a.id]?.trim())).length,
+    [outputs]
   );
 
   const runAction = useCallback(
     async (actionId: ActionId) => {
-      setActiveAction(actionId);
+      setViewing(actionId);
       setError(null);
       abortRef.current?.abort();
       const controller = new AbortController();
@@ -256,6 +272,7 @@ export function AccountExecutionPanel() {
               const parsed = JSON.parse(data) as { text?: string };
               if (parsed.text) {
                 assembled += parsed.text;
+                setOutputs((prev) => ({ ...prev, [actionId]: assembled }));
               }
             } catch {
               // skip malformed frames
@@ -289,13 +306,28 @@ export function AccountExecutionPanel() {
     [outputs, showToast]
   );
 
-  const activeOutput = activeAction ? outputs[activeAction] : null;
+  const selectAction = useCallback((id: ActionId) => {
+    setViewing(id);
+    setError(null);
+  }, []);
+
+  const activeDef = viewing ? ACTIONS.find((a) => a.id === viewing) : null;
+  const activeOutput = viewing ? outputs[viewing] : null;
   const isLoading = loading !== null;
+  const loadingThis = viewing && loading === viewing;
+
+  const tabTargets = useMemo(() => {
+    const withContent = ACTIONS.filter((a) => outputs[a.id]?.trim());
+    if (viewing && !withContent.find((a) => a.id === viewing)) {
+      return [...withContent, ACTIONS.find((a) => a.id === viewing)!];
+    }
+    return withContent;
+  }, [outputs, viewing]);
 
   return (
     <section
       className="scroll-mt-24 rounded-2xl border border-surface-border/50 bg-surface-elevated/35 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]"
-      aria-label="Account workflow execution"
+      aria-label="Account execution workspace"
     >
       <div className="border-b border-surface-border/40 px-4 py-3 sm:px-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
@@ -305,167 +337,256 @@ export function AccountExecutionPanel() {
             </div>
             <div className="min-w-0">
               <h2 className="text-[14px] font-semibold tracking-tight text-text-primary">
-                Account workflow
+                Execution workspace
               </h2>
-              <p className="mt-0.5 text-[11px] text-text-muted">
-                Structured runs for reviews—brief → discovery → POV → expansion.
+              <p className="mt-0.5 max-w-xl text-[11px] leading-snug text-text-muted">
+                Structured artifacts for live reviews—brief, discovery, POV, then expansion motions. Select a
+                step, run when ready, switch tabs to compare outputs.
               </p>
             </div>
           </div>
-          <div className="rounded-full border border-surface-border/50 bg-surface-muted/25 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.1em] text-text-faint">
-            {account.name}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-full border border-surface-border/50 bg-surface-muted/25 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.08em] text-text-faint">
+              {account.name}
+            </span>
+            <span className="rounded-full border border-surface-border/40 px-2.5 py-1 text-[10px] font-medium tabular-nums text-text-muted">
+              {readyCount}/{ACTIONS.length} ready
+            </span>
           </div>
         </div>
 
         {!hasApiKey && (
           <p className="mt-3 rounded-lg border border-accent/20 bg-accent/[0.06] px-3 py-2 text-[11px] text-accent/95">
-            Add your API key in the header to generate outputs. Saved results stay in this session until refreshed.
+            Add your API key in the header to generate artifacts. Results stay in this session until you
+            refresh or change accounts.
           </p>
         )}
+
+        <div className="mt-4 flex flex-wrap items-center gap-1.5 sm:gap-2" aria-hidden>
+          {PHASE_ORDER.map((p, i) => {
+            const complete = phaseComplete(p.id, outputs);
+            return (
+              <div key={p.id} className="flex items-center gap-1.5 sm:gap-2">
+                {i > 0 && (
+                  <span className="hidden h-px w-4 bg-surface-border/50 sm:block sm:w-6" />
+                )}
+                <div
+                  className={cn(
+                    "flex items-center gap-1.5 rounded-md border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em]",
+                    complete
+                      ? "border-emerald-500/25 bg-emerald-500/[0.07] text-emerald-300/95"
+                      : "border-surface-border/45 bg-surface-muted/20 text-text-faint"
+                  )}
+                >
+                  {complete ? (
+                    <Check className="h-3 w-3 shrink-0" strokeWidth={2.4} />
+                  ) : (
+                    <span className="flex h-3 w-3 items-center justify-center rounded-full border border-surface-border/60 text-[8px] text-text-faint">
+                      {i + 1}
+                    </span>
+                  )}
+                  {p.label}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="grid gap-0 lg:grid-cols-[220px_1fr] lg:divide-x lg:divide-surface-border/40">
-        <div className="p-4 sm:p-5">
-          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-faint">Phase</p>
-          <div className="mt-2 flex gap-1 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible">
-            {PHASES.map((p) => {
-              const isActive = phase === p.id;
+      <div className="grid gap-0 lg:grid-cols-[minmax(200px,248px)_1fr] lg:divide-x lg:divide-surface-border/40">
+        <div className="max-h-[min(52vh,420px)] overflow-y-auto p-3 sm:p-4 lg:max-h-none lg:overflow-visible">
+          <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-faint">Workflow</p>
+          <div className="mt-2 space-y-4">
+            {PHASE_ORDER.map((phase) => {
+              const phaseActions = ACTIONS.filter((a) => a.phase === phase.id);
               return (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => setPhase(p.id)}
-                  className={cn(
-                    "flex min-w-[132px] flex-col rounded-lg px-3 py-2 text-left transition-colors lg:min-w-0",
-                    isActive
-                      ? "border border-accent/30 bg-accent/[0.08]"
-                      : "border border-transparent hover:bg-surface-muted/30"
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "text-[12px] font-semibold",
-                      isActive ? "text-accent" : "text-text-secondary"
-                    )}
-                  >
-                    {p.label}
-                  </span>
-                  <span className="text-[10px] text-text-faint">{p.hint}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          <p className="mt-5 text-[10px] font-medium uppercase tracking-[0.14em] text-text-faint">Actions</p>
-          <div className="mt-2 space-y-1.5">
-            {phaseActions.map((a) => {
-              const done = Boolean(outputs[a.id]);
-              const running = loading === a.id;
-              const selected = activeAction === a.id;
-              return (
-                <button
-                  key={a.id}
-                  type="button"
-                  onClick={() => {
-                    setActiveAction(a.id);
-                    void runAction(a.id);
-                  }}
-                  disabled={isLoading}
-                  className={cn(
-                    "flex w-full items-center justify-between gap-2 rounded-lg border px-3 py-2 text-left text-[11px] font-medium transition-colors",
-                    selected
-                      ? "border-accent/35 bg-accent/[0.07] text-text-primary"
-                      : "border-surface-border/45 bg-surface-muted/20 text-text-secondary hover:border-accent/25",
-                    isLoading && !running && "opacity-60"
-                  )}
-                >
-                  <span className="min-w-0 leading-snug">{a.label}</span>
-                  <span className="flex shrink-0 items-center gap-1">
-                    {running && <Loader2 className="h-3.5 w-3.5 animate-spin text-accent" />}
-                    {done && !running && <Check className="h-3.5 w-3.5 text-emerald-400/90" strokeWidth={2.2} />}
-                  </span>
-                </button>
+                <div key={phase.id}>
+                  <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-text-faint/90">
+                    {phase.label}
+                  </p>
+                  <div className="mt-1.5 space-y-1">
+                    {phaseActions.map((a) => {
+                      const done = Boolean(outputs[a.id]?.trim());
+                      const running = loading === a.id;
+                      const selected = viewing === a.id;
+                      return (
+                        <button
+                          key={a.id}
+                          type="button"
+                          onClick={() => selectAction(a.id)}
+                          className={cn(
+                            "flex w-full items-start justify-between gap-2 rounded-lg border px-2.5 py-2 text-left text-[11px] font-medium transition-colors",
+                            selected
+                              ? "border-accent/35 bg-accent/[0.07] text-text-primary"
+                              : "border-surface-border/40 bg-surface-muted/15 text-text-secondary hover:border-accent/20",
+                            running && "ring-1 ring-accent/25"
+                          )}
+                        >
+                          <span className="min-w-0 leading-snug">{a.label}</span>
+                          <span className="flex shrink-0 items-center gap-1 pt-0.5">
+                            {running && (
+                              <Loader2 className="h-3.5 w-3.5 animate-spin text-accent" aria-hidden />
+                            )}
+                            {done && !running && (
+                              <Check className="h-3.5 w-3.5 text-emerald-400/90" strokeWidth={2.2} aria-hidden />
+                            )}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               );
             })}
           </div>
         </div>
 
-        <div className="min-h-[280px] p-4 sm:p-5">
-          {!activeAction && (
-            <div className="flex h-full min-h-[240px] flex-col justify-center rounded-xl border border-dashed border-surface-border/55 bg-surface-muted/15 px-4 py-8 text-center">
-              <p className="text-[13px] font-medium text-text-primary">Select a workflow step</p>
-              <p className="mx-auto mt-2 max-w-md text-[12px] leading-relaxed text-text-muted">
-                Choose a phase, then run an action. Output is formatted for fast scanning, CRM notes, and follow-up drafts.
-              </p>
+        <div className="flex min-h-[300px] flex-col border-t border-surface-border/35 lg:border-t-0">
+          {!viewing && (
+            <div className="flex flex-1 flex-col justify-center px-4 py-10 sm:px-6">
+              <div className="mx-auto w-full max-w-md rounded-xl border border-dashed border-surface-border/55 bg-surface-muted/[0.12] px-5 py-8 text-center">
+                <p className="text-[13px] font-medium text-text-primary">No artifact selected</p>
+                <p className="mx-auto mt-2 max-w-sm text-[12px] leading-relaxed text-text-muted">
+                  Pick a workflow step on the left to preview or generate territory-specific briefs, discovery
+                  prompts, POV plans, and expansion follow-through. Built for fast scanning and CRM paste.
+                </p>
+              </div>
             </div>
           )}
 
-          {activeAction && (
-            <div className="flex h-full flex-col rounded-xl border border-surface-border/45 bg-surface-muted/10">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-surface-border/35 px-3 py-2 sm:px-4">
-                <div className="min-w-0">
-                  <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-text-faint">Output</p>
-                  <p className="truncate text-[12px] font-semibold text-text-primary">
-                    {phaseActions.find((a) => a.id === activeAction)?.label ?? activeAction}
-                  </p>
+          {viewing && activeDef && (
+            <>
+              <div className="border-b border-surface-border/35 px-3 py-2 sm:px-4">
+                {tabTargets.length > 0 && (
+                  <div className="mb-2 flex gap-1 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                    {tabTargets.map((t) => {
+                      const active = viewing === t.id;
+                      const has = Boolean(outputs[t.id]?.trim());
+                      return (
+                        <button
+                          key={t.id}
+                          type="button"
+                          onClick={() => selectAction(t.id)}
+                          className={cn(
+                            "shrink-0 rounded-md border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors",
+                            active
+                              ? "border-accent/35 bg-accent/[0.1] text-accent"
+                              : "border-transparent bg-surface-muted/25 text-text-muted hover:border-surface-border/50",
+                            has && !active && "text-text-secondary"
+                          )}
+                        >
+                          {t.tab}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-text-faint">Artifact</p>
+                    <p className="truncate text-[12px] font-semibold text-text-primary">{activeDef.label}</p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => void copyOutput(viewing)}
+                      disabled={!activeOutput || loadingThis}
+                      className={cn(
+                        "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors",
+                        activeOutput && !loadingThis
+                          ? "border-surface-border/50 bg-surface-muted/25 text-text-secondary hover:border-accent/25 hover:text-text-primary"
+                          : "cursor-not-allowed border-surface-border/35 text-text-faint"
+                      )}
+                    >
+                      <Clipboard className="h-3.5 w-3.5" strokeWidth={2} />
+                      Copy
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void runAction(viewing)}
+                      disabled={!hasApiKey || isLoading}
+                      className={cn(
+                        "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors",
+                        hasApiKey && !isLoading
+                          ? "border-accent/30 bg-accent/[0.1] text-accent hover:bg-accent/[0.14]"
+                          : "cursor-not-allowed border-surface-border/40 text-text-faint"
+                      )}
+                    >
+                      {activeOutput ? (
+                        <>
+                          <RefreshCw className="h-3.5 w-3.5" strokeWidth={2} />
+                          Regenerate
+                        </>
+                      ) : (
+                        <>
+                          <Play className="h-3.5 w-3.5" strokeWidth={2} />
+                          Run
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => void copyOutput(activeAction)}
-                  disabled={!activeOutput || isLoading}
-                  className={cn(
-                    "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors",
-                    activeOutput && !isLoading
-                      ? "border-accent/25 bg-accent/[0.08] text-accent hover:bg-accent/[0.12]"
-                      : "cursor-not-allowed border-surface-border/40 text-text-faint"
-                  )}
-                >
-                  <Clipboard className="h-3.5 w-3.5" strokeWidth={2} />
-                  Copy
-                </button>
               </div>
 
-              {isLoading && loading === activeAction && (
-                <div className="relative h-0.5 w-full overflow-hidden bg-surface-border/40">
+              {loadingThis && (
+                <div className="relative h-0.5 w-full overflow-hidden bg-surface-border/35">
                   <motion.div
-                    className="absolute inset-y-0 w-1/3 bg-accent/35"
+                    className="absolute inset-y-0 w-[28%] bg-gradient-to-r from-transparent via-accent/45 to-transparent"
                     initial={false}
-                    animate={{ x: ["-100%", "320%"] }}
-                    transition={{ duration: 1.15, repeat: Infinity, ease: "linear" }}
+                    animate={{ x: ["-30%", "380%"] }}
+                    transition={{ duration: 1.25, repeat: Infinity, ease: "linear" }}
                   />
                 </div>
               )}
 
-              <div className="max-h-[min(420px,55vh)] flex-1 overflow-y-auto px-3 py-3 sm:px-4 sm:py-4">
+              <div className="max-h-[min(440px,56vh)] flex-1 overflow-y-auto px-3 py-3 sm:px-4 sm:py-4">
                 {error && (
                   <p className="rounded-lg border border-rose-400/25 bg-rose-500/[0.08] px-3 py-2 text-[12px] text-rose-200/95">
                     {error}
                   </p>
                 )}
 
-                {isLoading && loading === activeAction && !activeOutput && (
-                  <div className="space-y-2 pt-1" aria-busy>
-                    <div className="h-2.5 w-2/3 animate-pulse rounded bg-surface-muted/60" />
-                    <div className="h-2.5 w-full animate-pulse rounded bg-surface-muted/50" />
-                    <div className="h-2.5 w-5/6 animate-pulse rounded bg-surface-muted/45" />
-                    <div className="h-2.5 w-4/6 animate-pulse rounded bg-surface-muted/40" />
-                    <p className="pt-2 text-[11px] text-text-faint">Generating structured output…</p>
+                {loadingThis && !activeOutput && (
+                  <div className="space-y-3 pt-1" aria-busy>
+                    <div className="space-y-2 rounded-lg border border-surface-border/35 bg-surface-muted/10 p-3">
+                      <div className="h-2 w-1/3 rounded bg-surface-muted/55" />
+                      <div className="h-2 w-full rounded bg-surface-muted/45" />
+                      <div className="h-2 w-5/6 rounded bg-surface-muted/40" />
+                    </div>
+                    <div className="space-y-2 rounded-lg border border-surface-border/35 bg-surface-muted/10 p-3">
+                      <div className="h-2 w-2/5 rounded bg-surface-muted/50" />
+                      <div className="h-2 w-full rounded bg-surface-muted/38" />
+                      <div className="h-2 w-4/5 rounded bg-surface-muted/35" />
+                      <div className="h-2 w-3/5 rounded bg-surface-muted/32" />
+                    </div>
+                    <p className="text-[11px] text-text-faint">
+                      Generating structured output…
+                    </p>
                   </div>
                 )}
 
                 {activeOutput && (
-                  <article className="min-w-0">
+                  <article className="min-w-0 rounded-lg border border-surface-border/30 bg-surface-muted/[0.07] p-3 sm:p-4">
                     <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
                       {activeOutput}
                     </ReactMarkdown>
                   </article>
                 )}
 
-                {!isLoading && activeAction && !activeOutput && !error && (
-                  <p className="text-[12px] text-text-muted">Run the action to populate this panel.</p>
+                {!loadingThis && !activeOutput && !error && (
+                  <div className="rounded-lg border border-surface-border/40 bg-surface-muted/10 px-3 py-4 text-center sm:px-4">
+                    <p className="text-[12px] text-text-secondary">
+                      Ready to generate. Use <span className="font-medium text-text-primary">Run</span> to
+                      produce operator-ready markdown for this account.
+                    </p>
+                    {!hasApiKey && (
+                      <p className="mt-2 text-[11px] text-text-faint">API key required in the header.</p>
+                    )}
+                  </div>
                 )}
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>
