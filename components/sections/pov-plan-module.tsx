@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import type { LucideIcon } from "lucide-react";
 import type { PriorityAccount } from "@/data/territory-data";
 import { buildPovPlanFromPriorityAccount, type PovPlan } from "@/data/pov-plans";
 import { buildPovPlanGenerationPrompt } from "@/lib/prompts/pov-plan";
@@ -164,7 +165,7 @@ function PovBlock({
   summary,
   children,
 }: {
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  icon: LucideIcon;
   title: string;
   summary: string;
   children: ReactNode;
