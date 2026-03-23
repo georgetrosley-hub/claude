@@ -5,6 +5,7 @@ import { SectionHeader } from "@/components/ui/section-header";
 import { useTerritoryData } from "@/app/context/territory-data-context";
 import type { PriorityAccount } from "@/data/territory-data";
 import { PovPlanModule } from "@/components/sections/pov-plan-module";
+import { OperationsHub } from "@/components/sections/operations-hub";
 import { cn } from "@/lib/utils";
 
 const WHY_NOW_BY_ACCOUNT: Record<string, string> = {
@@ -102,6 +103,8 @@ export function Overview({
         priorityAccount={selectedAccount}
         onGeneratePovPlan={onOpenStrategyWithPrompt}
       />
+
+      <OperationsHub accountId={selectedAccount.id} accountName={selectedAccount.name} />
     </div>
   );
 }

@@ -12,6 +12,7 @@ const ORDERED_SECTIONS: ReadonlyArray<{ sectionId: SectionId; anchorId: string }
   { sectionId: "overview", anchorId: "overview" },
   { sectionId: "priorityAccounts", anchorId: "priority-accounts" },
   { sectionId: "povPlan", anchorId: "pov-plan" },
+  { sectionId: "operationsHub", anchorId: "operations-hub" },
 ] as const;
 const ACTIVATION_OFFSET_PX = 120;
 

@@ -24,6 +24,35 @@ Accounts are **N/A** for now. When you’re ready, add account data in `data/acc
 Optional — for chat and AI-generated content:
 
 - **ANTHROPIC_API_KEY** — Your API key (or add via the API Key button in the app)
+- **GOOGLE_API_KEY** — Enables Google Sheets read endpoint
+- **SLACK_WEBHOOK_URL** — Enables Slack post endpoint
+- **SF_INSTANCE_URL** + **SF_ACCESS_TOKEN** — Enables Salesforce SOQL query endpoint
+- **GOOGLE_OAUTH_CLIENT_ID** + **GOOGLE_OAUTH_CLIENT_SECRET** — Reserved for Calendar/Gmail/Docs/Slides OAuth connectors
+
+## Integrations (MVP)
+
+This build includes connector-ready API routes:
+
+- `GET /api/integrations/status` — Integration configuration status
+- `POST /api/integrations/google/sheets` — Read values from Google Sheets (`spreadsheetId`, `range`)
+- `POST /api/integrations/slack/post` — Post a Slack message (`text`)
+- `POST /api/integrations/salesforce/query` — Run a SOQL query (`soql`)
+
+Example requests:
+
+```bash
+curl -X POST http://localhost:3000/api/integrations/google/sheets \
+  -H "Content-Type: application/json" \
+  -d '{"spreadsheetId":"<SHEET_ID>","range":"Sheet1!A1:G200"}'
+
+curl -X POST http://localhost:3000/api/integrations/slack/post \
+  -H "Content-Type: application/json" \
+  -d '{"text":"POV approved for U.S. Financial Technology"}'
+
+curl -X POST http://localhost:3000/api/integrations/salesforce/query \
+  -H "Content-Type: application/json" \
+  -d '{"soql":"SELECT Id, Name FROM Account LIMIT 10"}'
+```
 
 ## Run it
 

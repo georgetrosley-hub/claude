@@ -11,6 +11,7 @@ import {
   PanelLeftOpen,
   X,
   BookOpenCheck,
+  NotebookPen,
 } from "lucide-react";
 
 const sectionGroups = [
@@ -20,6 +21,7 @@ const sectionGroups = [
       { id: "overview", label: "Overview", icon: LayoutDashboard },
       { id: "priorityAccounts", label: "Priority Accounts", icon: Target },
       { id: "povPlan", label: "POV Plan", icon: BookOpenCheck },
+      { id: "operationsHub", label: "Operations Hub", icon: NotebookPen },
     ],
   },
 ] as const;
