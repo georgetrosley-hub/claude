@@ -44,13 +44,43 @@ export function ChatPanel({
   const [streamingContent, setStreamingContent] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const inputBarRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
+  /** Pushes the composer above the on-screen keyboard (Visual Viewport API). */
+  const [keyboardInset, setKeyboardInset] = useState(0);
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
       setTimeout(() => inputRef.current?.focus(), 300);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setKeyboardInset(0);
+      return;
+    }
+    const vv = typeof window !== "undefined" ? window.visualViewport : null;
+    if (!vv) return;
+
+    const updateInset = () => {
+      const overlap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      setKeyboardInset(overlap);
+    };
+
+    updateInset();
+    vv.addEventListener("resize", updateInset);
+    vv.addEventListener("scroll", updateInset);
+    return () => {
+      vv.removeEventListener("resize", updateInset);
+      vv.removeEventListener("scroll", updateInset);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen || keyboardInset <= 0) return;
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [isOpen, keyboardInset]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -216,18 +246,20 @@ export function ChatPanel({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-y-0 right-0 z-50 flex h-[100dvh] max-h-[100dvh] w-full flex-col overflow-hidden bg-surface shadow-2xl sm:max-w-[480px] sm:border-l sm:border-surface-border/40 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
+            className="fixed inset-y-0 right-0 z-50 flex h-[100dvh] max-h-[100dvh] min-h-0 w-full flex-col overflow-hidden bg-surface shadow-2xl sm:max-w-[480px] sm:border-l sm:border-surface-border/40 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
           >
             {/* Header */}
             <div className="flex min-h-12 shrink-0 items-center justify-between border-b border-surface-border/40 bg-surface-elevated/70 backdrop-blur-sm px-4 py-3">
-              <div className="flex min-w-0 items-center gap-2">
-                <SnowflakeBrandmark height={18} className="max-w-[min(42vw,9rem)]" />
-                <span className="truncate text-[13px] font-medium text-text-primary">
-                  Execution Desk
-                </span>
-                <span className="hidden rounded-full bg-surface-muted/60 px-2 py-0.5 text-[10px] text-text-muted sm:inline-flex">
-                  {account.name}
-                </span>
+              <div className="flex min-w-0 flex-1 items-center gap-2">
+                <SnowflakeBrandmark height={18} className="max-w-[min(42vw,9rem)] shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:gap-2">
+                    <span className="shrink-0 text-[13px] font-medium text-text-primary">Execution Desk</span>
+                    <span className="truncate text-[10px] leading-tight text-text-muted sm:rounded-full sm:bg-surface-muted/60 sm:px-2 sm:py-0.5">
+                      {account.name}
+                    </span>
+                  </div>
+                </div>
               </div>
               <div className="flex items-center gap-1">
                 {messages.length > 0 && (
@@ -253,7 +285,7 @@ export function ChatPanel({
             {/* Messages */}
             <div
               ref={scrollRef}
-              className="flex-1 space-y-4 overflow-y-auto px-4 py-4"
+              className="min-h-0 flex-1 space-y-4 overflow-y-auto overflow-x-hidden px-4 py-4"
             >
               {messages.length === 0 && !streamingContent && (
                 <div className="flex h-full flex-col items-center justify-center px-4 text-center sm:px-8">
@@ -376,16 +408,29 @@ export function ChatPanel({
               )}
             </div>
 
-            {/* Input */}
-            <div className="shrink-0 border-t border-surface-border/40 px-4 pb-6 pt-4 sm:p-4">
+            {/* Input — paddingBottom accounts for mobile keyboard via Visual Viewport */}
+            <div
+              ref={inputBarRef}
+              className="shrink-0 border-t border-surface-border/40 px-4 pt-4 sm:p-4"
+              style={{
+                paddingBottom: `calc(1.25rem + env(safe-area-inset-bottom, 0px) + ${keyboardInset}px)`,
+              }}
+            >
               <div className="flex items-end gap-2">
                 <textarea
                   ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
+                  onFocus={() => {
+                    requestAnimationFrame(() => {
+                      inputBarRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+                    });
+                  }}
                   placeholder={`Ask about ${account.name}...`}
                   rows={1}
+                  enterKeyHint="send"
+                  inputMode="text"
                   className="flex-1 resize-none rounded-lg border border-surface-border/50 bg-surface-elevated/40 px-3 py-2.5 text-[13px] text-text-primary placeholder:text-text-muted/60 focus:border-accent/30 focus:outline-none focus:ring-1 focus:ring-accent/20 transition-colors duration-150"
                   style={{
                     maxHeight: "120px",

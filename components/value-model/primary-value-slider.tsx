@@ -68,9 +68,12 @@ export function PrimaryValueSlider({
         aria-label={label}
       />
 
-      <div className="grid grid-cols-4 gap-1 px-0.5">
+      <div className="grid grid-cols-4 gap-0.5 px-0 sm:gap-1 sm:px-0.5">
         {anchors.map((a) => (
-          <span key={a} className="text-center text-[9px] font-medium leading-tight text-text-faint sm:text-[10px]">
+          <span
+            key={a}
+            className="hyphens-auto break-words text-center text-[8px] font-medium leading-[1.15] text-text-faint sm:text-[10px]"
+          >
             {a}
           </span>
         ))}

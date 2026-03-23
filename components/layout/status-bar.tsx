@@ -60,9 +60,10 @@ export function StatusBar({
 
   return (
     <>
-      <header className="shrink-0 border-b border-surface-border/30 bg-surface/95 backdrop-blur-sm px-6 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8">
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex min-w-0 items-center gap-4">
+      <header className="shrink-0 border-b border-surface-border/30 bg-surface/95 backdrop-blur-sm px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8">
+        <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
+          <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
             <button
               type="button"
               onClick={onOpenMobileNav}
@@ -117,26 +118,48 @@ export function StatusBar({
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             {oversightStatus === "active" && (
-              <span className="hidden items-center gap-1.5 rounded border border-accent/15 bg-accent/10 px-2 py-1 text-[11px] font-medium text-accent sm:inline-flex">
-                <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                {pendingDecisions} open decisions
-              </span>
+              <>
+                <span className="hidden items-center gap-1.5 rounded border border-accent/15 bg-accent/10 px-2 py-1 text-[11px] font-medium text-accent sm:inline-flex">
+                  <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                  {pendingDecisions} open decisions
+                </span>
+                <span
+                  className="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-lg border border-accent/20 bg-accent/10 px-2 text-[11px] font-semibold tabular-nums text-accent sm:hidden"
+                  title={`${pendingDecisions} open decisions`}
+                >
+                  {pendingDecisions}
+                </span>
+              </>
             )}
             {dealHealth && (
-              <span
-                className={`hidden rounded px-2 py-1 text-[10px] font-medium sm:inline-block ${
-                  dealHealth.status === "healthy"
-                    ? "bg-emerald-500/10 text-emerald-400/90"
-                    : dealHealth.status === "attention"
-                      ? "bg-accent/10 text-accent/90"
-                      : "bg-rose-500/10 text-rose-400/90"
-                }`}
-                title={dealHealth.reason}
-              >
-                {dealHealth.label}
-              </span>
+              <>
+                <span
+                  className={`hidden rounded px-2 py-1 text-[10px] font-medium sm:inline-block ${
+                    dealHealth.status === "healthy"
+                      ? "bg-emerald-500/10 text-emerald-400/90"
+                      : dealHealth.status === "attention"
+                        ? "bg-accent/10 text-accent/90"
+                        : "bg-rose-500/10 text-rose-400/90"
+                  }`}
+                  title={dealHealth.reason}
+                >
+                  {dealHealth.label}
+                </span>
+                <span
+                  className={`inline-flex h-8 max-w-[5.5rem] items-center justify-center truncate rounded-lg px-2 text-[9px] font-semibold leading-tight sm:hidden ${
+                    dealHealth.status === "healthy"
+                      ? "bg-emerald-500/10 text-emerald-400/90"
+                      : dealHealth.status === "attention"
+                        ? "bg-accent/10 text-accent/90"
+                        : "bg-rose-500/10 text-rose-400/90"
+                  }`}
+                  title={`${dealHealth.label} — ${dealHealth.reason}`}
+                >
+                  {dealHealth.label}
+                </span>
+              </>
             )}
             <button
               type="button"
@@ -162,13 +185,40 @@ export function StatusBar({
             {onOpenChat && (
               <button
                 onClick={onOpenChat}
-                className="flex items-center gap-1.5 rounded bg-accent/15 px-3 py-1.5 text-[11px] font-medium text-accent transition-colors hover:bg-accent/25 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25"
+                className="flex items-center gap-1 rounded bg-accent/15 px-2 py-1.5 text-[10px] font-medium text-accent transition-colors hover:bg-accent/25 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25 sm:gap-1.5 sm:px-3 sm:text-[11px]"
               >
-                <MessageCircle className="h-3 w-3" strokeWidth={2} />
-                Execution Desk
+                <MessageCircle className="h-3 w-3 shrink-0" strokeWidth={2} />
+                <span className="hidden min-[380px]:inline">Execution Desk</span>
+                <span className="min-[380px]:hidden">Desk</span>
               </button>
             )}
           </div>
+        </div>
+
+        <div className="sm:hidden">
+          <label htmlFor="status-account-mobile" className="sr-only">
+            Account
+          </label>
+          <div className="relative">
+            <select
+              id="status-account-mobile"
+              value={account.id}
+              onChange={(e) => onAccountChange(e.target.value)}
+              className={cn(
+                "min-h-[44px] w-full appearance-none rounded-lg border border-surface-border/50 bg-surface-muted/25 py-2.5 pl-3 pr-9",
+                "text-[13px] text-text-primary cursor-pointer outline-none transition-colors",
+                "focus:border-accent/35 focus:ring-1 focus:ring-accent/20 hover:border-surface-border/70"
+              )}
+            >
+              {accounts.map((a) => (
+                <option key={a.id} value={a.id} className="bg-surface-elevated text-text-primary">
+                  {a.name}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-faint" />
+          </div>
+        </div>
         </div>
       </header>
 
