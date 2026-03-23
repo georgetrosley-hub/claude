@@ -5,10 +5,10 @@ import { AccountBusinessImpactModel } from "@/components/value-model/account-bus
 
 const FRAMING_BY_ACCOUNT: Record<string, string> = {
   "ciena-corp":
-    "This is how solving the first workload translates into measurable margin and forecast risk.",
-  "sagent-lending": "If this lands, this is the business impact on Dara retention and ARR.",
+    "The payoff: directional margin and forecast exposure — with one lever for Snowflake-enabled visibility.",
+  "sagent-lending": "The payoff: retention economics on Dara — one lever for how much ARR early detection can protect.",
   "us-financial-technology":
-    "This is how the first workload translates into measurable risk reduction on governed data.",
+    "The payoff: securitization risk on governed data — one lever for how much loss faster detection can avoid.",
 };
 
 export function BusinessImpactSection({
