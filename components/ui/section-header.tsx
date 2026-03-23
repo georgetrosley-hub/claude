@@ -1,0 +1,32 @@
+"use client";
+
+import { SnowflakeLogoIcon } from "@/components/ui/snowflake-logo";
+
+interface SectionHeaderProps {
+  title: string;
+  subtitle?: string;
+  /** Show Snowflake logo next to title for a consistent branded look */
+  showLogo?: boolean;
+}
+
+export function SectionHeader({ title, subtitle, showLogo }: SectionHeaderProps) {
+  return (
+    <header className="mb-5 sm:mb-6">
+      <div className="flex items-center gap-3">
+        {showLogo && (
+          <SnowflakeLogoIcon size={24} className="shrink-0 opacity-90" />
+        )}
+        <div>
+          <h2 className="text-[14px] font-semibold tracking-tight text-text-primary sm:text-[15px]">
+            {title}
+          </h2>
+          {subtitle && (
+            <p className="mt-1 max-w-2xl text-[12px] leading-relaxed text-text-muted">
+              {subtitle}
+            </p>
+          )}
+        </div>
+      </div>
+    </header>
+  );
+}
