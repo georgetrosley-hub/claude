@@ -156,14 +156,14 @@ export function EnterpriseRoiTco() {
       />
 
       {/* Tabs */}
-      <div className="flex gap-1 rounded-lg border border-surface-border/60 bg-surface-elevated/40 p-1">
+      <div className="flex gap-1 rounded-lg border border-surface-border/60 bg-surface-elevated/35 p-1.5">
         <button
           type="button"
           onClick={() => setActiveTab("tco")}
-          className={`flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2.5 text-[13px] font-medium transition-colors ${
+          className={`flex flex-1 min-h-[40px] items-center justify-center gap-2 rounded-md px-4 py-2.5 text-[13px] font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25 ${
             activeTab === "tco"
-              ? "bg-surface-muted text-text-primary shadow-sm"
-              : "text-text-muted hover:text-text-secondary"
+              ? "bg-surface-muted text-text-primary ring-1 ring-surface-border/60 shadow-[0_1px_0_rgba(255,255,255,0.04)]"
+              : "text-text-muted hover:bg-surface-muted/25 hover:text-text-secondary"
           }`}
         >
           <Calculator className="h-4 w-4" />
@@ -172,10 +172,10 @@ export function EnterpriseRoiTco() {
         <button
           type="button"
           onClick={() => setActiveTab("businessValue")}
-          className={`flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-2.5 text-[13px] font-medium transition-colors ${
+          className={`flex flex-1 min-h-[40px] items-center justify-center gap-2 rounded-md px-4 py-2.5 text-[13px] font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25 ${
             activeTab === "businessValue"
-              ? "bg-surface-muted text-text-primary shadow-sm"
-              : "text-text-muted hover:text-text-secondary"
+              ? "bg-surface-muted text-text-primary ring-1 ring-surface-border/60 shadow-[0_1px_0_rgba(255,255,255,0.04)]"
+              : "text-text-muted hover:bg-surface-muted/25 hover:text-text-secondary"
           }`}
         >
           <Lightbulb className="h-4 w-4" />
@@ -456,7 +456,7 @@ export function EnterpriseRoiTco() {
               >
                 {/* Executive summary cards */}
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  <div className="rounded-xl border border-surface-border/60 bg-surface-elevated/60 px-4 py-4">
+                  <div className="rounded-xl border border-surface-border/55 bg-surface-elevated/50 px-4 py-4 shadow-[0_1px_2px_rgba(0,0,0,0.14)]">
                     <p className="text-[10px] font-medium uppercase tracking-wider text-text-faint">
                       3-year savings
                     </p>
@@ -468,7 +468,7 @@ export function EnterpriseRoiTco() {
                       {formatCurrency(tco.netSavings)}
                     </p>
                   </div>
-                  <div className="rounded-xl border border-surface-border/60 bg-surface-elevated/60 px-4 py-4">
+                  <div className="rounded-xl border border-surface-border/55 bg-surface-elevated/50 px-4 py-4 shadow-[0_1px_2px_rgba(0,0,0,0.14)]">
                     <p className="text-[10px] font-medium uppercase tracking-wider text-text-faint">
                       ROI
                     </p>
@@ -476,7 +476,7 @@ export function EnterpriseRoiTco() {
                       {tco.roiPct >= 0 ? `${tco.roiPct.toFixed(0)}%` : `${tco.roiPct.toFixed(0)}%`}
                     </p>
                   </div>
-                  <div className="rounded-xl border border-surface-border/60 bg-surface-elevated/60 px-4 py-4">
+                  <div className="rounded-xl border border-surface-border/55 bg-surface-elevated/50 px-4 py-4 shadow-[0_1px_2px_rgba(0,0,0,0.14)]">
                     <p className="text-[10px] font-medium uppercase tracking-wider text-text-faint">
                       Payback
                     </p>
@@ -484,7 +484,7 @@ export function EnterpriseRoiTco() {
                       {tco.paybackMonths <= 36 ? `${tco.paybackMonths} mo` : ">36 mo"}
                     </p>
                   </div>
-                  <div className="rounded-xl border border-surface-border/60 bg-surface-elevated/60 px-4 py-4">
+                  <div className="rounded-xl border border-surface-border/55 bg-surface-elevated/50 px-4 py-4 shadow-[0_1px_2px_rgba(0,0,0,0.14)]">
                     <p className="text-[10px] font-medium uppercase tracking-wider text-text-faint">
                       Tools consolidated
                     </p>
@@ -495,7 +495,7 @@ export function EnterpriseRoiTco() {
                 </div>
 
                 {/* Stacked bar: 3-year TCO */}
-                <div className="rounded-xl border border-surface-border/60 bg-surface-elevated/40 p-4">
+                <div className="rounded-xl border border-surface-border/55 bg-surface-elevated/35 p-4">
                   <p className="mb-3 text-[12px] font-medium text-text-secondary">
                     Three-year TCO — Legacy vs Snowflake
                   </p>
@@ -686,7 +686,7 @@ function ValueCard({
   value: number;
 }) {
   return (
-    <div className="rounded-xl border border-surface-border/60 bg-surface-elevated/60 px-4 py-4">
+    <div className="rounded-xl border border-surface-border/55 bg-surface-elevated/50 px-4 py-4">
       <Icon className="h-4 w-4 text-accent/80" />
       <p className="mt-2 text-[12px] text-text-secondary">{label}</p>
       <p className="mt-1 text-lg font-semibold tabular-nums text-text-primary">

@@ -184,16 +184,19 @@ export function PipelineDashboard() {
             </table>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
-            <Inbox className="h-10 w-10 text-text-faint/50 mb-3" strokeWidth={1.5} />
-            <p className="text-[14px] font-medium text-text-primary">
+          <div className="flex flex-col items-center justify-center py-14 px-6 text-center">
+            <Inbox className="h-10 w-10 text-accent/70 mb-3" strokeWidth={1.5} />
+            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
+              Waiting for pipeline accounts
+            </p>
+            <p className="mt-2 text-[14px] font-semibold text-text-primary">
               No accounts in pipeline yet
             </p>
-            <p className="mt-1 text-[12px] text-text-muted max-w-sm">
+            <p className="mt-2 text-[12px] leading-relaxed text-text-muted max-w-sm">
               Once you receive the 15 accounts from the previous rep, add them to{" "}
-              <code className="rounded bg-surface-muted/50 px-1 py-0.5 text-[11px]">data/accounts.ts</code>
+              <code className="rounded-lg border border-surface-border/40 bg-surface-muted/30 px-2 py-0.5 text-[11px]">data/accounts.ts</code>
               {" "}and{" "}
-              <code className="rounded bg-surface-muted/50 px-1 py-0.5 text-[11px]">data/pipeline.ts</code>
+              <code className="rounded-lg border border-surface-border/40 bg-surface-muted/30 px-2 py-0.5 text-[11px]">data/pipeline.ts</code>
               . Pipeline and war room will populate here.
             </p>
           </div>

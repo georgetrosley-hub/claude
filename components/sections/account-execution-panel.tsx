@@ -414,7 +414,7 @@ export function AccountExecutionPanel() {
                           type="button"
                           onClick={() => selectAction(a.id)}
                           className={cn(
-                            "flex w-full items-start justify-between gap-2 rounded-lg border px-2.5 py-2 text-left text-[11px] font-medium transition-colors",
+                            "flex w-full items-start justify-between gap-2 rounded-lg border px-2.5 py-2 text-left text-[11px] font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25",
                             selected
                               ? "border-accent/35 bg-accent/[0.07] text-text-primary"
                               : "border-surface-border/40 bg-surface-muted/15 text-text-secondary hover:border-accent/20",
@@ -443,7 +443,10 @@ export function AccountExecutionPanel() {
         <div className="flex min-h-[300px] flex-col border-t border-surface-border/35 lg:border-t-0">
           {!viewing && (
             <div className="flex flex-1 flex-col justify-center px-4 py-10 sm:px-6">
-              <div className="mx-auto w-full max-w-md rounded-xl border border-dashed border-surface-border/55 bg-surface-muted/[0.12] px-5 py-8 text-center">
+              <div className="mx-auto w-full max-w-md rounded-xl border border-dashed border-surface-border/55 bg-surface-muted/[0.10] px-6 py-9 text-center">
+                <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-surface-border/50 bg-surface-elevated/20">
+                  <Workflow className="h-4 w-4 text-accent" strokeWidth={1.8} />
+                </div>
                 <p className="text-[13px] font-medium text-text-primary">No step selected</p>
                 <p className="mx-auto mt-2 max-w-sm text-[12px] leading-relaxed text-text-muted">
                   Choose a run step on the left: brief, discovery, POV, or expansion outputs. Copy-ready for
@@ -467,10 +470,10 @@ export function AccountExecutionPanel() {
                           type="button"
                           onClick={() => selectAction(t.id)}
                           className={cn(
-                            "shrink-0 rounded-md border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors",
+                            "shrink-0 rounded-lg border px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.08em] transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25",
                             active
-                              ? "border-accent/35 bg-accent/[0.1] text-accent"
-                              : "border-transparent bg-surface-muted/25 text-text-muted hover:border-surface-border/50",
+                              ? "border-accent/35 bg-accent/[0.10] text-accent ring-1 ring-accent/15"
+                              : "border-surface-border/45 bg-surface-muted/20 text-text-muted hover:bg-surface-muted/30 hover:border-surface-border/60",
                             has && !active && "text-text-secondary"
                           )}
                         >
@@ -492,7 +495,7 @@ export function AccountExecutionPanel() {
                       onClick={() => void copyOutput(viewing)}
                       disabled={!activeOutput || loadingThis}
                       className={cn(
-                        "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors",
+                        "inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[11px] font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25 disabled:cursor-not-allowed disabled:opacity-60",
                         activeOutput && !loadingThis
                           ? "border-surface-border/50 bg-surface-muted/25 text-text-secondary hover:border-accent/25 hover:text-text-primary"
                           : "cursor-not-allowed border-surface-border/35 text-text-faint"
@@ -506,7 +509,7 @@ export function AccountExecutionPanel() {
                       onClick={() => void runAction(viewing)}
                       disabled={!hasApiKey || isLoading}
                       className={cn(
-                        "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[11px] font-medium transition-colors",
+                        "inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[11px] font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25 disabled:cursor-not-allowed disabled:opacity-60",
                         hasApiKey && !isLoading
                           ? "border-accent/30 bg-accent/[0.1] text-accent hover:bg-accent/[0.14]"
                           : "cursor-not-allowed border-surface-border/40 text-text-faint"
@@ -549,15 +552,15 @@ export function AccountExecutionPanel() {
                 {loadingThis && !activeOutput && (
                   <div className="space-y-3 pt-1" aria-busy>
                     <div className="space-y-2 rounded-lg border border-surface-border/35 bg-surface-muted/10 p-3">
-                      <div className="h-2 w-1/3 rounded bg-surface-muted/55" />
-                      <div className="h-2 w-full rounded bg-surface-muted/45" />
-                      <div className="h-2 w-5/6 rounded bg-surface-muted/40" />
+                      <div className="h-2 w-1/3 rounded bg-surface-muted/55 animate-pulse" />
+                      <div className="h-2 w-full rounded bg-surface-muted/45 animate-pulse" />
+                      <div className="h-2 w-5/6 rounded bg-surface-muted/40 animate-pulse" />
                     </div>
                     <div className="space-y-2 rounded-lg border border-surface-border/35 bg-surface-muted/10 p-3">
-                      <div className="h-2 w-2/5 rounded bg-surface-muted/50" />
-                      <div className="h-2 w-full rounded bg-surface-muted/38" />
-                      <div className="h-2 w-4/5 rounded bg-surface-muted/35" />
-                      <div className="h-2 w-3/5 rounded bg-surface-muted/32" />
+                      <div className="h-2 w-2/5 rounded bg-surface-muted/50 animate-pulse" />
+                      <div className="h-2 w-full rounded bg-surface-muted/38 animate-pulse" />
+                      <div className="h-2 w-4/5 rounded bg-surface-muted/35 animate-pulse" />
+                      <div className="h-2 w-3/5 rounded bg-surface-muted/32 animate-pulse" />
                     </div>
                     <p className="text-[11px] text-text-faint">
                       Generating output…
@@ -574,10 +577,10 @@ export function AccountExecutionPanel() {
                 )}
 
                 {!loadingThis && !activeOutput && !error && (
-                  <div className="rounded-lg border border-surface-border/40 bg-surface-muted/10 px-3 py-4 text-center sm:px-4">
-                    <p className="text-[12px] text-text-secondary">
-                      Select <span className="font-medium text-text-primary">Run</span> to generate markdown
-                      for this account.
+                  <div className="rounded-lg border border-surface-border/45 bg-surface-muted/[0.12] px-4 py-5 text-center sm:px-5">
+                    <p className="text-[12px] leading-relaxed text-text-secondary">
+                      Select <span className="font-medium text-text-primary">Run</span> to generate copy-ready
+                      markdown for this account.
                     </p>
                     {!hasApiKey && (
                       <p className="mt-2 text-[11px] text-text-faint">API key required in the header.</p>

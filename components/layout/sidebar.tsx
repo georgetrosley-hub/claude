@@ -89,7 +89,7 @@ function SidebarBody({
             <button
               type="button"
               onClick={onToggleCollapsed}
-              className="hidden rounded-md p-1.5 text-text-muted transition-colors hover:bg-surface-muted/40 hover:text-text-secondary lg:inline-flex"
+              className="hidden rounded-md p-1.5 text-text-muted transition-colors hover:bg-surface-muted/40 hover:text-text-secondary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25 lg:inline-flex"
               aria-label={compact ? "Expand sidebar" : "Collapse sidebar"}
               title={compact ? "Expand sidebar" : "Collapse sidebar"}
             >
@@ -104,7 +104,7 @@ function SidebarBody({
             <button
               type="button"
               onClick={onCloseMobile}
-              className="rounded-md p-1.5 text-text-muted transition-colors hover:bg-surface-muted/40 hover:text-text-secondary lg:hidden"
+              className="rounded-md p-1.5 text-text-muted transition-colors hover:bg-surface-muted/40 hover:text-text-secondary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25 lg:hidden"
               aria-label="Close navigation"
             >
               <X className="h-4 w-4" />
@@ -121,7 +121,7 @@ function SidebarBody({
             onCloseMobile?.();
           }}
           className={cn(
-            "flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg border border-accent/20 bg-accent/[0.06] px-3 py-3 text-[12px] font-medium text-accent transition-colors active:bg-accent/10 hover:bg-accent/10",
+            "flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg border border-accent/20 bg-accent/[0.06] px-3 py-3 text-[12px] font-medium text-accent transition-colors active:bg-accent/10 hover:bg-accent/10 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25",
             compact && "justify-center px-0 py-2 min-h-[40px]"
           )}
           aria-label="Deal Desk"
@@ -158,11 +158,11 @@ function SidebarBody({
                     type="button"
                     onClick={() => handleSectionSelect(id)}
                     className={cn(
-                      "group flex w-full min-h-[44px] items-center gap-2 rounded-md px-3 py-3 text-left text-[13px] transition-all duration-150 active:bg-surface-muted/40",
+                      "group flex w-full min-h-[44px] items-center gap-2 rounded-lg px-3 py-3 text-left text-[13px] transition-colors duration-150 active:bg-surface-muted/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25 border border-transparent",
                       compact && "justify-center px-0 py-2 min-h-[40px]",
                       isActive
-                        ? "bg-surface-muted/60 text-accent font-semibold"
-                        : "text-text-muted hover:bg-surface-muted/30 hover:text-text-secondary"
+                        ? "border-accent/35 bg-surface-muted/60 text-accent font-semibold"
+                        : "text-text-muted hover:bg-surface-muted/30 hover:text-text-secondary hover:border-surface-border/50"
                     )}
                     aria-label={label}
                     title={label}

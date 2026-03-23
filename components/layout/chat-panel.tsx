@@ -240,7 +240,7 @@ export function ChatPanel({
             className="fixed inset-y-0 right-0 z-50 flex h-[100dvh] max-h-[100dvh] w-full flex-col overflow-hidden bg-surface shadow-2xl sm:max-w-[480px] sm:border-l sm:border-surface-border/40 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
           >
             {/* Header */}
-            <div className="flex min-h-12 shrink-0 items-center justify-between border-b border-surface-border/40 px-4 py-3">
+            <div className="flex min-h-12 shrink-0 items-center justify-between border-b border-surface-border/40 bg-surface-elevated/70 backdrop-blur-sm px-4 py-3">
               <div className="flex min-w-0 items-center gap-2">
                 <SnowflakeLogoIcon size={20} />
                 <span className="truncate text-[13px] font-medium text-text-primary">
@@ -257,14 +257,14 @@ export function ChatPanel({
                       setMessages([]);
                       setStreamingContent("");
                     }}
-                    className="rounded-md p-1.5 text-text-muted hover:bg-surface-muted/40 hover:text-text-secondary transition-colors"
+                    className="rounded-md p-1.5 text-text-muted hover:bg-surface-muted/40 hover:text-text-secondary transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </button>
                 )}
                 <button
                   onClick={onClose}
-                  className="rounded-md p-1.5 text-text-muted hover:bg-surface-muted/40 hover:text-text-secondary transition-colors"
+                  className="rounded-md p-1.5 text-text-muted hover:bg-surface-muted/40 hover:text-text-secondary transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -278,6 +278,7 @@ export function ChatPanel({
             >
               {messages.length === 0 && !streamingContent && (
                 <div className="flex h-full flex-col items-center justify-center px-4 text-center sm:px-8">
+                  <div className="w-full max-w-md rounded-xl border border-surface-border/50 bg-surface-elevated/30 px-6 py-10">
                   <SnowflakeLogoIcon
                     size={32}
                     className="mb-4 opacity-90"
@@ -312,11 +313,12 @@ export function ChatPanel({
                           setInput(suggestion);
                           setTimeout(() => inputRef.current?.focus(), 0);
                         }}
-                        className="w-full rounded-lg border border-surface-border/40 bg-surface-elevated/30 px-3 py-2.5 text-left text-[12px] text-text-muted hover:border-accent/20 hover:text-text-secondary transition-colors"
+                        className="w-full rounded-lg border border-surface-border/40 bg-surface-elevated/30 px-3 py-2.5 text-left text-[12px] text-text-muted hover:border-accent/20 hover:text-text-secondary transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25"
                       >
                         {suggestion}
                       </button>
                     ))}
+                  </div>
                   </div>
                 </div>
               )}
@@ -336,9 +338,9 @@ export function ChatPanel({
                   )}
                   <div
                     className={cn(
-                      "max-w-[85%] rounded-lg px-3 py-2.5 text-[13px] leading-relaxed",
+                      "max-w-[85%] rounded-lg border border-surface-border/25 px-3 py-2.5 text-[13px] leading-relaxed",
                       msg.role === "user"
-                        ? "bg-accent/10 text-text-primary"
+                        ? "border-accent/20 bg-accent/10 text-text-primary"
                         : "bg-surface-elevated/60 text-text-secondary"
                     )}
                   >
@@ -366,7 +368,7 @@ export function ChatPanel({
                       className="animate-pulse opacity-90"
                     />
                   </div>
-                  <div className="max-w-[85%] rounded-lg bg-surface-elevated/60 px-3 py-2.5 text-[13px] leading-relaxed text-text-secondary">
+                  <div className="max-w-[85%] rounded-lg border border-surface-border/25 bg-surface-elevated/60 px-3 py-2.5 text-[13px] leading-relaxed text-text-secondary">
                     <div className="min-w-0">
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
@@ -388,11 +390,10 @@ export function ChatPanel({
                       className="animate-pulse opacity-90"
                     />
                   </div>
-                  <div className="rounded-lg bg-surface-elevated/60 px-3 py-2.5">
-                    <div className="flex gap-1.5">
-                      <span className="h-1.5 w-1.5 rounded-full bg-text-muted/40 animate-bounce" style={{ animationDelay: "0ms" }} />
-                      <span className="h-1.5 w-1.5 rounded-full bg-text-muted/40 animate-bounce" style={{ animationDelay: "150ms" }} />
-                      <span className="h-1.5 w-1.5 rounded-full bg-text-muted/40 animate-bounce" style={{ animationDelay: "300ms" }} />
+                  <div className="rounded-lg border border-surface-border/25 bg-surface-elevated/60 px-3 py-2.5">
+                    <div className="space-y-2">
+                      <div className="h-2 w-2/3 rounded bg-surface-muted/50 animate-pulse" />
+                      <div className="h-2 w-full rounded bg-surface-muted/40 animate-pulse" />
                     </div>
                   </div>
                 </div>
@@ -409,7 +410,7 @@ export function ChatPanel({
                   onKeyDown={handleKeyDown}
                   placeholder={`Ask about ${account.name}...`}
                   rows={1}
-                  className="flex-1 resize-none rounded-lg border border-surface-border/50 bg-surface-elevated/40 px-3 py-2.5 text-[13px] text-text-primary placeholder:text-text-muted/60 focus:border-accent/30 focus:outline-none focus:ring-0 transition-colors"
+                  className="flex-1 resize-none rounded-lg border border-surface-border/50 bg-surface-elevated/40 px-3 py-2.5 text-[13px] text-text-primary placeholder:text-text-muted/60 focus:border-accent/30 focus:outline-none focus:ring-1 focus:ring-accent/20 transition-colors duration-150"
                   style={{
                     maxHeight: "120px",
                     minHeight: "40px",
@@ -424,7 +425,7 @@ export function ChatPanel({
                 {isStreaming ? (
                   <button
                     onClick={stopStreaming}
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-surface-muted/60 text-text-muted hover:bg-surface-muted transition-colors"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-surface-muted/60 text-text-muted hover:bg-surface-muted transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25"
                   >
                     <Square className="h-3.5 w-3.5" />
                   </button>
@@ -433,7 +434,7 @@ export function ChatPanel({
                     onClick={sendMessage}
                     disabled={!input.trim()}
                     className={cn(
-                      "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors",
+                      "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25 disabled:cursor-not-allowed disabled:opacity-60",
                       input.trim()
                         ? "bg-accent/90 text-white hover:bg-accent"
                         : "bg-surface-muted/40 text-text-muted/40"

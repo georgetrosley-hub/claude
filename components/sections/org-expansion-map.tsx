@@ -272,7 +272,7 @@ export function OrgExpansionMap({ nodes, account, competitors }: OrgExpansionMap
                       />
                     ))
                   ) : (
-                    <div className="rounded-[22px] border border-dashed border-white/8 bg-white/[0.02] px-4 py-5 text-[12px] leading-relaxed text-text-muted">
+                    <div className="rounded-xl border border-dashed border-surface-border/45 bg-surface-elevated/20 px-4 py-6 text-[12px] leading-relaxed text-text-muted">
                       {lane.emptyState}
                     </div>
                   )}

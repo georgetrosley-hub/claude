@@ -28,13 +28,21 @@ function AccountCard({
 }) {
   return (
     <article
+      role="button"
+      tabIndex={0}
       className={cn(
-        "rounded-xl border p-4 transition-colors cursor-pointer",
+        "rounded-xl border p-4 transition-colors duration-150 cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-accent/25",
         isSelected
-          ? "border-accent/40 bg-accent/[0.08]"
-          : "border-surface-border/50 bg-surface-muted/30 hover:border-accent/25"
+          ? "border-accent/35 bg-accent/[0.08] hover:border-accent/45"
+          : "border-surface-border/50 bg-surface-muted/20 hover:bg-surface-muted/30 hover:border-accent/25"
       )}
       onClick={onSelect}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
     >
       <div className="flex items-start justify-between gap-2">
         <h3 className="text-[14px] font-semibold text-text-primary">{account.name}</h3>
@@ -159,7 +167,7 @@ export function Overview({
 
   return (
     <div className="space-y-8 sm:space-y-10">
-      <section id="overview" className="scroll-mt-24 rounded-2xl border border-surface-border/50 bg-surface-elevated/30 p-4 sm:p-5">
+      <section id="overview" className="scroll-mt-24 rounded-2xl border border-surface-border/50 bg-surface-elevated/30 p-5 sm:p-6">
         <h1 className="text-[20px] font-semibold tracking-tight text-text-primary sm:text-[22px]">
           Overview
         </h1>
@@ -173,7 +181,7 @@ export function Overview({
           <button
             type="button"
             onClick={onOpenStrategy}
-            className="mt-4 rounded-lg border border-accent/30 bg-accent/10 px-4 py-2 text-[12px] font-medium text-accent transition-colors hover:bg-accent/20"
+            className="mt-4 rounded-lg border border-accent/30 bg-accent/10 px-4 py-2.5 text-[12px] font-medium text-accent transition-colors hover:bg-accent/20 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25"
           >
             Open Deal Desk
           </button>
@@ -212,7 +220,7 @@ export function Overview({
               type="button"
               onClick={() => setBriefingWindow(w)}
               className={cn(
-                "rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors",
+                "rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25",
                 briefingWindow === w
                   ? "border border-accent/30 bg-accent/[0.10] text-accent"
                   : "border border-surface-border/50 bg-surface-muted/40 text-text-muted hover:text-text-secondary"

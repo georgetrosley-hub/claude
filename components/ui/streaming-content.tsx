@@ -37,7 +37,7 @@ export function StreamingContent({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
       className={cn(
-        "rounded-lg border border-surface-border/50 bg-surface-elevated/40",
+        "rounded-xl border border-surface-border/55 bg-surface-elevated/45 shadow-[0_1px_2px_rgba(0,0,0,0.16)]",
         className
       )}
     >
@@ -58,7 +58,7 @@ export function StreamingContent({
           <div className="flex items-center gap-1">
             <button
               onClick={handleCopy}
-              className="rounded p-1 text-text-muted hover:bg-surface-muted/40 hover:text-text-secondary transition-colors"
+              className="rounded p-1 text-text-muted hover:bg-surface-muted/40 hover:text-text-secondary transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25"
               title="Copy"
             >
               {copied ? (
@@ -70,7 +70,7 @@ export function StreamingContent({
             {onRegenerate && (
               <button
                 onClick={onRegenerate}
-                className="rounded p-1 text-text-muted hover:bg-surface-muted/40 hover:text-text-secondary transition-colors"
+                className="rounded p-1 text-text-muted hover:bg-surface-muted/40 hover:text-text-secondary transition-colors duration-150 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25"
                 title="Regenerate"
               >
                 <RefreshCw className="h-3.5 w-3.5" />

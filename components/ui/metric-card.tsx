@@ -18,8 +18,8 @@ export function MetricCard({ label, value, subtitle, className, delay = 0 }: Met
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
       className={cn(
-        "rounded-md bg-surface-elevated/60 px-5 py-4",
-        "border border-surface-border/60",
+        "rounded-lg border border-surface-border/55 bg-surface-elevated/50 px-5 py-4 shadow-[0_1px_2px_rgba(0,0,0,0.18)] transition-colors duration-150",
+        "hover:bg-surface-elevated/55 hover:border-surface-border/70",
         className
       )}
     >
@@ -29,14 +29,14 @@ export function MetricCard({ label, value, subtitle, className, delay = 0 }: Met
         </p>
       )}
       <p className={cn(
-        "font-medium tabular-nums text-text-primary",
+        "font-medium tabular-nums leading-none text-text-primary",
         label ? "mt-1.5" : "",
         String(value).length > 8 ? "text-xl" : "text-2xl tracking-tight"
       )}>
         {value}
       </p>
       {subtitle && (
-        <p className="mt-1 text-[12px] text-text-muted">{subtitle}</p>
+        <p className="mt-1.5 text-[12px] text-text-muted">{subtitle}</p>
       )}
     </motion.div>
   );
