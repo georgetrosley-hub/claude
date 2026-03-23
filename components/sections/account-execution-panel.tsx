@@ -314,7 +314,7 @@ export function AccountExecutionPanel() {
   const activeDef = viewing ? ACTIONS.find((a) => a.id === viewing) : null;
   const activeOutput = viewing ? outputs[viewing] : null;
   const isLoading = loading !== null;
-  const loadingThis = viewing && loading === viewing;
+  const loadingThis = viewing !== null && loading === viewing;
 
   const tabTargets = useMemo(() => {
     const withContent = ACTIONS.filter((a) => outputs[a.id]?.trim());
