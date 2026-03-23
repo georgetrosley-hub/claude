@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { SnowflakeLogoIcon, SnowflakeWordmark } from "@/components/ui/snowflake-logo";
 import {
   MessageCircle,
+  LayoutDashboard,
   Target,
   PanelLeftClose,
   PanelLeftOpen,
@@ -14,6 +15,8 @@ import {
   ClipboardCheck,
   Compass,
   BookOpenCheck,
+  Search,
+  TrendingUp,
 } from "lucide-react";
 
 const SNOWFLAKE_SUMMIT_URL = "https://www.snowflake.com/en/summit/";
@@ -22,12 +25,14 @@ const sectionGroups = [
   {
     label: "Territory Operating System",
     items: [
-      { id: "territoryPriorities", label: "Territory Priorities", icon: Target },
-      { id: "dailyBriefing", label: "Daily Briefing", icon: Newspaper },
-      { id: "operatingPriorities", label: "Operating Priorities", icon: ClipboardCheck },
-      { id: "accountDossiers", label: "Account Dossiers", icon: FileText },
-      { id: "executionFramework", label: "Execution Framework", icon: Compass },
-      { id: "briefingEngine", label: "Briefing Engine", icon: BookOpenCheck },
+      { id: "overview", label: "Overview", icon: LayoutDashboard },
+      { id: "priorityAccounts", label: "Priority Accounts", icon: Target },
+      { id: "accountBrief", label: "Account Brief", icon: FileText },
+      { id: "discoveryPrep", label: "Discovery Prep", icon: Search },
+      { id: "povPlan", label: "POV Plan", icon: BookOpenCheck },
+      { id: "expansionPath", label: "Expansion Path", icon: TrendingUp },
+      { id: "weeklyBriefing", label: "Weekly Briefing", icon: Newspaper },
+      { id: "signalsActivity", label: "Signals & Activity", icon: ClipboardCheck },
     ],
   },
 ] as const;

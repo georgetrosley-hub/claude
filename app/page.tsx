@@ -2,46 +2,34 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AppProvider, useApp } from "@/app/context/app-context";
+import { useTerritoryData } from "@/app/context/territory-data-context";
 import { Sidebar, type SectionId } from "@/components/layout/sidebar";
 import { StatusBar } from "@/components/layout/status-bar";
 import { ChatPanel } from "@/components/layout/chat-panel";
 import { Overview } from "@/components/sections/overview";
 
 const ORDERED_SECTIONS: ReadonlyArray<{ sectionId: SectionId; anchorId: string }> = [
-  { sectionId: "territoryPriorities", anchorId: "territory-priorities" },
-  { sectionId: "dailyBriefing", anchorId: "daily-account-briefing" },
-  { sectionId: "operatingPriorities", anchorId: "operating-priorities" },
-  { sectionId: "accountDossiers", anchorId: "account-dossiers" },
-  { sectionId: "executionFramework", anchorId: "execution-framework" },
-  { sectionId: "briefingEngine", anchorId: "briefing-engine" },
+  { sectionId: "overview", anchorId: "overview" },
+  { sectionId: "priorityAccounts", anchorId: "priority-accounts" },
+  { sectionId: "accountBrief", anchorId: "account-brief" },
+  { sectionId: "discoveryPrep", anchorId: "discovery-prep" },
+  { sectionId: "povPlan", anchorId: "pov-plan" },
+  { sectionId: "expansionPath", anchorId: "expansion-path" },
+  { sectionId: "weeklyBriefing", anchorId: "weekly-briefing" },
+  { sectionId: "signalsActivity", anchorId: "signals-activity" },
 ] as const;
 const ACTIVATION_OFFSET_PX = 120;
 
 function MainContent() {
-  const [activeSection, setActiveSection] = useState<SectionId>("territoryPriorities");
+  const [activeSection, setActiveSection] = useState<SectionId>("overview");
   const [chatOpen, setChatOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const mainScrollRef = useRef<HTMLElement | null>(null);
-  const activeSectionRef = useRef<SectionId>("territoryPriorities");
-  const {
-    account,
-    accounts,
-    competitors,
-    signals,
-    stakeholders,
-    executionItems,
-    accountUpdates,
-    workspaceDraft,
-    currentRecommendation,
-    pipelineTarget,
-    pendingDecisionCount,
-    dealHealth,
-    setAccountId,
-    updateWorkspaceField,
-    addAccountUpdate,
-  } = useApp();
+  const activeSectionRef = useRef<SectionId>("overview");
+  const { account, accounts, competitors, pendingDecisionCount, dealHealth, setAccountId } = useApp();
+  const { signals: territorySignals } = useTerritoryData();
 
   const handleSectionChange = (section: SectionId) => {
     setActiveSection(section);
@@ -67,18 +55,7 @@ function MainContent() {
   const overviewNode = (
     <Overview
       account={account}
-      competitors={competitors}
-      signals={signals}
-      stakeholders={stakeholders}
-      executionItems={executionItems}
-      accountUpdates={accountUpdates}
-      workspaceDraft={workspaceDraft}
-      pipelineTarget={pipelineTarget}
-      currentRecommendation={currentRecommendation}
-      dealHealth={dealHealth}
       onSelectAccount={handleAccountChange}
-      onUpdateWorkspaceField={updateWorkspaceField}
-      onAddAccountUpdate={addAccountUpdate}
     />
   );
 
@@ -187,7 +164,7 @@ function MainContent() {
           account={account}
           accounts={accounts}
           onAccountChange={handleAccountChange}
-          signalCount={signals.length}
+          signalCount={territorySignals.length}
           pendingDecisions={pendingDecisionCount}
           oversightStatus={oversightStatus}
           dealHealth={dealHealth}
