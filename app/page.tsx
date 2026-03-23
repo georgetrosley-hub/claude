@@ -11,13 +11,7 @@ import { Overview } from "@/components/sections/overview";
 const ORDERED_SECTIONS: ReadonlyArray<{ sectionId: SectionId; anchorId: string }> = [
   { sectionId: "overview", anchorId: "overview" },
   { sectionId: "priorityAccounts", anchorId: "priority-accounts" },
-  { sectionId: "accountHeader", anchorId: "account-header" },
-  { sectionId: "whyThisAccountMatters", anchorId: "why-this-account-matters" },
-  { sectionId: "recommendedMotion", anchorId: "recommended-motion" },
-  { sectionId: "whatToConfirmFirst", anchorId: "what-to-confirm-first" },
   { sectionId: "povPlan", anchorId: "pov-plan" },
-  { sectionId: "executionActions", anchorId: "execution-actions" },
-  { sectionId: "recommendedNextAction", anchorId: "recommended-next-action" },
 ] as const;
 const ACTIVATION_OFFSET_PX = 120;
 
@@ -69,6 +63,7 @@ function MainContent() {
     <Overview
       account={account}
       onSelectAccount={handleAccountChange}
+      onOpenStrategyWithPrompt={handleOpenChatWithPrompt}
     />
   );
 

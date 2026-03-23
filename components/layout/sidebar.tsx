@@ -10,10 +10,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   X,
-  CircleDot,
   BookOpenCheck,
-  ListChecks,
-  Sparkles,
 } from "lucide-react";
 
 const sectionGroups = [
@@ -22,13 +19,7 @@ const sectionGroups = [
     items: [
       { id: "overview", label: "Overview", icon: LayoutDashboard },
       { id: "priorityAccounts", label: "Priority Accounts", icon: Target },
-      { id: "accountHeader", label: "Account Header", icon: CircleDot },
-      { id: "whyThisAccountMatters", label: "Why This Account Matters", icon: ListChecks },
-      { id: "recommendedMotion", label: "Recommended Motion", icon: Sparkles },
-      { id: "whatToConfirmFirst", label: "What to Confirm First", icon: ListChecks },
       { id: "povPlan", label: "POV Plan", icon: BookOpenCheck },
-      { id: "executionActions", label: "Execution Actions", icon: Sparkles },
-      { id: "recommendedNextAction", label: "Recommended Next Action", icon: CircleDot },
     ],
   },
 ] as const;
