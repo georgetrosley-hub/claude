@@ -12,10 +12,11 @@ const ORDERED_SECTIONS: ReadonlyArray<{ sectionId: SectionId; anchorId: string }
   { sectionId: "overview", anchorId: "overview" },
   { sectionId: "priorityAccounts", anchorId: "priority-accounts" },
   { sectionId: "accountBrief", anchorId: "account-brief" },
+  { sectionId: "discoveryPrep", anchorId: "discovery-prep" },
   { sectionId: "povPlan", anchorId: "pov-plan" },
   { sectionId: "expansionPath", anchorId: "expansion-path" },
   { sectionId: "weeklyBriefing", anchorId: "weekly-briefing" },
-  { sectionId: "signalsActivity", anchorId: "signals-activity" },
+  { sectionId: "recentSignals", anchorId: "recent-signals" },
 ] as const;
 const ACTIVATION_OFFSET_PX = 120;
 
@@ -55,6 +56,7 @@ function MainContent() {
     <Overview
       account={account}
       onSelectAccount={handleAccountChange}
+      onOpenStrategy={handleOpenChat}
     />
   );
 
@@ -157,7 +159,7 @@ function MainContent() {
         onToggleCollapsed={() => setSidebarCollapsed((prev) => !prev)}
       />
       <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(41,181,232,0.06),transparent_55%),radial-gradient(ellipse_at_bottom_left,rgba(41,181,232,0.04),transparent_55%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(41,181,232,0.03),transparent_60%)]" />
 
         <StatusBar
           account={account}
@@ -174,9 +176,9 @@ function MainContent() {
         />
         <main
           ref={mainScrollRef as unknown as React.RefObject<HTMLElement>}
-          className="relative flex-1 overflow-y-auto overflow-x-hidden px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-8 xl:px-10 xl:py-10"
+          className="relative flex-1 overflow-y-auto overflow-x-hidden px-6 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12 xl:px-16 xl:py-14"
         >
-          <div className="mx-auto w-full max-w-6xl min-w-0">{overviewNode}</div>
+          <div className="mx-auto w-full max-w-5xl min-w-0">{overviewNode}</div>
         </main>
       </div>
 

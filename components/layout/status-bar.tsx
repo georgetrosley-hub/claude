@@ -103,8 +103,8 @@ export function StatusBar({
                 </select>
                 <ChevronDown className="pointer-events-none absolute right-0 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted" />
               </div>
-              <div className="flex shrink-0 items-center gap-1.5 rounded-md border border-surface-border/50 bg-surface-elevated/40 px-2.5 py-1.5">
-                <span className="text-[10px] font-medium uppercase tracking-wider text-text-faint">Territory</span>
+              <div className="flex shrink-0 items-center gap-1.5 rounded-md border border-surface-border/40 bg-surface-elevated/30 px-2.5 py-1.5">
+                <span className="text-[10px] font-medium uppercase tracking-wider text-text-faint">Account</span>
                 <span className="tabular-nums text-[13px] font-semibold text-accent">
                   {account.name}
                 </span>
@@ -137,7 +137,7 @@ export function StatusBar({
               >
                 <KeyRound className="h-3 w-3" />
                 <span className="hidden sm:inline">
-                  {isReady && hasApiKey ? "API key saved" : "Add API key"}
+                  {isReady && hasApiKey ? "AI ready" : "Add key"}
                 </span>
               </button>
               {onOpenChat && (
@@ -146,7 +146,7 @@ export function StatusBar({
                   className="flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] text-text-secondary transition-colors hover:bg-surface-muted/30 hover:text-text-primary"
                 >
                   <MessageCircle className="h-3 w-3" />
-                  <span className="hidden sm:inline">Ask</span>
+                  <span className="hidden sm:inline">Strategy</span>
                 </button>
               )}
               <div className="flex items-center gap-2 text-[11px]">
@@ -157,7 +157,7 @@ export function StatusBar({
                       <span className="relative inline-flex h-2 w-2 rounded-full bg-accent/70" />
                     </span>
                     <span className="hidden text-accent/80 sm:inline">
-                      {pendingDecisions} decision{pendingDecisions === 1 ? "" : "s"} pending
+                      {pendingDecisions} action{pendingDecisions === 1 ? "" : "s"} pending
                     </span>
                   </>
                 ) : (
@@ -186,9 +186,9 @@ export function StatusBar({
               </span>
             )}
             <span className="text-text-muted">
-              Built using public information only. Internal account details, consumption, opportunities, and competitive footprint must be validated post-onboarding.
+              Public intel only. Validate consumption and footprint post-onboarding.
             </span>
-            <span className="text-text-muted">{signalCount > 0 ? `${signalCount} public signals tracked` : "Public signal workflow active"}</span>
+            <span className="text-text-muted">{signalCount > 0 ? `${signalCount} signal${signalCount === 1 ? "" : "s"}` : "No signals yet"}</span>
           </div>
         </div>
       </header>
@@ -202,7 +202,7 @@ export function StatusBar({
                 <div>
                   <p className="text-[13px] font-medium text-text-primary">API Key</p>
                   <p className="mt-1 text-[11px] text-text-muted">
-                    Add your API key to enable chat and content generation.
+                    Enable AI-assisted strategy for this account.
                   </p>
                 </div>
               </div>
@@ -233,8 +233,8 @@ export function StatusBar({
 
               <div className="rounded-lg bg-surface/60 px-3 py-2 text-[11px] text-text-secondary">
                 {hasApiKey
-                  ? "An API key is saved for this browser."
-                  : "Add an API key to enable chat and content generation."}
+                  ? "Key saved. Strategy panel ready."
+                  : "Add key to enable AI-assisted execution."}
               </div>
 
               <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">

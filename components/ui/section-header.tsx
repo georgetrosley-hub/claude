@@ -11,17 +11,17 @@ interface SectionHeaderProps {
 
 export function SectionHeader({ title, subtitle, showLogo }: SectionHeaderProps) {
   return (
-    <header className="mb-6 sm:mb-8 lg:mb-10">
+    <header className="mb-5 sm:mb-6">
       <div className="flex items-center gap-3">
         {showLogo && (
-          <SnowflakeLogoIcon size={28} className="shrink-0 opacity-90" />
+          <SnowflakeLogoIcon size={24} className="shrink-0 opacity-90" />
         )}
         <div>
-          <h2 className="text-[15px] font-medium tracking-tight text-text-primary sm:text-[16px]">
+          <h2 className="text-[14px] font-semibold tracking-tight text-text-primary sm:text-[15px]">
             {title}
           </h2>
           {subtitle && (
-            <p className="mt-1 max-w-2xl text-[12px] leading-relaxed text-text-muted sm:text-[13px]">
+            <p className="mt-1 max-w-2xl text-[12px] leading-relaxed text-text-muted">
               {subtitle}
             </p>
           )}

@@ -2,17 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Snowflake GTM design system — internal AE hub */
+/* Snowflake Field Execution — premium internal territory OS */
 
-/* Snowflake Blue #29B5E8 (41, 181, 232), Mid Blue #11567F (17, 86, 127) */
+/* Snowflake Blue #29B5E8 (41, 181, 232) */
 :root,
 html[data-theme="dark"] {
-  --surface: 15 18 22;
-  --surface-elevated: 22 26 32;
-  --surface-muted: 32 38 46;
-  --surface-border: 45 55 68;
-  --surface-divider: 40 48 58;
-  --text-primary: 241 245 249;
+  --surface: 12 14 17;
+  --surface-elevated: 18 21 26;
+  --surface-muted: 26 30 36;
+  --surface-border: 38 45 55;
+  --surface-divider: 35 42 52;
+  --text-primary: 248 250 252;
   --text-secondary: 203 213 225;
   --text-muted: 148 163 184;
   --text-faint: 100 116 139;
@@ -59,13 +59,14 @@ body {
   font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
   overflow-x: hidden;
   transition:
     background-color 180ms ease,
     color 180ms ease;
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+  line-height: 1.5;
 }
 
 @media (pointer: coarse) {
