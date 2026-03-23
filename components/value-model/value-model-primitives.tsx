@@ -75,6 +75,8 @@ type SliderFieldProps = {
   id: string;
   label: string;
   hint?: string;
+  /** Subtle cue for which direction strengthens/weakens the outcome (slider semantics). */
+  orientationHint?: string;
   min: number;
   max: number;
   step: number;
@@ -89,6 +91,7 @@ export function SliderField({
   id,
   label,
   hint,
+  orientationHint,
   min,
   max,
   step,
@@ -159,6 +162,9 @@ export function SliderField({
           "accent-[rgb(var(--accent))]"
         )}
       />
+      {orientationHint ? (
+        <p className="text-[10px] leading-snug text-text-faint">{orientationHint}</p>
+      ) : null}
     </div>
   );
 }

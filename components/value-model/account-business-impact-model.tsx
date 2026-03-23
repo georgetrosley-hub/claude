@@ -7,7 +7,6 @@ import {
   OutputMetricRow,
   SliderField,
   SnowflakeAttributionBlock,
-  TimeToValueRow,
   ValueModelCard,
 } from "@/components/value-model/value-model-primitives";
 import { ImpactExplanationModal, type ImpactExplanationSection } from "@/components/value-model/impact-explanation-modal";
@@ -18,6 +17,12 @@ import {
   formatCurrencyInput,
   formatPercent,
 } from "@/lib/value-model-format";
+import {
+  computeCienaSnowflakeEnabled,
+  computeFintechSnowflakeEnabled,
+  computeSagentSnowflakeEnabled,
+} from "@/lib/snowflake-enabled-value";
+import { SnowflakeEnabledValueBlock } from "@/components/value-model/snowflake-enabled-value-block";
 import { cn } from "@/lib/utils";
 
 type AccountBusinessImpactModelProps = {
@@ -67,6 +72,11 @@ function CienaImpactModel({ accountName, proofPoint }: { accountName: string; pr
   const marginExposure = revenueAtRisk * (grossMarginPct / 100);
   const recoverableMargin = marginExposure * (improvementPct / 100);
 
+  const snowflakeEnabled = useMemo(
+    () => computeCienaSnowflakeEnabled(recoverableMargin, improvementPct, grossMarginPct, riskPct),
+    [recoverableMargin, improvementPct, grossMarginPct, riskPct]
+  );
+
   const insight = useMemo(() => {
     const rev = formatCurrencyCompact(revenueAtRisk);
     const me = formatCurrencyCompact(marginExposure);
@@ -82,16 +92,16 @@ function CienaImpactModel({ accountName, proofPoint }: { accountName: string; pr
   const sections: ImpactExplanationSection[] = useMemo(
     () => [
       {
-        title: "What the numbers imply",
-        body: `At these inputs, directionally ${formatCurrencyCompact(revenueAtRisk)} revenue at risk flows to ${formatCurrencyCompact(marginExposure)} margin exposure (${formatPercent(grossMarginPct)} GM) and ${formatCurrencyCompact(recoverableMargin)} recoverable if visibility improves ${formatPercent(improvementPct)} of that exposure — anchored to ${formatCurrencyCompact(backlog)} backlog with ${formatPercent(riskPct)} at-risk. Proof bar: ${proofPoint}.`,
+        title: "Total business exposure",
+        body: `At these inputs, ${formatCurrencyCompact(revenueAtRisk)} in revenue is at risk (${formatPercent(riskPct)} of ${formatCurrencyCompact(backlog)} backlog). At ${formatPercent(grossMarginPct)} gross margin, that is ${formatCurrencyCompact(marginExposure)} in margin exposure. If visibility and coordination improve enough to recover ${formatPercent(improvementPct)} of that exposure, recoverable margin is ${formatCurrencyCompact(recoverableMargin)}. Proof bar: ${proofPoint}.`,
+      },
+      {
+        title: "Snowflake-enabled value",
+        body: `Directionally ${formatCurrencyCompact(snowflakeEnabled.value)} — about ${formatPercent(snowflakeEnabled.unlockRatio * 100, 0)} of recoverable margin — is realistically attainable in an initial motion. Snowflake works on ERP and CRM data already in place, avoids a long pipeline rebuild before anything is visible, and gives sales, ops, and finance the same governed view of backlog → fulfillment → margin. That is how the recoverable pool becomes practical to capture quickly, not just theoretically.`,
       },
       {
         title: "Why that matters commercially",
         body: `This isn’t “better reporting.” It’s whether finance and ops can see backlog-driven margin exposure before the forecast locks — when trade-offs are still available. That’s the difference between a dashboard and a decision artifact.`,
-      },
-      {
-        title: "Why Snowflake makes this outcome practical",
-        body: `The value lands because Snowflake unifies ERP/CRM-backed signals into a governed cross-functional view quickly — without forcing a long pipeline rebuild before leadership sees anything useful. Friction drops, time-to-insight compresses, and the POV stays narrow: a few AI deals, defensible lineage, refresh leadership trusts.`,
       },
       {
         title: "Why this is the right first workload",
@@ -107,6 +117,8 @@ function CienaImpactModel({ accountName, proofPoint }: { accountName: string; pr
       recoverableMargin,
       revenueAtRisk,
       riskPct,
+      snowflakeEnabled.unlockRatio,
+      snowflakeEnabled.value,
     ]
   );
 
@@ -122,6 +134,7 @@ function CienaImpactModel({ accountName, proofPoint }: { accountName: string; pr
             id="ciena-backlog"
             label="Total AI backlog"
             hint="Directional backlog tied to AI demand you’re executing against."
+            orientationHint="Larger backlog increases total revenue at risk when risk share is held constant."
             min={5_000_000}
             max={120_000_000}
             step={500_000}
@@ -133,6 +146,7 @@ function CienaImpactModel({ accountName, proofPoint }: { accountName: string; pr
           <SliderField
             id="ciena-risk"
             label="Percent of backlog at risk"
+            orientationHint="Higher backlog risk increases revenue and margin exposure."
             min={5}
             max={45}
             step={1}
@@ -144,6 +158,7 @@ function CienaImpactModel({ accountName, proofPoint }: { accountName: string; pr
           <SliderField
             id="ciena-gm"
             label="Gross margin"
+            orientationHint="Higher gross margin widens margin exposure from the same revenue at risk."
             min={18}
             max={62}
             step={1}
@@ -156,6 +171,7 @@ function CienaImpactModel({ accountName, proofPoint }: { accountName: string; pr
             id="ciena-imp"
             label="Optional improvement from better visibility"
             hint="Share of margin exposure you could protect with earlier detection and coordination."
+            orientationHint="Greater visibility improvement increases recoverable margin."
             min={5}
             max={55}
             step={1}
@@ -171,6 +187,20 @@ function CienaImpactModel({ accountName, proofPoint }: { accountName: string; pr
             <OutputMetricRow label="Recoverable margin" value={formatCurrencyCompact(recoverableMargin)} />
           </div>
 
+          <SnowflakeEnabledValueBlock
+            title="Value unlockable with Snowflake"
+            valueDisplay={formatCurrencyCompact(snowflakeEnabled.value)}
+            portionLine={
+              recoverableMargin > 0
+                ? `≈ ${formatPercent(snowflakeEnabled.unlockRatio * 100, 0)} of recoverable margin in an initial motion`
+                : "No recoverable margin at these inputs — raise exposure or visibility improvement to see directional unlock."
+            }
+            barPercent={recoverableMargin > 0 ? snowflakeEnabled.unlockRatio * 100 : 0}
+            supportingText="Because Snowflake can work on existing operational data quickly, a meaningful portion of this margin protection is realistically achievable in an initial motion — without waiting for a pipeline rebuild."
+            timeToValueBadge="Fast on existing data"
+            timeToValueHint="First cross-functional backlog-to-margin signal without a multi-quarter replatform gate."
+          />
+
           <InsightBox>{insight}</InsightBox>
 
           <SnowflakeAttributionBlock
@@ -180,11 +210,6 @@ function CienaImpactModel({ accountName, proofPoint }: { accountName: string; pr
               "Creates finance, ops, and sales visibility on the same governed view of demand vs. fulfillment.",
               "Useful output in days — not months — so the POV proves value before architecture debates take over.",
             ]}
-          />
-
-          <TimeToValueRow
-            headline="Days, not months"
-            subline="First cross-functional backlog-to-margin signal without a multi-quarter replatform gate."
           />
         </div>
       </ValueModelCard>
@@ -213,6 +238,11 @@ function SagentImpactModel({ accountName, proofPoint }: { accountName: string; p
   const arrAtRisk = atRiskDeployments * arr;
   const recoverableArr = arrAtRisk * (recoverablePct / 100);
 
+  const snowflakeEnabled = useMemo(
+    () => computeSagentSnowflakeEnabled(recoverableArr, recoverablePct, detectDays, underPct),
+    [recoverableArr, recoverablePct, detectDays, underPct]
+  );
+
   const insight = useMemo(() => {
     const adr = formatCurrencyCompact(arrAtRisk);
     const rec = formatCurrencyCompact(recoverableArr);
@@ -225,23 +255,35 @@ function SagentImpactModel({ accountName, proofPoint }: { accountName: string; p
   const sections: ImpactExplanationSection[] = useMemo(
     () => [
       {
-        title: "What the numbers imply",
-        body: `Directionally ${formatCount(atRiskDeployments)} at-risk deployments → ${formatCurrencyCompact(arrAtRisk)} ARR at risk (${formatCurrencyCompact(arr)} avg ARR) → ${formatCurrencyCompact(recoverableArr)} recoverable at ${formatPercent(recoverablePct)}. Detection lag modeled ~${detectDays} days. Proof bar: ${proofPoint}.`,
+        title: "Total business exposure",
+        body: `Across ${formatCount(atRiskDeployments)} underperforming deployments (${formatPercent(underPct)} of ${formatCount(deployments)}), ARR at risk is ${formatCurrencyCompact(arrAtRisk)} at ${formatCurrencyCompact(arr)} average ARR. If ${formatPercent(recoverablePct)} of that exposure is recoverable with earlier detection, recoverable ARR is ${formatCurrencyCompact(recoverableArr)}. Operational detection lag is modeled at ${detectDays} days. Proof bar: ${proofPoint}.`,
+      },
+      {
+        title: "Snowflake-enabled value",
+        body: `Directionally ${formatCurrencyCompact(snowflakeEnabled.value)} — about ${formatPercent(snowflakeEnabled.unlockRatio * 100, 0)} of recoverable ARR — is realistically attainable in an initial motion. Snowflake unifies product, CS, and deployment signals so issues surface across customers without heavy custom engineering, which is what makes faster detection economically credible before retention damage sets in.`,
       },
       {
         title: "Why that matters commercially",
         body: `Retention is the board metric. If Dara rollouts drift, ARR leaks quietly — and CS can’t fix what it can’t see across customers. This is a health-and-economics story, not a telemetry flex.`,
       },
       {
-        title: "Why Snowflake makes this outcome practical",
-        body: `Snowflake collapses product, CS, and deployment signals into governed cross-customer visibility without a custom engineering program before action is possible. You get speed and alignment: identify the cohort, quantify exposure, then tighten the workflow — without slowing active rollouts.`,
-      },
-      {
         title: "Why this is the right first workload",
         body: `It matches the POV: one ops-owned exception path, measurable cycle-time improvement, and a pilot cohort view CS + Product will defend. Win that, then widen coverage — still anchored to retention economics.`,
       },
     ],
-    [arr, arrAtRisk, atRiskDeployments, detectDays, proofPoint, recoverableArr, recoverablePct]
+    [
+      arr,
+      arrAtRisk,
+      atRiskDeployments,
+      deployments,
+      detectDays,
+      proofPoint,
+      recoverableArr,
+      recoverablePct,
+      snowflakeEnabled.unlockRatio,
+      snowflakeEnabled.value,
+      underPct,
+    ]
   );
 
   return (
@@ -255,6 +297,7 @@ function SagentImpactModel({ accountName, proofPoint }: { accountName: string; p
           <SliderField
             id="sg-deploy"
             label="Number of Dara deployments"
+            orientationHint="More deployments scale total ARR at risk when underperformance share is held constant."
             min={10}
             max={200}
             step={1}
@@ -266,6 +309,7 @@ function SagentImpactModel({ accountName, proofPoint }: { accountName: string; p
           <SliderField
             id="sg-under"
             label="Percent underperforming"
+            orientationHint="A higher underperforming share increases at-risk deployments and ARR exposure."
             min={3}
             max={35}
             step={1}
@@ -277,6 +321,7 @@ function SagentImpactModel({ accountName, proofPoint }: { accountName: string; p
           <SliderField
             id="sg-arr"
             label="Average ARR per customer"
+            orientationHint="Higher ARR density increases dollars at risk for the same deployment count."
             min={120_000}
             max={1_500_000}
             step={10_000}
@@ -288,6 +333,7 @@ function SagentImpactModel({ accountName, proofPoint }: { accountName: string; p
           <SliderField
             id="sg-rec"
             label="Percent of at-risk ARR recoverable with earlier detection"
+            orientationHint="Earlier detection increases realistically recoverable ARR."
             min={10}
             max={80}
             step={1}
@@ -300,6 +346,7 @@ function SagentImpactModel({ accountName, proofPoint }: { accountName: string; p
             id="sg-days"
             label="Time to detect issues (operational)"
             hint="Used to contextualize urgency — not part of the ARR math."
+            orientationHint="Shorter detection lag improves how much recoverable ARR is realistic to capture."
             min={5}
             max={60}
             step={1}
@@ -315,6 +362,20 @@ function SagentImpactModel({ accountName, proofPoint }: { accountName: string; p
             <OutputMetricRow label="Recoverable ARR" value={formatCurrencyCompact(recoverableArr)} />
           </div>
 
+          <SnowflakeEnabledValueBlock
+            title="ARR recoverable with Snowflake"
+            valueDisplay={formatCurrencyCompact(snowflakeEnabled.value)}
+            portionLine={
+              recoverableArr > 0
+                ? `≈ ${formatPercent(snowflakeEnabled.unlockRatio * 100, 0)} of recoverable ARR in an initial motion`
+                : "No recoverable ARR at these inputs — adjust deployment or recovery assumptions."
+            }
+            barPercent={recoverableArr > 0 ? snowflakeEnabled.unlockRatio * 100 : 0}
+            supportingText="The faster deployment issues become visible across customers, the more realistic it becomes to protect ARR before underperformance turns into retention risk — without slowing active rollouts."
+            timeToValueBadge="Weeks, not quarters"
+            timeToValueHint="Cross-customer cohort visibility before you fund a slow custom rebuild."
+          />
+
           <InsightBox>{insight}</InsightBox>
 
           <SnowflakeAttributionBlock
@@ -324,11 +385,6 @@ function SagentImpactModel({ accountName, proofPoint }: { accountName: string; p
               "Insight across Dara customers without slowing active rollouts.",
               "Moves you from “quarterly surprises” to weekly operational clarity on what’s failing.",
             ]}
-          />
-
-          <TimeToValueRow
-            headline="Weeks, not quarters"
-            subline="Cross-customer cohort visibility before you fund a slow custom rebuild."
           />
         </div>
       </ValueModelCard>
@@ -356,6 +412,11 @@ function UsFintechImpactModel({ accountName, proofPoint }: { accountName: string
   const riskExposure = volumeImpacted * (lossRatePct / 100);
   const avoidableRisk = riskExposure * (avoidablePct / 100);
 
+  const snowflakeEnabled = useMemo(
+    () => computeFintechSnowflakeEnabled(avoidableRisk, avoidablePct, anomalyPct, lossRatePct),
+    [avoidableRisk, avoidablePct, anomalyPct, lossRatePct]
+  );
+
   const insight = useMemo(() => {
     const exp = formatCurrencyCompact(riskExposure);
     const av = formatCurrencyCompact(avoidableRisk);
@@ -365,16 +426,16 @@ function UsFintechImpactModel({ accountName, proofPoint }: { accountName: string
   const sections: ImpactExplanationSection[] = useMemo(
     () => [
       {
-        title: "What the numbers imply",
-        body: `${formatCurrencyCompact(annualVolume)} annual flow, ${formatPercent(anomalyPct, 1)} affected → ${formatCurrencyCompact(volumeImpacted)} impacted volume → ${formatCurrencyCompact(riskExposure)} exposure at ${formatPercent(lossRatePct, 2)} loss on affected flow → ${formatCurrencyCompact(avoidableRisk)} avoidable at ${formatPercent(avoidablePct)}. Proof bar: ${proofPoint}.`,
+        title: "Total business exposure",
+        body: `${formatCurrencyCompact(annualVolume)} annual workflow volume with ${formatPercent(anomalyPct, 1)} affected by anomalies yields ${formatCurrencyCompact(volumeImpacted)} impacted volume. At ${formatPercent(lossRatePct, 2)} estimated loss on affected flow, exposure is ${formatCurrencyCompact(riskExposure)}. If ${formatPercent(avoidablePct)} of that loss is avoidable with faster detection, avoidable risk is ${formatCurrencyCompact(avoidableRisk)}. Proof bar: ${proofPoint}.`,
+      },
+      {
+        title: "Snowflake-enabled value",
+        body: `Directionally ${formatCurrencyCompact(snowflakeEnabled.value)} — about ${formatPercent(snowflakeEnabled.unlockRatio * 100, 0)} of avoidable risk — is realistically addressable in an initial motion. Snowflake extends secure sharing on governed data, which reduces detection lag without unnecessary movement or shadow copies — the executive tradeoff in a regulated environment.`,
       },
       {
         title: "Why that matters commercially",
         body: `Secure access isn’t the bottleneck — decision speed under scrutiny is. The risk is downstream exposure that compounds while reporting catches up. The POV is measured: faster anomaly surfacing on a governed slice, not a platform science fair.`,
-      },
-      {
-        title: "Why Snowflake makes this outcome practical",
-        body: `Snowflake extends existing secure sharing patterns so insights land on governed data without unnecessary new movement or shadow copies. You reduce detection lag without increasing architectural risk — the regulated-environment tradeoff executives actually care about.`,
       },
       {
         title: "Why this is the right first workload",
@@ -389,6 +450,8 @@ function UsFintechImpactModel({ accountName, proofPoint }: { accountName: string
       lossRatePct,
       proofPoint,
       riskExposure,
+      snowflakeEnabled.unlockRatio,
+      snowflakeEnabled.value,
       volumeImpacted,
     ]
   );
@@ -405,6 +468,7 @@ function UsFintechImpactModel({ accountName, proofPoint }: { accountName: string
             id="ft-vol"
             label="Annual workflow volume"
             hint="Directional volume flowing through the scoped securitization process."
+            orientationHint="Higher annual volume scales impacted volume when anomaly share is held constant."
             min={400_000_000}
             max={8_000_000_000}
             step={50_000_000}
@@ -416,6 +480,7 @@ function UsFintechImpactModel({ accountName, proofPoint }: { accountName: string
           <SliderField
             id="ft-anom"
             label="Percent of volume affected by anomalies"
+            orientationHint="A larger affected share increases downstream exposure."
             min={0.5}
             max={14}
             step={0.5}
@@ -427,6 +492,7 @@ function UsFintechImpactModel({ accountName, proofPoint }: { accountName: string
           <SliderField
             id="ft-loss"
             label="Estimated loss rate on affected volume"
+            orientationHint="A higher loss rate on affected flow increases total risk exposure."
             min={0.05}
             max={2}
             step={0.05}
@@ -438,6 +504,7 @@ function UsFintechImpactModel({ accountName, proofPoint }: { accountName: string
           <SliderField
             id="ft-avoid"
             label="Percent of loss avoidable with faster detection"
+            orientationHint="Faster anomaly detection increases avoidable risk reduction."
             min={15}
             max={90}
             step={1}
@@ -453,6 +520,20 @@ function UsFintechImpactModel({ accountName, proofPoint }: { accountName: string
             <OutputMetricRow label="Avoidable risk" value={formatCurrencyCompact(avoidableRisk)} />
           </div>
 
+          <SnowflakeEnabledValueBlock
+            title="Risk reduction enabled by Snowflake"
+            valueDisplay={formatCurrencyCompact(snowflakeEnabled.value)}
+            portionLine={
+              avoidableRisk > 0
+                ? `≈ ${formatPercent(snowflakeEnabled.unlockRatio * 100, 0)} of avoidable risk in an initial motion`
+                : "No avoidable risk at these inputs — adjust volume, anomaly, or loss assumptions."
+            }
+            barPercent={avoidableRisk > 0 ? snowflakeEnabled.unlockRatio * 100 : 0}
+            supportingText="In a regulated environment, the value is not just the analytics outcome. It is the ability to act faster without introducing additional architectural risk — extending secure sharing on data you already govern."
+            timeToValueBadge="Governed speed"
+            timeToValueHint="Reduce detection lag without new data sprawl or ungoverned copies."
+          />
+
           <InsightBox>{insight}</InsightBox>
 
           <SnowflakeAttributionBlock
@@ -462,11 +543,6 @@ function UsFintechImpactModel({ accountName, proofPoint }: { accountName: string
               "Avoids unnecessary data movement and duplicate copies just to chase speed.",
               "Supports faster decisions without increasing architectural or compliance risk.",
             ]}
-          />
-
-          <TimeToValueRow
-            headline="Faster decisions on governed data"
-            subline="Reduce detection lag without new data sprawl or ungoverned copies."
           />
         </div>
       </ValueModelCard>
