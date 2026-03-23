@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { useApp } from "@/app/context/app-context";
 import { useTerritoryData } from "@/app/context/territory-data-context";
@@ -97,6 +97,11 @@ export function Overview({
   const [signalAccount, setSignalAccount] = useState(account.id);
   const [briefingWindow, setBriefingWindow] = useState<"24h" | "7d" | "30d">("7d");
 
+  useEffect(() => {
+    setActivityAccount(account.id);
+    setSignalAccount(account.id);
+  }, [account.id]);
+
   const selectedAccount = useMemo(
     () => priorityAccounts.find((p) => p.id === account.id) ?? priorityAccounts[0],
     [account.id, priorityAccounts]
@@ -151,6 +156,18 @@ export function Overview({
   );
 
   const expansionSequence = ["Initial Workload", "Early Adoption", "Platform Trust", "Expanded Consumption"];
+  const filteredWeekItems = useMemo(
+    () => next7Days.filter((item) => item.account === account.id),
+    [account.id, next7Days]
+  );
+  const filteredActivities = useMemo(
+    () => activities.filter((a) => a.account === account.id).slice(0, 8),
+    [account.id, activities]
+  );
+  const filteredSignals = useMemo(
+    () => signals.filter((s) => s.account === account.id).slice(0, 8),
+    [account.id, signals]
+  );
 
   return (
     <div className="space-y-8 sm:space-y-10">
@@ -269,7 +286,7 @@ export function Overview({
 
       {/* SECTION 6: EXPANSION PATH */}
       <section id="expansion-path" className="scroll-mt-24 rounded-2xl border border-surface-border/50 bg-surface-elevated/30 p-4 sm:p-6">
-        <SectionHeader title="Expansion Path" subtitle="Land → prove → expand sequence" />
+        <SectionHeader title="Expansion Path" subtitle={`${selectedAccount.name} — Land → prove → expand`} />
         <div className="mt-4 flex flex-wrap gap-2">
           {expansionSequence.map((step) => (
             <span
@@ -280,33 +297,39 @@ export function Overview({
             </span>
           ))}
         </div>
-        <p className="mt-3 text-[12px] text-text-secondary">
-          Land one workflow, prove value quickly, then broaden adoption across teams.
-        </p>
+        <div className="mt-3 space-y-2">
+          <p className="text-[12px] font-medium text-text-primary">Wedge: {selectedAccount.expansionWedge}</p>
+          <p className="text-[12px] text-text-secondary">
+            Proof: {selectedAccount.proofPoint}. Pivot if needed: {selectedAccount.pivotIfNeeded}.
+          </p>
+        </div>
       </section>
 
       {/* SECTION 7: WEEKLY BRIEFING */}
       <section id="weekly-briefing" className="scroll-mt-24 rounded-2xl border border-surface-border/50 bg-surface-elevated/30 p-4 sm:p-6">
-        <SectionHeader title="Weekly Briefing" subtitle="This week's operating priorities" />
+        <SectionHeader title="Weekly Briefing" subtitle={`${selectedAccount.name} — This week's priorities`} />
         <ul className="mt-4 space-y-2">
-          {next7Days.map((item) => (
-            <li
-              key={`${item.day}-${item.action}`}
-              className="flex flex-wrap items-center gap-2 rounded-lg border border-surface-border/50 bg-surface-muted/30 px-3 py-2 text-[12px]"
-            >
-              <span className="font-medium text-text-faint">{item.day}</span>
-              <span className="rounded bg-accent/15 px-2 py-0.5 text-[10px] text-accent">
-                {accountDisplayName(item.account)}
-              </span>
-              <span className="text-text-secondary">{item.action}</span>
+          {filteredWeekItems.length > 0 ? (
+            filteredWeekItems.map((item) => (
+              <li
+                key={`${item.day}-${item.action}`}
+                className="flex flex-wrap items-center gap-2 rounded-lg border border-surface-border/50 bg-surface-muted/30 px-3 py-2 text-[12px]"
+              >
+                <span className="font-medium text-text-faint">{item.day}</span>
+                <span className="text-text-secondary">{item.action}</span>
+              </li>
+            ))
+          ) : (
+            <li className="rounded-lg border border-surface-border/50 bg-surface-muted/30 px-3 py-4 text-[12px] text-text-muted">
+              No scheduled priorities for {selectedAccount.name} this week. Add items in territory data or switch accounts.
             </li>
-          ))}
+          )}
         </ul>
       </section>
 
       {/* SECTION 8: SIGNALS & ACTIVITY */}
       <section id="signals-activity" className="scroll-mt-24 space-y-4">
-        <SectionHeader title="Signals & Activity" subtitle="Curated news, outreach log—connect to CRM post-onboarding" />
+        <SectionHeader title="Signals & Activity" subtitle={`${selectedAccount.name} — Curated news, outreach log`} />
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <div className="rounded-xl border border-surface-border/50 bg-surface-elevated/30 p-4">
             <h4 className="text-[12px] font-semibold text-text-primary">Activity Feed</h4>
@@ -337,15 +360,16 @@ export function Overview({
               </button>
             </form>
             <div className="mt-3 max-h-48 space-y-2 overflow-y-auto">
-              {activities.slice(0, 8).map((a, i) => (
-                <div key={i} className="flex gap-2 text-[11px]">
-                  <span className="shrink-0 text-text-faint">{a.timestamp}</span>
-                  <span className="rounded bg-accent/10 px-1.5 py-0.5 text-accent">
-                    {accountDisplayName(a.account)}
-                  </span>
-                  <span className="text-text-secondary">{a.text}</span>
-                </div>
-              ))}
+              {filteredActivities.length > 0 ? (
+                filteredActivities.map((a, i) => (
+                  <div key={`${a.timestamp}-${a.text}-${i}`} className="flex gap-2 text-[11px]">
+                    <span className="shrink-0 text-text-faint">{a.timestamp}</span>
+                    <span className="text-text-secondary">{a.text}</span>
+                  </div>
+                ))
+              ) : (
+                <p className="text-[11px] text-text-muted">No activity for {selectedAccount.name} yet.</p>
+              )}
             </div>
           </div>
           <div className="rounded-xl border border-surface-border/50 bg-surface-elevated/30 p-4">
@@ -377,15 +401,16 @@ export function Overview({
               </button>
             </form>
             <div className="mt-3 max-h-48 space-y-2 overflow-y-auto">
-              {signals.slice(0, 8).map((s, i) => (
-                <div key={i} className="flex gap-2 text-[11px]">
-                  <span className="shrink-0 text-text-faint">{s.timestamp}</span>
-                  <span className="rounded bg-accent/10 px-1.5 py-0.5 text-accent">
-                    {accountDisplayName(s.account)}
-                  </span>
-                  <span className="text-text-secondary">{s.text}</span>
-                </div>
-              ))}
+              {filteredSignals.length > 0 ? (
+                filteredSignals.map((s, i) => (
+                  <div key={`${s.timestamp}-${s.text}-${i}`} className="flex gap-2 text-[11px]">
+                    <span className="shrink-0 text-text-faint">{s.timestamp}</span>
+                    <span className="text-text-secondary">{s.text}</span>
+                  </div>
+                ))
+              ) : (
+                <p className="text-[11px] text-text-muted">No signals for {selectedAccount.name} yet.</p>
+              )}
             </div>
           </div>
         </div>
