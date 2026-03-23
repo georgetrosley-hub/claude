@@ -4,6 +4,7 @@ import { useMemo, useState, type ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import type { PriorityAccount } from "@/data/territory-data";
 import { buildPovPlanFromPriorityAccount, type PovPlan } from "@/data/pov-plans";
+import { AccountBusinessImpactModel } from "@/components/value-model/account-business-impact-model";
 import { cn } from "@/lib/utils";
 import {
   BookOpenCheck,
@@ -277,6 +278,12 @@ export function PovPlanModule({ priorityAccount, onGeneratePovPlan }: PovPlanMod
             {recommendedNextStep}
           </p>
         </PovBlock>
+
+        <AccountBusinessImpactModel
+          accountId={priorityAccount.id}
+          accountName={priorityAccount.name}
+          proofPoint={priorityAccount.proofPoint}
+        />
 
         <PovBlock icon={BookOpenCheck} title="NotebookLM Prompt Generator" summary="Generate a share-ready briefing prompt">
           <div className="flex flex-wrap gap-2">

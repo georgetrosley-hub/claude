@@ -107,3 +107,46 @@ body {
 .snowflake-glow {
   animation: subtle-glow 4s ease-in-out infinite;
 }
+
+/* Value model range inputs — premium, minimal */
+input[type="range"].value-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+}
+input[type="range"].value-slider:focus {
+  outline: none;
+}
+input[type="range"].value-slider:focus-visible {
+  box-shadow: 0 0 0 2px rgb(var(--surface) / 1), 0 0 0 4px rgb(var(--accent) / 0.35);
+  border-radius: 9999px;
+}
+input[type="range"].value-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: rgb(var(--accent));
+  border: 2px solid rgb(var(--surface-elevated));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  margin-top: -5px;
+}
+input[type="range"].value-slider::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 9999px;
+  background: rgb(var(--surface-border) / 0.45);
+}
+input[type="range"].value-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background: rgb(var(--accent));
+  border: 2px solid rgb(var(--surface-elevated));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+input[type="range"].value-slider::-moz-range-track {
+  height: 8px;
+  border-radius: 9999px;
+  background: rgb(var(--surface-border) / 0.55);
+}
