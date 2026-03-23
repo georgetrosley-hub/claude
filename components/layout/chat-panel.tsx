@@ -9,7 +9,7 @@ import { useApiKey } from "@/app/context/api-key-context";
 import { cn } from "@/lib/utils";
 import { readApiErrorMessage } from "@/lib/client/api";
 import { streamSseText } from "@/lib/client/sse";
-import { SnowflakeLogoIcon } from "@/components/ui/snowflake-logo";
+import { SnowflakeBrandmark, SnowflakeLogoIcon } from "@/components/ui/snowflake-logo";
 import type { Account, Competitor } from "@/types";
 
 interface Message {
@@ -221,7 +221,7 @@ export function ChatPanel({
             {/* Header */}
             <div className="flex min-h-12 shrink-0 items-center justify-between border-b border-surface-border/40 bg-surface-elevated/70 backdrop-blur-sm px-4 py-3">
               <div className="flex min-w-0 items-center gap-2">
-                <SnowflakeLogoIcon size={20} />
+                <SnowflakeBrandmark height={18} className="max-w-[min(42vw,9rem)]" />
                 <span className="truncate text-[13px] font-medium text-text-primary">
                   Execution Desk
                 </span>
@@ -258,10 +258,7 @@ export function ChatPanel({
               {messages.length === 0 && !streamingContent && (
                 <div className="flex h-full flex-col items-center justify-center px-4 text-center sm:px-8">
                   <div className="w-full max-w-md rounded-xl border border-surface-border/50 bg-surface-elevated/30 px-6 py-10">
-                  <SnowflakeLogoIcon
-                    size={32}
-                    className="mb-4 opacity-90"
-                  />
+                  <SnowflakeBrandmark height={36} className="mb-4 mx-auto opacity-95" />
                   <p className="text-[15px] font-semibold text-text-primary mb-1">
                     Execution Desk
                   </p>

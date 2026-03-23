@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { SnowflakeLogoIcon, SnowflakeWordmark } from "@/components/ui/snowflake-logo";
+import { SnowflakeBrandmark, SnowflakeLogoIcon } from "@/components/ui/snowflake-logo";
 import {
   MessageCircle,
   LayoutDashboard,
@@ -66,16 +66,15 @@ function SidebarBody({
     <>
       <div className={cn("relative px-5 py-5", compact && "px-3 py-4")}>
         <div className="flex items-center justify-between gap-2">
-          <div className={cn("flex items-center gap-2", compact && "justify-center")}>
-            <div className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-md">
-              <SnowflakeLogoIcon size={24} className="h-full w-full" />
-            </div>
-            {!compact && (
-              <div>
-                <SnowflakeWordmark />
-                <p className="text-[11px] text-text-muted">
-                  Enterprise Territory Execution
-                </p>
+          <div className={cn("flex min-w-0 items-center gap-2", compact && "justify-center")}>
+            {compact ? (
+              <div className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-md">
+                <SnowflakeLogoIcon size={24} className="h-full w-full" />
+              </div>
+            ) : (
+              <div className="min-w-0">
+                <SnowflakeBrandmark height={26} priority className="max-w-[min(100%,11rem)]" />
+                <p className="mt-1 text-[11px] text-text-muted">Enterprise Territory Execution</p>
               </div>
             )}
           </div>

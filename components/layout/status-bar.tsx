@@ -16,7 +16,7 @@ import {
 import { useApiKey } from "@/app/context/api-key-context";
 import { useTheme } from "@/app/context/theme-context";
 import { cn } from "@/lib/utils";
-import { SnowflakeLogoIcon, SnowflakeWordmark } from "@/components/ui/snowflake-logo";
+import { SnowflakeBrandmark, SnowflakeLogoIcon } from "@/components/ui/snowflake-logo";
 import type { Account } from "@/types";
 import type { DealHealthSummary } from "@/lib/deal-health";
 
@@ -85,9 +85,13 @@ export function StatusBar({
               )}
             </button>
 
-            <div className="flex items-center gap-3">
-              <SnowflakeWordmark className="shrink-0 text-[13px] font-semibold tracking-tight text-text-primary" />
-              <div className="hidden sm:block">
+            <div className="flex min-w-0 items-center gap-3">
+              <SnowflakeBrandmark
+                height={22}
+                priority
+                className="max-w-[min(52vw,11rem)] sm:max-w-none"
+              />
+              <div className="hidden min-w-0 sm:block">
                 <span className="font-semibold text-[13px] text-text-primary tracking-tight">
                   Enterprise Territory Execution
                 </span>

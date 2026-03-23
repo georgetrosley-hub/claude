@@ -4,6 +4,9 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 const LOGO_SRC = "/snowflake-logo.png";
+/** Horizontal wordmark (Wikimedia Snowflake_Logo.svg) — viewBox 184×44, transparent */
+const WORDMARK_HORIZONTAL_SRC = "/snowflake-logo-horizontal.svg";
+const WORDMARK_HW_RATIO = 184 / 44;
 
 interface SnowflakeLogoProps {
   className?: string;
@@ -32,6 +35,31 @@ export function SnowflakeWordmark({ className }: { className?: string }) {
     <span className={cn("font-semibold tracking-tight text-[15px] text-text-primary", className)}>
       Snowflake
     </span>
+  );
+}
+
+/** Full horizontal Snowflake logo (icon + wordmark). SVG has transparent background. */
+export function SnowflakeBrandmark({
+  className,
+  height = 26,
+  priority,
+}: {
+  className?: string;
+  height?: number;
+  priority?: boolean;
+}) {
+  const h = height;
+  const w = Math.round(h * WORDMARK_HW_RATIO);
+  return (
+    <img
+      src={WORDMARK_HORIZONTAL_SRC}
+      alt="Snowflake"
+      width={w}
+      height={h}
+      className={cn("shrink-0 object-contain object-left", className)}
+      fetchPriority={priority ? "high" : undefined}
+      decoding="async"
+    />
   );
 }
 
