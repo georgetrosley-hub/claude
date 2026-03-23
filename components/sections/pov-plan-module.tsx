@@ -198,7 +198,7 @@ export function PovPlanModule({ priorityAccount, onGeneratePovPlan }: PovPlanMod
           summary="What this POV proves and why now"
         >
           <p className="text-[12px] leading-relaxed text-text-secondary">{objectiveText}</p>
-          <p className="mt-2 text-[11px] font-medium text-amber-300/90">Why now: {whyNow}</p>
+          <p className="mt-2 text-[11px] font-medium text-[#36b39a]">Why now: {whyNow}</p>
         </PovBlock>
 
         <div className="grid gap-4 lg:grid-cols-2">

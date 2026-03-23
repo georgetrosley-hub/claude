@@ -50,7 +50,7 @@ function AccountCard({
         </span>
       </div>
       <p className="mt-2 text-[12px] text-text-secondary line-clamp-2">{account.whyMatters}</p>
-      <p className="mt-2 text-[11px] font-medium text-amber-300/90">Why now: {WHY_NOW_BY_ACCOUNT[account.id] ?? account.status}</p>
+      <p className="mt-2 text-[11px] font-medium text-[#36b39a]">Why now: {WHY_NOW_BY_ACCOUNT[account.id] ?? account.status}</p>
       <p className="mt-2 text-[11px] font-semibold text-accent">Next action: {account.nextAction}</p>
     </article>
   );
