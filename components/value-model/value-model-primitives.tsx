@@ -5,19 +5,41 @@ import { motion } from "framer-motion";
 import { BarChart3, Clock3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export function ValueModelCard({
-  title,
-  subtitle,
-  children,
-  footer,
-  action,
-}: {
-  title: string;
-  subtitle: string;
+type ValueModelCardProps = {
   children: ReactNode;
   footer?: ReactNode;
   action?: ReactNode;
-}) {
+} & (
+  | {
+      variant?: "full";
+      title: string;
+      subtitle: string;
+    }
+  | {
+      variant: "standalone";
+      title?: undefined;
+      subtitle?: undefined;
+    }
+);
+
+export function ValueModelCard(props: ValueModelCardProps) {
+  const { children, footer, action } = props;
+  const variant = props.variant ?? "full";
+
+  if (variant === "standalone") {
+    return (
+      <div className="rounded-xl border border-surface-border/40 bg-surface-elevated/45 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
+        <div className="p-4 sm:p-5">{children}</div>
+        {(action || footer) && (
+          <div className="flex flex-col gap-3 border-t border-surface-border/30 px-4 py-3 sm:px-5">
+            {action}
+            {footer}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-xl border border-surface-border/40 bg-surface-elevated/45 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
       <div className="border-b border-surface-border/35 px-4 py-3 sm:px-5 sm:py-3.5">
@@ -27,8 +49,8 @@ export function ValueModelCard({
               <BarChart3 className="h-4 w-4 text-accent" strokeWidth={1.8} />
             </div>
             <div className="min-w-0">
-              <h3 className="text-[13px] font-semibold tracking-tight text-text-primary">{title}</h3>
-              <p className="mt-0.5 text-[11px] leading-snug text-text-muted">{subtitle}</p>
+              <h3 className="text-[13px] font-semibold tracking-tight text-text-primary">{props.title}</h3>
+              <p className="mt-0.5 text-[11px] leading-snug text-text-muted">{props.subtitle}</p>
             </div>
           </div>
           {action ? <div className="shrink-0 sm:pt-0.5">{action}</div> : null}

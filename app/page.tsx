@@ -10,9 +10,9 @@ import { Overview } from "@/components/sections/overview";
 
 const ORDERED_SECTIONS: ReadonlyArray<{ sectionId: SectionId; anchorId: string }> = [
   { sectionId: "overview", anchorId: "overview" },
-  { sectionId: "priorityAccounts", anchorId: "priority-accounts" },
   { sectionId: "povPlan", anchorId: "pov-plan" },
-  { sectionId: "operationsHub", anchorId: "operations-hub" },
+  { sectionId: "execution", anchorId: "execution" },
+  { sectionId: "businessImpact", anchorId: "business-impact" },
 ] as const;
 const ACTIVATION_OFFSET_PX = 120;
 

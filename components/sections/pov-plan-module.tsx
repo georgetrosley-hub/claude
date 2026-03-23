@@ -4,7 +4,6 @@ import { useMemo, useState, type ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 import type { PriorityAccount } from "@/data/territory-data";
 import { buildPovPlanFromPriorityAccount, type PovPlan } from "@/data/pov-plans";
-import { AccountBusinessImpactModel } from "@/components/value-model/account-business-impact-model";
 import { cn } from "@/lib/utils";
 import {
   BookOpenCheck,
@@ -162,13 +161,13 @@ export function PovPlanModule({ priorityAccount, onGeneratePovPlan }: PovPlanMod
             <div className="flex items-center gap-2">
               <BookOpenCheck className="h-4 w-4 text-accent" strokeWidth={1.8} />
               <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent/90">
-                POV Plan
+                POV
               </p>
             </div>
             <h2 className="mt-2 text-[16px] font-semibold tracking-tight text-text-primary">
               {priorityAccount.name}
             </h2>
-            <p className="mt-1 text-[11px] text-text-faint">Executive-friendly proof of value artifact</p>
+            <p className="mt-1 text-[11px] text-text-faint">Hypothesis, workload, and proof plan</p>
           </div>
           <div className="flex shrink-0 gap-2">
             <button
@@ -278,12 +277,6 @@ export function PovPlanModule({ priorityAccount, onGeneratePovPlan }: PovPlanMod
             {recommendedNextStep}
           </p>
         </PovBlock>
-
-        <AccountBusinessImpactModel
-          accountId={priorityAccount.id}
-          accountName={priorityAccount.name}
-          proofPoint={priorityAccount.proofPoint}
-        />
 
         <PovBlock icon={BookOpenCheck} title="NotebookLM Prompt Generator" summary="Generate a share-ready briefing prompt">
           <div className="flex flex-wrap gap-2">

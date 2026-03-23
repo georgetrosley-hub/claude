@@ -45,8 +45,8 @@ function ExplainButton({ onClick }: { onClick: () => void }) {
       type="button"
       onClick={onClick}
       className={cn(
-        "inline-flex w-full items-center justify-center rounded-lg border border-accent/28 bg-accent/[0.08] px-3 py-2",
-        "text-[11px] font-semibold text-accent transition-colors hover:bg-accent/[0.12] sm:w-auto"
+        "inline-flex w-full items-center justify-center rounded-lg border border-accent/28 bg-accent/[0.08] px-3 py-2.5",
+        "text-[11px] font-semibold text-accent transition-colors hover:bg-accent/[0.12]"
       )}
     >
       Explain the Impact
@@ -113,8 +113,7 @@ function CienaImpactModel({ accountName, proofPoint }: { accountName: string; pr
   return (
     <>
       <ValueModelCard
-        title="Business Impact Model"
-        subtitle="Quantify the margin exposure created by backlog and fulfillment risk on AI deals."
+        variant="standalone"
         action={<ExplainButton onClick={() => setExplainOpen(true)} />}
         footer={<DirectionalDisclaimer />}
       >
@@ -248,8 +247,7 @@ function SagentImpactModel({ accountName, proofPoint }: { accountName: string; p
   return (
     <>
       <ValueModelCard
-        title="Business Impact Model"
-        subtitle="Estimate the ARR and retention exposure tied to underperforming Dara deployments."
+        variant="standalone"
         action={<ExplainButton onClick={() => setExplainOpen(true)} />}
         footer={<DirectionalDisclaimer />}
       >
@@ -398,8 +396,7 @@ function UsFintechImpactModel({ accountName, proofPoint }: { accountName: string
   return (
     <>
       <ValueModelCard
-        title="Business Impact Model"
-        subtitle="Illustrate the risk reduction opportunity from faster anomaly detection on securitization workflows."
+        variant="standalone"
         action={<ExplainButton onClick={() => setExplainOpen(true)} />}
         footer={<DirectionalDisclaimer />}
       >

@@ -332,8 +332,9 @@ export function AccountExecutionPanel() {
   }, [outputs, viewing]);
 
   return (
-    <section
-      className="scroll-mt-24 rounded-2xl border border-surface-border/50 bg-surface-elevated/35 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]"
+    <div
+      className="rounded-2xl border border-surface-border/50 bg-surface-elevated/35 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]"
+      role="region"
       aria-label="Execution runbook"
     >
       <div className="border-b border-surface-border/40 px-4 py-3 sm:px-5">
@@ -599,6 +600,6 @@ export function AccountExecutionPanel() {
           )}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

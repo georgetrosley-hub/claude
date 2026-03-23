@@ -6,22 +6,22 @@ import { SnowflakeLogoIcon, SnowflakeWordmark } from "@/components/ui/snowflake-
 import {
   MessageCircle,
   LayoutDashboard,
-  Target,
   PanelLeftClose,
   PanelLeftOpen,
   X,
   BookOpenCheck,
-  NotebookPen,
+  Workflow,
+  TrendingUp,
 } from "lucide-react";
 
 const sectionGroups = [
   {
-    label: "Territory execution",
+    label: "Territory",
     items: [
       { id: "overview", label: "Overview", icon: LayoutDashboard },
-      { id: "priorityAccounts", label: "Priority Accounts", icon: Target },
-      { id: "povPlan", label: "POV Plan", icon: BookOpenCheck },
-      { id: "operationsHub", label: "Operations Hub", icon: NotebookPen },
+      { id: "povPlan", label: "POV", icon: BookOpenCheck },
+      { id: "execution", label: "Execution", icon: Workflow },
+      { id: "businessImpact", label: "Business Impact", icon: TrendingUp },
     ],
   },
 ] as const;
@@ -148,6 +148,7 @@ function SidebarBody({
             <div className="space-y-0.5">
               {group.items.map(({ id, label, icon: Icon }) => {
                 const isActive = activeSection === id;
+                const isImpact = id === "businessImpact";
                 return (
                   <button
                     key={id}
@@ -158,7 +159,8 @@ function SidebarBody({
                       compact && "justify-center px-0 py-2 min-h-[40px]",
                       isActive
                         ? "border-accent/35 bg-surface-muted/60 text-accent font-semibold"
-                        : "text-text-muted hover:bg-surface-muted/30 hover:text-text-secondary hover:border-surface-border/50"
+                        : "text-text-muted hover:bg-surface-muted/30 hover:text-text-secondary hover:border-surface-border/50",
+                      !isActive && isImpact && "font-medium text-text-secondary/95"
                     )}
                     aria-label={label}
                     title={label}
@@ -166,12 +168,13 @@ function SidebarBody({
                     <Icon
                       className={cn(
                         "h-[14px] w-[14px] shrink-0 transition-colors duration-200",
-                        isActive ? "text-accent" : "opacity-45 group-hover:opacity-70"
+                        isActive ? "text-accent" : "opacity-45 group-hover:opacity-70",
+                        !isActive && isImpact && "opacity-70"
                       )}
                       strokeWidth={1.8}
                     />
                     {!compact && (
-                      <span>{label}</span>
+                      <span className={cn(isImpact && !isActive && "tracking-tight")}>{label}</span>
                     )}
                     {isActive && !compact && (
                       <span className="ml-auto h-1 w-1 rounded-full bg-accent" />
@@ -201,9 +204,9 @@ function SidebarBody({
       {!compact && (
         <div className="space-y-1 px-5 pb-4">
           <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-text-faint/70">
-            Internal field ops
+            AE narrative
           </p>
-          <p className="text-[10px] text-text-faint/60">Workflow guidance for enterprise execution.</p>
+          <p className="text-[10px] text-text-faint/60">Account strategy, execution, and business value.</p>
         </div>
       )}
     </>
