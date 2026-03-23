@@ -5,7 +5,6 @@ import { SectionHeader } from "@/components/ui/section-header";
 import { useTerritoryData } from "@/app/context/territory-data-context";
 import type { PriorityAccount } from "@/data/territory-data";
 import { PovPlanModule } from "@/components/sections/pov-plan-module";
-import { AccountExecutionPanel } from "@/components/sections/account-execution-panel";
 import { BusinessImpactSection } from "@/components/sections/business-impact-section";
 import { cn } from "@/lib/utils";
 
@@ -80,8 +79,7 @@ export function Overview({
         <div className="rounded-2xl border border-surface-border/50 bg-surface-elevated/30 p-5 sm:p-6">
           <h1 className="text-[20px] font-semibold tracking-tight text-text-primary sm:text-[22px]">Territory POV</h1>
           <p className="mt-2 max-w-2xl text-[12px] leading-relaxed text-text-muted">
-            Pick an account, align the POV, execute the runbook, and quantify business impact — one flow from problem to
-            value.
+            Pick an account, align the POV, and quantify business impact — one flow from problem to value.
           </p>
         </div>
 
@@ -107,14 +105,6 @@ export function Overview({
         priorityAccount={selectedAccount}
         onGeneratePovPlan={onOpenStrategyWithPrompt}
       />
-
-      <section id="execution" className="scroll-mt-24 space-y-4 sm:space-y-5">
-        <SectionHeader
-          title="Execution"
-          subtitle="Runbook outputs for live account work — brief, discovery, POV, expansion — copy-ready for email and CRM."
-        />
-        <AccountExecutionPanel />
-      </section>
 
       <BusinessImpactSection
         accountId={selectedAccount.id}

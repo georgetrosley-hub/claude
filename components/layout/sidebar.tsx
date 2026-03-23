@@ -10,7 +10,6 @@ import {
   PanelLeftOpen,
   X,
   BookOpenCheck,
-  Workflow,
   TrendingUp,
 } from "lucide-react";
 
@@ -20,7 +19,6 @@ const sectionGroups = [
     items: [
       { id: "overview", label: "Overview", icon: LayoutDashboard },
       { id: "povPlan", label: "POV", icon: BookOpenCheck },
-      { id: "execution", label: "Execution", icon: Workflow },
       { id: "businessImpact", label: "Business Impact", icon: TrendingUp },
     ],
   },
