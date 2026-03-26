@@ -10,7 +10,6 @@ import {
   Target,
   Zap,
   DollarSign,
-  Map,
   ListChecks,
   Flag,
 } from "lucide-react";
@@ -24,7 +23,6 @@ const sectionGroups = [
       { id: "whyNow", label: "Why now", icon: Zap },
       { id: "execution", label: "Execution plan", icon: Flag },
       { id: "dollars", label: "Value in dollars", icon: DollarSign },
-      { id: "expansion", label: "Expansion map", icon: Map },
       { id: "prioritization", label: "Prioritization", icon: ListChecks },
       { id: "closing", label: "Close", icon: Presentation },
     ],
@@ -71,21 +69,19 @@ function SidebarBody({
       <div className={cn("relative px-5 py-5", compact && "px-3 py-4")}>
         <div className="flex items-center justify-between gap-2">
           <div className={cn("flex min-w-0 items-center gap-2", compact && "justify-center")}>
-            <div className={cn("shrink-0", compact ? "hidden" : "")} aria-hidden>
+            <div className="shrink-0" aria-hidden>
               <img
                 src="/claude-ai-symbol.svg"
                 alt=""
                 className="h-5 w-5 opacity-80"
               />
             </div>
-            <div className={cn("min-w-0", compact ? "text-center" : "")}>
-              <p className={cn("text-[12px] font-semibold tracking-tight text-text-primary", compact && "text-[11px]")}>
-                Claude Enterprise
-              </p>
-              {!compact && (
+            {!compact && (
+              <div className="min-w-0">
+                <p className="text-[12px] font-semibold tracking-tight text-text-primary">Claude Enterprise</p>
                 <p className="mt-1 text-[11px] text-text-muted">Ciena account strategy (March 2026)</p>
-              )}
-            </div>
+              </div>
+            )}
           </div>
           {onToggleCollapsed && (
             <button

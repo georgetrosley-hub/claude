@@ -10,7 +10,6 @@ const ORDERED_SECTIONS: ReadonlyArray<{ sectionId: SectionId; anchorId: string }
   { sectionId: "whyNow", anchorId: "why-now" },
   { sectionId: "execution", anchorId: "execution" },
   { sectionId: "dollars", anchorId: "dollars" },
-  { sectionId: "expansion", anchorId: "expansion" },
   { sectionId: "prioritization", anchorId: "prioritization" },
   { sectionId: "closing", anchorId: "closing" },
 ] as const;
