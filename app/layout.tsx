@@ -36,7 +36,6 @@ export const metadata: Metadata = {
     "How I’d win Ciena for Claude Enterprise. Wedge, proof plan, and a finance-grade value model.",
   icons: {
     icon: [{ url: "/claude-ai-symbol.svg", type: "image/svg+xml", sizes: "any" }],
-    apple: [{ url: "/adaptive-logo-dark.png", type: "image/png", sizes: "180x180" }],
   },
   openGraph: {
     title: "Ciena Account Strategy | Claude Enterprise",
@@ -47,9 +46,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/adaptive-logo-dark.png",
-        width: 512,
-        height: 512,
+        url: "/claude-ai-symbol.svg",
         alt: "Claude",
       },
     ],
@@ -58,7 +55,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "Ciena Account Strategy | Claude Enterprise",
     description: "How I’d win Ciena for Claude Enterprise.",
-    images: ["/adaptive-logo-dark.png"],
+    images: ["/claude-ai-symbol.svg"],
   },
 };
 
