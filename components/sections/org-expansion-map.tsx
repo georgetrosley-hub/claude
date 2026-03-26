@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { CircleAlert, Target, Users } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { SectionHeader } from "@/components/ui/section-header";
 import { OrgNodeCard } from "@/components/ui/org-node-card";
 import { clamp } from "@/lib/value-model-format";
@@ -151,7 +151,7 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="space-y-8 sm:space-y-10"
+      className="space-y-10 sm:space-y-12"
     >
       <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
         <SectionHeader
@@ -210,129 +210,112 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:gap-8 xl:grid-cols-[minmax(0,1.45fr)_380px]">
-        <div className="space-y-5">
-          <div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
-                Expansion lanes
-              </p>
-              <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-text-muted">
-                Sequence the rollout. Start where there is motion. Expand where the value is clear.
-              </p>
-            </div>
-          </div>
+      <div className="pt-3" />
 
-          <div className="grid gap-6 xl:grid-cols-3">
-            {laneGroups.map((lane, laneIndex) => (
-              <motion.section
-                key={lane.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: laneIndex * 0.06, duration: 0.4 }}
-                className="space-y-4"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
-                      {lane.title}
+      <div className="space-y-10">
+        {laneGroups.map((lane, laneIndex) => {
+          const isActiveLane = lane.id === "active";
+          const isNextLane = lane.id === "next";
+          const isLaterLane = lane.id === "later";
+
+          const headerTitle =
+            lane.id === "active" ? "ACTIVE MOTION" : lane.id === "next" ? "BUILD NEXT" : "LONGER-TERM";
+
+          return (
+            <motion.section
+              key={lane.id}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: laneIndex * 0.06, duration: 0.4 }}
+              className={cn(laneIndex === 0 ? "pt-2" : "")}
+            >
+              <div className="flex flex-wrap items-baseline justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-3">
+                    <p className="text-[14px] font-semibold tracking-tight text-text-primary">
+                      {headerTitle}
                     </p>
-                    <p className="mt-2 text-[12px] leading-relaxed text-text-muted">
-                      {lane.description}
-                    </p>
+                    <span className="rounded-full bg-[#F5F4EE] px-2.5 py-1 text-[12px] font-medium text-text-muted">
+                      {lane.nodes.length}
+                    </span>
                   </div>
-                  <div className="rounded-full bg-[#F5F4EE] px-2.5 py-1 text-[11px] font-medium text-text-secondary">
-                    {lane.nodes.length}
-                  </div>
+                  <p className="mt-2 max-w-3xl text-[13px] leading-relaxed text-text-muted">
+                    {lane.description}
+                  </p>
                 </div>
+              </div>
 
-                <div className="grid gap-4">
-                  {lane.nodes.length > 0 ? (
-                    lane.nodes.map((node) => (
+              <div className="mt-6 grid gap-4 md:grid-cols-2">
+                {lane.nodes.length > 0 ? (
+                  lane.nodes.map((node) => {
+                    const isPrimary = isActiveLane && node.name === "Engineering";
+                    const isSecondary =
+                      isNextLane && (node.name === "Finance" || node.name === "Operations");
+                    const isDeemphasized =
+                      !isPrimary && !isSecondary && (node.name === "Security" || node.name === "Data / AI" || node.name === "Product");
+
+                    return (
                       <OrgNodeCard
                         key={node.id}
                         node={node}
-                        className={node.id === selectedDeptId ? "ring-1 ring-accent/25" : ""}
                         onClick={() => setSelectedDeptId(node.id)}
+                        tone={isPrimary ? "primary" : isDeemphasized ? "muted" : "secondary"}
+                        className={cn(
+                          node.id === selectedDeptId ? "ring-2 ring-accent/20" : "",
+                          isPrimary && "md:scale-[1.01]"
+                        )}
                       />
-                    ))
-                  ) : (
-                    <div className="rounded-[12px] bg-white px-5 py-6 text-[12px] leading-relaxed text-text-muted shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)]">
-                      {lane.emptyState}
-                    </div>
-                  )}
-                </div>
-              </motion.section>
-            ))}
-          </div>
-        </div>
+                    );
+                  })
+                ) : (
+                  <div className="rounded-[12px] bg-white px-6 py-8 text-[13px] leading-relaxed text-text-muted shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)] md:col-span-2">
+                    {lane.emptyState}
+                  </div>
+                )}
+              </div>
 
-        <div className="space-y-4">
+              {isLaterLane ? (
+                <div className="mt-10" />
+              ) : (
+                <div className="mt-10" />
+              )}
+            </motion.section>
+          );
+        })}
+
+        <div className="pt-2" />
+
+        <div className="grid gap-4 lg:grid-cols-3">
           <div className="rounded-[12px] bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)]">
-            <div className="flex items-center gap-2">
-              <div>
-                <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-accent/65">
-                  Expansion brief
-                </p>
-                <p className="text-[13px] font-medium text-text-primary">{account.name}</p>
-              </div>
-            </div>
-
-            <div className="mt-5">
-              <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">Current thesis</p>
-              <p className="mt-2 text-[14px] leading-relaxed text-text-secondary">
-                {account.firstWedge}
-              </p>
-            </div>
-
-            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-              <div className="rounded-[12px] bg-[#FAF9F5] p-4">
-                <div className="flex items-center gap-2 text-text-secondary">
-                  <Users className="h-4 w-4 text-accent/75" strokeWidth={1.8} />
-                  <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-text-faint">
-                    Executive sponsors
-                  </p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
+              Executive sponsors
+            </p>
+            <div className="mt-4 space-y-2">
+              {account.executiveSponsors.slice(0, 4).map((sponsor) => (
+                <div key={sponsor} className="text-[13px] leading-relaxed text-text-secondary">
+                  {sponsor}
                 </div>
-                <div className="mt-3 space-y-2">
-                  {account.executiveSponsors.slice(0, 3).map((sponsor) => (
-                    <div
-                      key={sponsor}
-                      className="text-[13px] text-text-secondary"
-                    >
-                      {sponsor}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="rounded-[12px] bg-[#FAF9F5] p-4">
-                <div className="flex items-center gap-2 text-text-secondary">
-                  <CircleAlert className="h-4 w-4 text-accent/75" strokeWidth={1.8} />
-                  <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-text-faint">
-                    Key blockers
-                  </p>
-                </div>
-                <div className="mt-3 space-y-2">
-                  {account.topBlockers.slice(0, 3).map((blocker) => (
-                    <div
-                      key={blocker}
-                      className="text-[13px] leading-relaxed text-text-secondary"
-                    >
-                      {blocker}
-                    </div>
-                  ))}
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
           <div className="rounded-[12px] bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)]">
-            <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-accent/75" strokeWidth={1.8} />
-              <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
-                Best expansion paths
-              </p>
+            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
+              Key blockers
+            </p>
+            <div className="mt-4 space-y-2">
+              {account.topBlockers.slice(0, 4).map((blocker) => (
+                <div key={blocker} className="text-[13px] leading-relaxed text-text-secondary">
+                  {blocker}
+                </div>
+              ))}
             </div>
+          </div>
+
+          <div className="rounded-[12px] bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
+              Best expansion paths
+            </p>
             <div className="mt-4 space-y-3">
               {account.topExpansionPaths.slice(0, 3).map((path, index) => (
                 <div key={path} className="text-[13px] leading-relaxed text-text-secondary">
@@ -342,35 +325,41 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
               ))}
             </div>
           </div>
+        </div>
 
-          <div className="rounded-[12px] bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)]">
-            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
-              Department details (interactive)
-            </p>
+        <div className="pt-2" />
 
-            {!selectedNode ? (
-              <div className="mt-4 rounded-xl border border-dashed border-surface-border/45 bg-surface-elevated/20 px-4 py-6 text-[12px] leading-relaxed text-text-muted">
-                Click a department card to tune likelihood and ARR potential.
+        <div className="rounded-[12px] bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)]">
+          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
+            Department details (interactive)
+          </p>
+
+          {!selectedNode ? (
+            <div className="mt-4 rounded-[12px] bg-[#FAF9F5] px-5 py-6 text-[13px] leading-relaxed text-text-muted">
+              Click a department card to tune likelihood and ARR potential.
+            </div>
+          ) : (
+            <div className="mt-5 space-y-5">
+              <div className="rounded-[12px] bg-[#FAF9F5] p-5">
+                <p className="text-[14px] font-semibold text-text-primary">{selectedNode.name}</p>
+                <p className="mt-2 text-[13px] leading-relaxed text-text-secondary">{selectedNode.useCase}</p>
+                <p className="mt-3 text-[12px] text-text-muted">
+                  Next move: <span className="text-text-secondary">{selectedNode.recommendedNextStep}</span>
+                </p>
               </div>
-            ) : (
-              <div className="mt-4 space-y-4">
-                <div className="rounded-[20px] border border-white/8 bg-white/[0.03] p-4">
-                  <p className="text-[12px] font-semibold text-text-primary">{selectedNode.name}</p>
-                  <p className="mt-2 text-[12px] leading-relaxed text-text-secondary">{selectedNode.useCase}</p>
-                  <p className="mt-3 text-[11px] text-text-muted">
-                    Next move: <span className="text-text-secondary">{selectedNode.recommendedNextStep}</span>
-                  </p>
-                </div>
 
+              <div className="grid gap-5 lg:grid-cols-2">
                 <div className="space-y-3">
                   <div className="flex items-end justify-between gap-3">
                     <div className="min-w-0">
                       <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
                         Buying likelihood
                       </p>
-                      <p className="mt-1 text-[12px] text-text-muted">Directional readiness. Tune based on stakeholder mapping.</p>
+                      <p className="mt-1 text-[12px] text-text-muted">
+                        Directional readiness. Tune based on stakeholder mapping.
+                      </p>
                     </div>
-                    <div className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[12px] text-text-secondary">
+                    <div className="shrink-0 rounded-full bg-[#F5F4EE] px-3 py-1.5 text-[12px] text-text-secondary">
                       {selectedNode.buyingLikelihood}%
                     </div>
                   </div>
@@ -395,9 +384,11 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
                       <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
                         ARR potential
                       </p>
-                      <p className="mt-1 text-[12px] text-text-muted">Directional $M estimate for this department’s motion.</p>
+                      <p className="mt-1 text-[12px] text-text-muted">
+                        Directional $M estimate for this department’s motion.
+                      </p>
                     </div>
-                    <div className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[12px] text-text-secondary">
+                    <div className="shrink-0 rounded-full bg-[#F5F4EE] px-3 py-1.5 text-[12px] text-text-secondary">
                       ${selectedNode.arrPotential.toFixed(2)}M
                     </div>
                   </div>
@@ -416,8 +407,8 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
                   />
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </motion.div>
