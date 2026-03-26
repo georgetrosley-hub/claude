@@ -22,7 +22,7 @@ export function CoverSection() {
             </span>
             <span className="text-text-faint">→</span>
             <span className="rounded-full bg-white/70 px-3 py-1.5 text-text-secondary shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
-              Proof (2 weeks)
+              Proof
             </span>
             <span className="text-text-faint">→</span>
             <span className="rounded-full bg-white/70 px-3 py-1.5 text-text-secondary shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
