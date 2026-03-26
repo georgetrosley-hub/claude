@@ -15,9 +15,8 @@ export function ClosingSection() {
           The ask
         </p>
         <p className="mt-2 max-w-3xl text-[13px] leading-relaxed text-text-secondary">
-          Give me the first wedge with Blue Planet engineering and two weeks to prove measurable velocity gain. If I can
-          land that proof point, I’ll turn it into a repeatable expansion motion across finance, ops and GTM. Then scale
-          to an enterprise rollout.
+          Give me Blue Planet engineering and two weeks to prove measurable velocity gain. If I hit that, I expand into
+          finance, ops and GTM with the same motion. This becomes a repeatable expansion engine, not a one-off win.
         </p>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-3">

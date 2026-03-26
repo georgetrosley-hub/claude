@@ -32,6 +32,10 @@ export function WhyNowSection() {
         subtitle="The timing is margin pressure plus execution drag. This is where frontier AI becomes a business operating advantage."
       />
 
+      <p className="max-w-3xl text-[13px] leading-relaxed text-text-secondary">
+        AI is no longer an innovation lever here. It is a margin and execution problem.
+      </p>
+
       <div className="grid gap-4 lg:grid-cols-3">
         {[
           {

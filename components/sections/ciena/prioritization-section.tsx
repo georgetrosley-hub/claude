@@ -62,6 +62,7 @@ export function PrioritizationSection() {
             Start small. Prove value fast. Expand only where outcomes are measurable.
           </p>
           <p>Each step tests a hypothesis.</p>
+          <p>This is exactly how I would run this territory from day one.</p>
         </div>
       </div>
     </section>

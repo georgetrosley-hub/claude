@@ -162,13 +162,6 @@ export function DollarsSection() {
               Phased rollout with a credible per-seat range.
             </p>
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setAssumptionsOpen(true)}
-                className="rounded-full bg-white/70 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-text-secondary shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] transition-colors hover:bg-white"
-              >
-                Explain assumptions
-              </button>
               <p className="text-[12px] text-text-muted">
                 Executive readout: directional Year 1 ARR range tied to a sequenced rollout.
               </p>

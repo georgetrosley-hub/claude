@@ -8,7 +8,6 @@ export function WhyCienaSection() {
     <section id="why-ciena" className="scroll-mt-24 space-y-6 sm:space-y-8">
       <SectionHeader
         title="Why Ciena"
-        subtitle="Ciena builds the networking infrastructure AI runs on, but their teams aren't using frontier AI to operate the business. That gap between what they enable for others and what they use themselves is the opportunity."
       />
 
       <div className="ds-card p-6 sm:p-7">
