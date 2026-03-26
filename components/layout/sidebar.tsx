@@ -71,6 +71,13 @@ function SidebarBody({
       <div className={cn("relative px-5 py-5", compact && "px-3 py-4")}>
         <div className="flex items-center justify-between gap-2">
           <div className={cn("flex min-w-0 items-center gap-2", compact && "justify-center")}>
+            <div className={cn("shrink-0", compact ? "hidden" : "")} aria-hidden>
+              <img
+                src="/claude-ai-symbol.svg"
+                alt=""
+                className="h-5 w-5 opacity-80"
+              />
+            </div>
             <div className={cn("min-w-0", compact ? "text-center" : "")}>
               <p className={cn("text-[12px] font-semibold tracking-tight text-text-primary", compact && "text-[11px]")}>
                 Claude Enterprise
@@ -167,8 +174,8 @@ function SidebarBody({
 
       <div className={cn("mt-auto border-t border-surface-border/30 px-5 py-4", compact && "px-3")}>
         <div className={cn("flex items-center gap-2.5", compact && "justify-center")}>
-          <div className="h-8 w-8 shrink-0 rounded-2xl border border-white/8 bg-white/[0.04] p-1.5">
-            <div className="h-full w-full rounded-xl bg-gradient-to-br from-accent/40 via-accent/15 to-transparent" />
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl bg-[#F5F4EE] shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
+            <img src="/claude-ai-symbol.svg" alt="" className="h-4 w-4 opacity-80" />
           </div>
           {!compact && (
             <div className="min-w-0">

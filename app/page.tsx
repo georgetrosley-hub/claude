@@ -130,9 +130,17 @@ function MainContent() {
           <div className="mx-auto w-full max-w-6xl min-w-0">
             <div className="flex items-center justify-between gap-3 pb-6 sm:pb-8">
               <div className="min-w-0">
-                <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-text-faint">
-                  Claude Enterprise
-                </p>
+                <div className="flex items-center gap-2">
+                  <img
+                    src="/claude-ai-symbol.svg"
+                    alt=""
+                    className="h-4 w-4 opacity-70"
+                    aria-hidden
+                  />
+                  <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-text-faint">
+                    Claude Enterprise
+                  </p>
+                </div>
                 <p className="mt-1 truncate text-[13px] text-text-muted">Ciena account strategy</p>
               </div>
               <button

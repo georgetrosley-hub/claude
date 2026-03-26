@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   description:
     "How I’d win Ciena for Claude Enterprise. Wedge, proof plan, value model and expansion map.",
   icons: {
-    icon: [{ url: "/adaptive-logo-dark.png", type: "image/png", sizes: "any" }],
+    icon: [{ url: "/claude-ai-symbol.svg", type: "image/svg+xml", sizes: "any" }],
     apple: [{ url: "/adaptive-logo-dark.png", type: "image/png", sizes: "180x180" }],
   },
   openGraph: {
