@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 
-const THEME_STORAGE_KEY = "snowflake-gtm-theme";
+const THEME_STORAGE_KEY = "ciena-claude-theme";
 
 type Theme = "light" | "dark";
 
@@ -23,16 +23,16 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 function getInitialTheme(): Theme {
-  if (typeof window === "undefined") return "light";
+  if (typeof window === "undefined") return "dark";
   try {
     const stored = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
     if (stored === "light" || stored === "dark") return stored;
   } catch {}
-  return "light";
+  return "dark";
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("light");
+  const [theme, setThemeState] = useState<Theme>("dark");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

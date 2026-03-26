@@ -74,9 +74,9 @@ export function DollarsSection() {
   const [phase2Seats, setPhase2Seats] = useState(500);
   const [phase3Seats, setPhase3Seats] = useState(1800);
 
-  // Directional per-seat ARR ranges (tunable) so Ryan can play with assumptions.
+  // Directional per-seat ARR ranges (tunable).
   const [minArrPerSeat, setMinArrPerSeat] = useState(720);
-  const [maxArrPerSeat, setMaxArrPerSeat] = useState(1220);
+  const [maxArrPerSeat, setMaxArrPerSeat] = useState(960);
 
   const phases: PhaseInputs[] = useMemo(
     () => [
@@ -116,7 +116,7 @@ export function DollarsSection() {
     <section id="dollars" className="scroll-mt-24 space-y-6 sm:space-y-8">
       <SectionHeader
         title="What this looks like in dollars"
-        subtitle="Phased enterprise deployment. Tune seats + per-seat ARR assumptions and watch Year 1 ARR update live."
+        subtitle="Phased enterprise deployment. Tune seats and per-seat ARR assumptions and watch Year 1 ARR update."
       />
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_420px]">
@@ -134,8 +134,7 @@ export function DollarsSection() {
               </p>
             </div>
             <p className="mt-3 max-w-3xl text-[13px] leading-relaxed text-text-secondary">
-              This is a directional pricing/seat model used to communicate scale and sequencing. The point is the motion:
-              land fast, prove value, expand into adjacent functions, then scale.
+              Phased rollout with a credible per-seat range.
             </p>
           </div>
 
@@ -214,16 +213,6 @@ export function DollarsSection() {
                 onChange={(n) => setMaxArrPerSeat(clamp(n, Math.min(3000, minArrPerSeat + 50), 3000))}
               />
             </div>
-          </div>
-
-          <div className="rounded-[24px] border border-surface-border/45 bg-surface-elevated/20 p-5">
-            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
-              Deck alignment
-            </p>
-            <p className="mt-3 text-[13px] leading-relaxed text-text-secondary">
-              Default story: Phase 1 (100 seats) → Phase 2 (500 seats) → Phase 3 (1,800+ seats) with Year 1 ARR
-              potential in the ~$1.3M–$2.2M range depending on packaging and scope.
-            </p>
           </div>
         </div>
       </div>

@@ -56,14 +56,12 @@ export function PrioritizationSection() {
         </p>
         <div className="mt-3 space-y-2 text-[13px] leading-relaxed text-text-secondary">
           <p>
-            I’m positioning Claude as the intelligence layer for how Ciena’s teams write, analyze, build, and make decisions—from
-            engineering to finance to go-to-market.
+            I position Claude as the operating layer for how Ciena teams write, analyze, build and decide. Start with engineering. Expand into finance and ops.
           </p>
           <p>
-            Each motion starts small on purpose. I’m not trying to win the account in one motion. I’m trying to prove value quickly,
-            then expand based on what the business actually needs.
+            Start small. Prove value fast. Expand only where outcomes are measurable.
           </p>
-          <p>Each motion is designed to validate a hypothesis quickly, not assume one.</p>
+          <p>Each step tests a hypothesis.</p>
         </div>
       </div>
     </section>

@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Claude Enterprise — premium account strategy deck */
+/* Claude Enterprise. Premium account strategy deck. */
 
 /* Accent: warm Claude-inspired orange */
 :root,
@@ -100,15 +100,15 @@ body {
 }
 
 @keyframes subtle-glow {
-  0%, 100% { box-shadow: 0 0 0 rgba(41, 181, 232, 0); }
-  50% { box-shadow: 0 0 20px rgba(41, 181, 232, 0.15); }
+  0%, 100% { box-shadow: 0 0 0 rgb(var(--accent) / 0); }
+  50% { box-shadow: 0 0 20px rgb(var(--accent) / 0.18); }
 }
 
-.snowflake-glow {
+.accent-glow {
   animation: subtle-glow 4s ease-in-out infinite;
 }
 
-/* Value model range inputs — premium, minimal */
+/* Value model range inputs. Premium and minimal. */
 input[type="range"].value-slider {
   -webkit-appearance: none;
   appearance: none;

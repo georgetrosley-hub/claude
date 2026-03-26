@@ -17,29 +17,21 @@ interface OrgExpansionMapProps {
 const departmentOrder = [
   "Engineering",
   "Platform Engineering",
-  "Security",
-  "IT",
   "Finance",
-  "Legal",
   "Operations",
-  "Customer Support",
-  "Product",
+  "Security",
   "Data / AI",
-  "Executive Leadership",
+  "Product",
 ] as const;
 
 const defaultUseCases: Record<(typeof departmentOrder)[number], string> = {
   Engineering: "Code generation and review",
   "Platform Engineering": "Internal tooling and docs",
-  Security: "Policy and compliance review",
-  IT: "Help desk and provisioning",
   Finance: "Excel and reporting automation",
-  Legal: "Contract and document review",
-  Operations: "Process documentation",
-  "Customer Support": "Ticket handling and knowledge",
-  Product: "PRD and spec generation",
   "Data / AI": "Model and data workflows",
-  "Executive Leadership": "Strategic synthesis and reporting",
+  Operations: "Backlog and fulfillment visibility",
+  Security: "Governance and audit controls",
+  Product: "Specs and roadmap synthesis",
 };
 
 const activeStatuses = new Set<OrgNode["status"]>(["engaged", "pilot", "deployed"]);
@@ -200,7 +192,7 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
             ${totalPotential.toFixed(2)}M
           </p>
           <p className="mt-1 text-[12px] text-text-muted">
-            Full cross-functional upside across the account.
+            Total across mapped departments.
           </p>
         </div>
 
@@ -212,7 +204,7 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
             {averageLikelihood}%
           </p>
           <p className="mt-1 text-[12px] text-text-muted">
-            Average readiness across every mapped department.
+            Average across mapped departments.
           </p>
         </div>
 
@@ -237,14 +229,12 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
                 Expansion lanes
               </p>
               <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-text-muted">
-                The org view is now organized by motion instead of forcing every team into a noisy
-                diagram. This makes the sequence obvious: what is active now, what should be built
-                next, and what can wait.
+                Sequence the rollout. Start where there is motion. Expand where the value is clear.
               </p>
             </div>
             <div className="inline-flex items-center gap-2 text-[12px] text-accent/70">
               <TrendingUp className="h-3.5 w-3.5" strokeWidth={1.8} />
-              Expansion strategy, not org-chart spaghetti
+              Expansion sequencing
             </div>
           </div>
 

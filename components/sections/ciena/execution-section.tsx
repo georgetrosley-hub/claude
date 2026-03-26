@@ -75,13 +75,9 @@ export function ExecutionSection() {
             Why Claude (enterprise)
           </p>
           <p className="mt-3 text-[13px] leading-relaxed text-text-secondary">
-            Ciena operates in defense-adjacent, IP-sensitive infrastructure. They need an AI partner that leads with safety
-            and data governance. Claude Enterprise offers SSO, SCIM, audit logs, role-based access, and a commitment not
-            to train on customer data.
-          </p>
-          <p className="mt-3 text-[13px] leading-relaxed text-text-secondary">
-            Claude Code gives engineering teams an AI-native dev workflow. The 1M token context window lets RFP teams
-            ingest entire technical specifications in a single session.
+            Ciena operates in defense-adjacent, IP-sensitive infrastructure. They need an AI partner that leads with safety and
+            data governance. Claude Enterprise offers SSO, SCIM, audit logs, role-based access and a commitment not to train on customer data.
+            Claude Code gives engineering teams an AI-native dev workflow. The 1M token context window lets RFP teams process full technical specs in a single session.
           </p>
         </div>
 
@@ -91,9 +87,9 @@ export function ExecutionSection() {
           </p>
           <ul className="mt-4 space-y-2 text-[13px] leading-relaxed text-text-secondary">
             {[
-              "vs Copilot: Claude Code wins on agentic tasks and complex codebases. No Microsoft lock-in.",
-              "vs ChatGPT: Safety posture matters in defense-adjacent infrastructure. Customer data never trains the model.",
-              "vs Databricks: Claude is the productivity layer, not the data layer. Complementary play.",
+              "vs Copilot: Claude Code is stronger for agentic workflows and complex codebases. No Microsoft lock-in",
+              "vs ChatGPT: Safety and data governance are critical in defense-adjacent infrastructure. Customer data never trains the model",
+              "vs Databricks: Claude is the productivity layer, not the data layer. Complementary play",
             ].map((b) => (
               <li key={b} className="flex gap-2">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/35" />

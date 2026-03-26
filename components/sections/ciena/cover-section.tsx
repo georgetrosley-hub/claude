@@ -20,8 +20,7 @@ export function CoverSection() {
             How I’d win Ciena for Claude Enterprise
           </h1>
           <p className="max-w-2xl text-[13px] leading-relaxed text-text-muted">
-            If you dropped me in seat as an Anthropic Enterprise AE, this is the land motion, proof plan, and expansion map
-            I’d execute—starting with a 2-week proof point and scaling to an enterprise rollout.
+            This is how I land a wedge, prove value fast and expand across an enterprise account. Ciena is the example.
           </p>
           <div className="flex flex-wrap items-center gap-2 pt-2 text-[12px] text-text-secondary">
             <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">
@@ -35,42 +34,6 @@ export function CoverSection() {
             </span>
           </div>
         </motion.div>
-      </div>
-
-      <SectionHeader
-        title="What you’ll see"
-        subtitle="A tight narrative with two interactive modules (dollars + expansion) you can manipulate in real time."
-      />
-
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {[
-          {
-            title: "Thesis",
-            body: "Why Ciena is a must-win and why the gap is widening now.",
-          },
-          {
-            title: "Execution",
-            body: "First workload, 2-week proof point, and who I’d engage.",
-          },
-          {
-            title: "Value",
-            body: "Phased rollout with seat and ARR ranges you can tune.",
-          },
-          {
-            title: "Expansion",
-            body: "A sequenced map by function—active motion, next, later.",
-          },
-        ].map((card) => (
-          <div
-            key={card.title}
-            className="rounded-2xl border border-white/8 bg-white/[0.03] p-4"
-          >
-            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
-              {card.title}
-            </p>
-            <p className="mt-3 text-[13px] font-medium text-text-primary">{card.body}</p>
-          </div>
-        ))}
       </div>
     </section>
   );

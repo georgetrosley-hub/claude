@@ -144,7 +144,7 @@ function MainContent() {
                   Claude Enterprise
                 </p>
                 <p className="mt-1 truncate text-[13px] text-text-muted">
-                  Ciena Account Strategy · Presentation site
+                  Ciena account strategy
                 </p>
               </div>
               <button

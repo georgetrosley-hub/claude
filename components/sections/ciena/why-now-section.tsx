@@ -29,7 +29,7 @@ export function WhyNowSection() {
     <section id="why-now" className="scroll-mt-24 space-y-6 sm:space-y-8">
       <SectionHeader
         title="Why now"
-        subtitle="Three compelling events + what’s actually broken. The story is margin + forecast defensibility as AI demand scales."
+        subtitle="The timing is margin pressure plus execution drag. This is where frontier AI becomes a business operating advantage."
       />
 
       <div className="grid gap-4 lg:grid-cols-3">
@@ -69,9 +69,9 @@ export function WhyNowSection() {
           </p>
           <ul className="mt-4 space-y-2 text-[13px] leading-relaxed text-text-secondary">
             {[
-              "Finance, ops, and sales run off different versions of backlog and fulfillment data → unmanaged margin exposure.",
-              "Blue Planet engineering is scaling without frontier AI tooling → review cycles and context switching consume velocity.",
-              "RFP teams assemble proposals manually across a product portfolio that has doubled in complexity.",
+              "Finance, ops and sales running off different versions of backlog and fulfillment data. Millions in unmanaged margin exposure",
+              "Blue Planet engineering scaling without frontier AI tooling. Review cycles and context switching eating velocity",
+              "RFP teams manually assembling proposals across a product portfolio that has doubled in complexity",
             ].map((b) => (
               <li key={b} className="flex gap-2">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/35" />

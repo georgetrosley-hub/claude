@@ -16,7 +16,7 @@ export function ClosingSection() {
         </p>
         <p className="mt-2 max-w-3xl text-[13px] leading-relaxed text-text-secondary">
           Give me the first wedge with Blue Planet engineering and two weeks to prove measurable velocity gain. If I can
-          land that proof point, I’ll turn it into a repeatable expansion motion across finance, ops, and GTM—then scale
+          land that proof point, I’ll turn it into a repeatable expansion motion across finance, ops and GTM. Then scale
           to an enterprise rollout.
         </p>
 
@@ -42,7 +42,7 @@ export function ClosingSection() {
 
         <div className="mt-8 flex flex-col gap-2 border-t border-surface-border/40 pt-5 text-[12px] text-text-muted sm:flex-row sm:items-center sm:justify-between">
           <span>George Trosley · March 2026</span>
-          <span className="text-text-faint">Claude Enterprise · Ciena Account Strategy</span>
+          <span className="text-text-faint">Built with Cursor and Claude · March 2026</span>
         </div>
       </div>
     </section>

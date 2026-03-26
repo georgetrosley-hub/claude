@@ -24,24 +24,6 @@ const CIENA_EXPANSION_NODES: OrgNode[] = [
     recommendedNextStep: "Map dev productivity KPIs + leaders",
   },
   {
-    id: "security",
-    name: "Security",
-    useCase: "Governance, access controls, audit trail, safe usage policy",
-    buyingLikelihood: 66,
-    arrPotential: 0.12,
-    status: "identified",
-    recommendedNextStep: "Define enterprise guardrails + rollout controls",
-  },
-  {
-    id: "it",
-    name: "IT",
-    useCase: "Provisioning workflow + SSO/SCIM rollout planning",
-    buyingLikelihood: 58,
-    arrPotential: 0.08,
-    status: "latent",
-    recommendedNextStep: "Sequence identity + device posture requirements",
-  },
-  {
     id: "finance",
     name: "Finance",
     useCase: "Forecast automation + backlog risk analysis under new CFO",
@@ -51,15 +33,6 @@ const CIENA_EXPANSION_NODES: OrgNode[] = [
     recommendedNextStep: "Define 2–3 deal cohort + margin exposure POV",
   },
   {
-    id: "legal",
-    name: "Legal",
-    useCase: "Policy + contract review with auditable controls",
-    buyingLikelihood: 54,
-    arrPotential: 0.06,
-    status: "latent",
-    recommendedNextStep: "Package procurement/security artifacts",
-  },
-  {
     id: "operations",
     name: "Operations",
     useCase: "Backlog intelligence + fulfillment-to-margin visibility",
@@ -67,15 +40,6 @@ const CIENA_EXPANSION_NODES: OrgNode[] = [
     arrPotential: 0.18,
     status: "identified",
     recommendedNextStep: "Align on ‘single version of backlog truth’",
-  },
-  {
-    id: "customer-support",
-    name: "Customer Support",
-    useCase: "Internal KB search + ticket summarization",
-    buyingLikelihood: 52,
-    arrPotential: 0.06,
-    status: "latent",
-    recommendedNextStep: "Quantify handle-time + deflection upside",
   },
   {
     id: "product",
@@ -96,13 +60,13 @@ const CIENA_EXPANSION_NODES: OrgNode[] = [
     recommendedNextStep: "Pilot on one RFP response cycle",
   },
   {
-    id: "exec",
-    name: "Executive Leadership",
-    useCase: "Cross-functional synthesis + board-ready reporting",
-    buyingLikelihood: 60,
-    arrPotential: 0.08,
-    status: "latent",
-    recommendedNextStep: "Define executive readout cadence + KPIs",
+    id: "security",
+    name: "Security",
+    useCase: "Governance, access controls, audit trail, safe usage policy",
+    buyingLikelihood: 66,
+    arrPotential: 0.12,
+    status: "identified",
+    recommendedNextStep: "Define enterprise guardrails + rollout controls",
   },
 ];
 
@@ -129,7 +93,7 @@ export function ExpansionSection() {
     <section id="expansion" className="scroll-mt-24 space-y-6 sm:space-y-8">
       <SectionHeader
         title="Expansion map"
-        subtitle="From engineering wedge to enterprise rollout. Click departments and tune ARR/likelihood to explore sequencing."
+        subtitle="From engineering wedge to enterprise rollout. Tune assumptions and sequence the rollout."
       />
       <OrgExpansionMap nodes={CIENA_EXPANSION_NODES} account={account as any} competitors={[]} />
     </section>

@@ -296,7 +296,7 @@ export function ChatPanel({
                   </p>
                   <p className="text-[13px] text-text-muted leading-relaxed mb-6">
                     {account.id === "na"
-                      ? "Discovery, POV, and expansion — account-sharp answers."
+                      ? "Discovery, POV and expansion. Account-sharp answers."
                       : `${account.name}: discovery angles, POV proof, expansion motion.`}
                   </p>
                   {!hasApiKey && (
@@ -310,7 +310,7 @@ export function ChatPanel({
                   <div className="space-y-2 w-full">
                     {[
                       `Land motion for ${account.name}`,
-                      `Map stakeholders — ${account.name}`,
+                      `Map stakeholders. ${account.name}`,
                       "Security & legal objections",
                       "Fastest credible pilot",
                       "Procurement & governance path",
@@ -408,7 +408,7 @@ export function ChatPanel({
               )}
             </div>
 
-            {/* Input — paddingBottom accounts for mobile keyboard via Visual Viewport */}
+            {/* Input. paddingBottom accounts for mobile keyboard via Visual Viewport. */}
             <div
               ref={inputBarRef}
               className="shrink-0 border-t border-surface-border/40 px-4 pt-4 sm:p-4"

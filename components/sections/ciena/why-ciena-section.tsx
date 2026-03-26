@@ -8,8 +8,7 @@ export function WhyCienaSection() {
     <section id="why-ciena" className="scroll-mt-24 space-y-6 sm:space-y-8">
       <SectionHeader
         title="Why Ciena"
-        subtitle="Ciena builds the networking infrastructure AI runs on. Their opportunity is to use frontier AI internally to operate the business at the speed of their market."
-        showLogo
+        subtitle="Ciena builds the networking infrastructure AI runs on, but their teams aren't using frontier AI to operate the business. That gap between what they enable for others and what they use themselves is the opportunity."
       />
 
       <div className="rounded-2xl border border-surface-border/50 bg-surface-elevated/25 p-5 sm:p-6">
@@ -17,9 +16,8 @@ export function WhyCienaSection() {
           Account thesis
         </p>
         <p className="mt-3 max-w-4xl text-[14px] leading-relaxed text-text-secondary">
-          Ciena enables AI at the infrastructure layer, but their internal teams are not using frontier AI to operate the
-          business. That gap between what they enable for others and what they use themselves is the wedge—and it widens
-          every quarter.
+          Ciena builds the infrastructure AI runs on, but their teams are not using frontier AI to run the business. That
+          gap is the wedge. It widens every quarter.
         </p>
       </div>
 

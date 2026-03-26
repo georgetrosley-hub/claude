@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Ciena Account Strategy | Claude Enterprise",
   description:
-    "A presentation-style account strategy site: how I’d win Ciena for Claude Enterprise with a proof plan, value model, and expansion map.",
+    "How I’d win Ciena for Claude Enterprise. Wedge, proof plan, value model and expansion map.",
   icons: {
     icon: [{ url: "/adaptive-logo-dark.png", type: "image/png", sizes: "any" }],
     apple: [{ url: "/adaptive-logo-dark.png", type: "image/png", sizes: "180x180" }],
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Ciena Account Strategy | Claude Enterprise",
     description:
-      "How I’d win Ciena for Claude Enterprise: thesis, why now, execution plan, interactive dollars, and expansion map.",
+      "How I’d win Ciena for Claude Enterprise. Wedge, proof plan, value model and expansion map.",
     url: "/",
     siteName: "Ciena Account Strategy",
     type: "website",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary",
     title: "Ciena Account Strategy | Claude Enterprise",
-    description: "Thesis → why now → execution → interactive dollars → expansion map.",
+    description: "How I’d win Ciena for Claude Enterprise.",
     images: ["/adaptive-logo-dark.png"],
   },
 };

@@ -17,7 +17,7 @@ import {
 
 const sectionGroups = [
   {
-    label: "Ciena deck",
+    label: "Sections",
     items: [
       { id: "cover", label: "Cover", icon: Presentation },
       { id: "whyCiena", label: "Why Ciena", icon: Target },
@@ -180,15 +180,6 @@ function SidebarBody({
           )}
         </div>
       </div>
-
-      {!compact && (
-        <div className="space-y-1 px-5 pb-4">
-          <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-text-faint/70">
-            Narrative
-          </p>
-          <p className="text-[10px] text-text-faint/60">Thesis → why now → execution → value → expansion.</p>
-        </div>
-      )}
     </>
   );
 }
