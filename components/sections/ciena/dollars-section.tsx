@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { clamp } from "@/lib/value-model-format";
+import { ImpactExplanationModal, type ImpactExplanationSection } from "@/components/value-model/impact-explanation-modal";
 
 type PhaseInputs = {
   label: string;
@@ -73,6 +74,7 @@ export function DollarsSection() {
   const [phase1Seats, setPhase1Seats] = useState(100);
   const [phase2Seats, setPhase2Seats] = useState(500);
   const [phase3Seats, setPhase3Seats] = useState(1800);
+  const [assumptionsOpen, setAssumptionsOpen] = useState(false);
 
   // Directional per-seat ARR ranges (tunable).
   const [minArrPerSeat, setMinArrPerSeat] = useState(720);
@@ -112,6 +114,28 @@ export function DollarsSection() {
     return { sumSeats, minArr, maxArr };
   }, [phases]);
 
+  const assumptionsSections: ImpactExplanationSection[] = useMemo(
+    () => [
+      {
+        title: "What this model is",
+        body: "A directional Year 1 ARR range from phased seat rollout × per-seat ARR assumptions. It is not a forecast, quote, or procurement-backed pricing schedule.",
+      },
+      {
+        title: "Key assumptions",
+        body: `Seats: ${formatInt(phase1Seats)} (Phase 1), ${formatInt(phase2Seats)} (Phase 2), ${formatInt(phase3Seats)} (Phase 3). Per-seat ARR: $${formatInt(minArrPerSeat)}–$${formatInt(maxArrPerSeat)}.`,
+      },
+      {
+        title: "How I’d validate in discovery",
+        body: "Confirm seatable populations (engineering, FP&A, ops), procurement motion, security requirements (SSO/SCIM/audit), and the proof point that unlocks the next tranche. Convert the range into an approved rollout plan before scaling.",
+      },
+      {
+        title: "What’s excluded",
+        body: "Multi-year expansion, services, usage-based uplift, and any ‘everyone adopts’ assumptions. The goal is a credible first-year range tied to a sequence.",
+      },
+    ],
+    [maxArrPerSeat, minArrPerSeat, phase1Seats, phase2Seats, phase3Seats]
+  );
+
   return (
     <section id="dollars" className="scroll-mt-24 space-y-6 sm:space-y-8">
       <SectionHeader
@@ -137,6 +161,18 @@ export function DollarsSection() {
             <p className="mt-3 max-w-3xl text-[13px] leading-relaxed text-text-secondary">
               Phased rollout with a credible per-seat range.
             </p>
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setAssumptionsOpen(true)}
+                className="rounded-full bg-white/70 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-text-secondary shadow-[inset_0_1px_0_rgba(255,255,255,0.85)] transition-colors hover:bg-white"
+              >
+                Explain assumptions
+              </button>
+              <p className="text-[12px] text-text-muted">
+                Executive readout: directional Year 1 ARR range tied to a sequenced rollout.
+              </p>
+            </div>
           </div>
 
           <div className="grid gap-4 lg:grid-cols-3">
@@ -217,6 +253,13 @@ export function DollarsSection() {
           </div>
         </div>
       </div>
+
+      <ImpactExplanationModal
+        open={assumptionsOpen}
+        onClose={() => setAssumptionsOpen(false)}
+        accountLabel="Ciena"
+        sections={assumptionsSections}
+      />
     </section>
   );
 }
