@@ -197,7 +197,7 @@ export function Sidebar({
     <>
       <aside
         className={cn(
-          "hidden shrink-0 border-r border-surface-border/40 bg-surface-elevated/20 transition-[width] duration-200 lg:flex lg:flex-col",
+          "hidden shrink-0 bg-white/60 backdrop-blur-sm transition-[width] duration-200 lg:flex lg:flex-col",
           collapsed ? "lg:w-20" : "lg:w-56"
         )}
       >
@@ -228,7 +228,7 @@ export function Sidebar({
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 28, stiffness: 260 }}
-              className="fixed inset-y-0 left-0 z-50 flex w-[85vw] max-w-xs flex-col border-r border-surface-border/40 bg-surface shadow-2xl lg:hidden"
+              className="fixed inset-y-0 left-0 z-50 flex w-[85vw] max-w-xs flex-col bg-white shadow-2xl lg:hidden"
             >
               <SidebarBody
                 activeSection={activeSection}

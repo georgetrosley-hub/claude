@@ -4,36 +4,42 @@
 
 /* Claude Enterprise. Premium account strategy deck. */
 
-/* Accent: warm Claude-inspired orange */
-:root,
-html[data-theme="dark"] {
-  --surface: 12 14 17;
-  --surface-elevated: 18 21 26;
-  --surface-muted: 26 30 36;
-  --surface-border: 38 45 55;
-  --surface-divider: 35 42 52;
-  --text-primary: 248 250 252;
-  --text-secondary: 203 213 225;
-  --text-muted: 148 163 184;
-  --text-faint: 100 116 139;
-  --accent: 218 119 86;
-  --accent-muted: 240 154 120;
-  --accent-subtle: 84 44 34;
-  --gradient-warm-start: 255 237 213;
-  --gradient-warm-end: 254 215 170;
+/* Warm, light executive palette (default). */
+:root {
+  --surface: 250 249 245; /* #FAF9F5 */
+  --surface-elevated: 255 255 255; /* card */
+  --surface-muted: 245 244 238; /* subtle fills */
+  --surface-border: 232 230 220; /* #E8E6DC (dividers only) */
+  --surface-divider: 232 230 220;
+  --text-primary: 20 20 19; /* #141413 */
+  --text-secondary: 20 20 19;
+  --text-muted: 176 174 165; /* #B0AEA5 */
+  --text-faint: 176 174 165;
+
+  /* Primary accent (orange) */
+  --accent: 217 119 87; /* #D97757 */
+  --accent-muted: 217 119 87;
+  --accent-subtle: 252 236 232; /* warm tint */
+
+  --gradient-warm-start: 255 255 255;
+  --gradient-warm-end: 250 249 245;
 }
 
+/* Keep theme toggles harmless: treat dark as light for the body surfaces. */
+html[data-theme="dark"],
 html[data-theme="light"] {
-  --surface: 255 255 255;
-  --surface-elevated: 248 250 252;
-  --surface-muted: 241 245 249;
-  --surface-border: 226 232 240;
-  --surface-divider: 226 232 240;
-  --text-primary: 15 23 42;
-  --text-secondary: 51 65 85;
-  --text-muted: 100 116 139;
-  --text-faint: 148 163 184;
-  --accent-subtle: 224 242 254;
+  --surface: 250 249 245;
+  --surface-elevated: 255 255 255;
+  --surface-muted: 245 244 238;
+  --surface-border: 232 230 220;
+  --surface-divider: 232 230 220;
+  --text-primary: 20 20 19;
+  --text-secondary: 20 20 19;
+  --text-muted: 176 174 165;
+  --text-faint: 176 174 165;
+  --accent: 217 119 87;
+  --accent-muted: 217 119 87;
+  --accent-subtle: 252 236 232;
 }
 
 * {
@@ -41,16 +47,11 @@ html[data-theme="light"] {
 }
 
 html {
-  color-scheme: dark;
-}
-
-html[data-theme="light"] {
   color-scheme: light;
 }
 
-html[data-theme="dark"] body,
-html:not([data-theme="light"]) body {
-  background-color: rgb(var(--surface));
+html[data-theme="dark"] {
+  color-scheme: light;
 }
 
 body {

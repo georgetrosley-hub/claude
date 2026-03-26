@@ -62,14 +62,6 @@ function MainContent() {
         sectionId,
         top: baseScrollTop + (element.getBoundingClientRect().top - containerRect.top),
       }));
-      if (process.env.NODE_ENV === "development") {
-        for (let i = 1; i < tops.length; i += 1) {
-          if (tops[i].top < tops[i - 1].top) {
-            console.warn("Scrollspy section order is not ascending:", tops);
-            break;
-          }
-        }
-      }
       return tops;
     };
 
@@ -131,8 +123,6 @@ function MainContent() {
         onToggleCollapsed={() => setSidebarCollapsed((prev) => !prev)}
       />
       <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(41,181,232,0.03),transparent_60%)]" />
-
         <main
           ref={mainScrollRef as unknown as React.RefObject<HTMLElement>}
           className="relative flex-1 overflow-y-auto overflow-x-hidden px-6 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12 xl:px-16 xl:py-14"
@@ -143,14 +133,12 @@ function MainContent() {
                 <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-text-faint">
                   Claude Enterprise
                 </p>
-                <p className="mt-1 truncate text-[13px] text-text-muted">
-                  Ciena account strategy
-                </p>
+                <p className="mt-1 truncate text-[13px] text-text-muted">Ciena account strategy</p>
               </div>
               <button
                 type="button"
                 onClick={() => setMobileNavOpen(true)}
-                className="touch-target inline-flex min-h-[40px] items-center justify-center rounded-lg border border-surface-border/50 bg-surface-elevated/30 px-3 py-2 text-[12px] text-text-secondary transition-colors hover:border-surface-border/70 hover:bg-surface-elevated/45 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25 lg:hidden"
+                className="touch-target inline-flex min-h-[40px] items-center justify-center rounded-lg bg-white px-3 py-2 text-[12px] text-text-secondary shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)] transition-colors hover:bg-[#F5F4EE] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 lg:hidden"
               >
                 Deck nav
               </button>

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, CircleAlert, Target, TrendingUp, Users } from "lucide-react";
+import { CircleAlert, Target, Users } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { OrgNodeCard } from "@/components/ui/org-node-card";
 import { clamp } from "@/lib/value-model-format";
@@ -158,21 +158,10 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
           title="Org expansion map"
           subtitle={`${activeNodes.length} departments in motion · $${totalPotential.toFixed(2)}M total expansion ARR potential`}
         />
-
-        <div className="flex flex-wrap gap-2">
-          {rankedNodes.slice(0, 3).map((node, index) => (
-            <div
-              key={node.id}
-              className="rounded-full border border-white/8 bg-white/[0.03] px-3 py-1.5 text-[11px] text-text-secondary"
-            >
-              <span className="text-text-faint">#{index + 1}</span> {node.name}
-            </div>
-          ))}
-        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+        <div className="rounded-[12px] bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)]">
           <p className="text-[10px] uppercase tracking-[0.12em] text-text-faint">
             Departments in motion
           </p>
@@ -184,7 +173,7 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
           </p>
         </div>
 
-        <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+        <div className="rounded-[12px] bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)]">
           <p className="text-[10px] uppercase tracking-[0.12em] text-text-faint">
             Expansion ARR
           </p>
@@ -196,7 +185,7 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
           </p>
         </div>
 
-        <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+        <div className="rounded-[12px] bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)]">
           <p className="text-[10px] uppercase tracking-[0.12em] text-text-faint">
             Avg. buying likelihood
           </p>
@@ -208,7 +197,7 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
           </p>
         </div>
 
-        <div className="rounded-[24px] border border-accent/12 bg-accent/[0.04] p-4">
+        <div className="rounded-[12px] bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)]">
           <p className="text-[10px] uppercase tracking-[0.12em] text-accent/65">
             Highest priority
           </p>
@@ -232,20 +221,16 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
                 Sequence the rollout. Start where there is motion. Expand where the value is clear.
               </p>
             </div>
-            <div className="inline-flex items-center gap-2 text-[12px] text-accent/70">
-              <TrendingUp className="h-3.5 w-3.5" strokeWidth={1.8} />
-              Expansion sequencing
-            </div>
           </div>
 
-          <div className="grid gap-4 xl:grid-cols-3">
+          <div className="grid gap-6 xl:grid-cols-3">
             {laneGroups.map((lane, laneIndex) => (
               <motion.section
                 key={lane.id}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: laneIndex * 0.06, duration: 0.4 }}
-                className={`rounded-[24px] border p-4 sm:p-5 ${lane.className}`}
+                className="space-y-4"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
@@ -256,12 +241,12 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
                       {lane.description}
                     </p>
                   </div>
-                  <div className="rounded-full border border-white/8 bg-white/[0.04] px-2.5 py-1 text-[11px] font-medium text-text-secondary">
+                  <div className="rounded-full bg-[#F5F4EE] px-2.5 py-1 text-[11px] font-medium text-text-secondary">
                     {lane.nodes.length}
                   </div>
                 </div>
 
-                <div className="mt-5 space-y-3">
+                <div className="grid gap-4">
                   {lane.nodes.length > 0 ? (
                     lane.nodes.map((node) => (
                       <OrgNodeCard
@@ -272,7 +257,7 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
                       />
                     ))
                   ) : (
-                    <div className="rounded-xl border border-dashed border-surface-border/45 bg-surface-elevated/20 px-4 py-6 text-[12px] leading-relaxed text-text-muted">
+                    <div className="rounded-[12px] bg-white px-5 py-6 text-[12px] leading-relaxed text-text-muted shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)]">
                       {lane.emptyState}
                     </div>
                   )}
@@ -283,7 +268,7 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
         </div>
 
         <div className="space-y-4">
-          <div className="rounded-[24px] border border-accent/12 bg-gradient-to-br from-accent/[0.06] via-surface-elevated/70 to-surface/60 p-4 sm:rounded-[30px] sm:p-6">
+          <div className="rounded-[12px] bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)]">
             <div className="flex items-center gap-2">
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-accent/65">
@@ -294,14 +279,14 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
             </div>
 
             <div className="mt-5">
-              <p className="text-[12px] font-medium text-text-primary">Current thesis</p>
+              <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">Current thesis</p>
               <p className="mt-2 text-[14px] leading-relaxed text-text-secondary">
                 {account.firstWedge}
               </p>
             </div>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-              <div className="rounded-[22px] border border-white/8 bg-white/[0.03] p-4">
+              <div className="rounded-[12px] bg-[#FAF9F5] p-4">
                 <div className="flex items-center gap-2 text-text-secondary">
                   <Users className="h-4 w-4 text-accent/75" strokeWidth={1.8} />
                   <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-text-faint">
@@ -312,7 +297,7 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
                   {account.executiveSponsors.slice(0, 3).map((sponsor) => (
                     <div
                       key={sponsor}
-                      className="rounded-2xl border border-white/5 bg-black/10 px-3 py-2 text-[12px] text-text-secondary"
+                      className="text-[13px] text-text-secondary"
                     >
                       {sponsor}
                     </div>
@@ -320,7 +305,7 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
                 </div>
               </div>
 
-              <div className="rounded-[22px] border border-white/8 bg-white/[0.03] p-4">
+              <div className="rounded-[12px] bg-[#FAF9F5] p-4">
                 <div className="flex items-center gap-2 text-text-secondary">
                   <CircleAlert className="h-4 w-4 text-accent/75" strokeWidth={1.8} />
                   <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-text-faint">
@@ -331,7 +316,7 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
                   {account.topBlockers.slice(0, 3).map((blocker) => (
                     <div
                       key={blocker}
-                      className="rounded-2xl border border-white/5 bg-black/10 px-3 py-2 text-[12px] leading-relaxed text-text-secondary"
+                      className="text-[13px] leading-relaxed text-text-secondary"
                     >
                       {blocker}
                     </div>
@@ -341,7 +326,7 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
             </div>
           </div>
 
-          <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4 sm:p-5">
+          <div className="rounded-[12px] bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)]">
             <div className="flex items-center gap-2">
               <Target className="h-4 w-4 text-accent/75" strokeWidth={1.8} />
               <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
@@ -350,18 +335,15 @@ export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
             </div>
             <div className="mt-4 space-y-3">
               {account.topExpansionPaths.slice(0, 3).map((path, index) => (
-                <div key={path} className="px-1 py-1">
-                  <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.08em] text-text-faint">
-                    <span>Path {index + 1}</span>
-                    <ArrowRight className="h-3 w-3" strokeWidth={1.8} />
-                  </div>
-                  <p className="mt-2 text-[13px] leading-relaxed text-text-secondary">{path}</p>
+                <div key={path} className="text-[13px] leading-relaxed text-text-secondary">
+                  <span className="mr-2 font-medium text-text-faint">{index + 1}.</span>
+                  {path}
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4 sm:p-5">
+          <div className="rounded-[12px] bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)]">
             <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
               Department details (interactive)
             </p>

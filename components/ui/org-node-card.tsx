@@ -46,51 +46,33 @@ const statusStyles: Record<
   {
     label: string;
     badge: string;
-    accent: string;
-    iconTone: string;
-    meter: string;
-    card: string;
+    leftAccent: string;
   }
 > = {
   latent: {
     label: "Latent",
-    badge: "border-white/10 bg-white/5 text-text-muted",
-    accent: "from-white/30 via-white/10 to-transparent",
-    iconTone: "border-white/10 bg-white/5 text-text-muted",
-    meter: "bg-white/25",
-    card: "border-white/5 bg-surface-elevated/55",
+    badge: "bg-[#B0AEA5]/15 text-[#7D7B73]",
+    leftAccent: "bg-[#E8E6DC]",
   },
   identified: {
     label: "Identified",
-    badge: "border-sky-400/15 bg-sky-400/10 text-sky-200",
-    accent: "from-sky-300/70 via-sky-300/20 to-transparent",
-    iconTone: "border-sky-400/15 bg-sky-400/10 text-sky-200",
-    meter: "bg-sky-300/70",
-    card: "border-sky-400/10 bg-surface-elevated/62",
+    badge: "bg-[#6A9BCC]/15 text-[#3E6F9F]",
+    leftAccent: "bg-[#6A9BCC]",
   },
   engaged: {
     label: "Engaged",
-    badge: "border-accent/15 bg-accent/10 text-accent/90",
-    accent: "from-accent via-accent/20 to-transparent",
-    iconTone: "border-accent/15 bg-accent/10 text-accent/90",
-    meter: "bg-accent/75",
-    card: "border-accent/12 bg-surface-elevated/68",
+    badge: "bg-[#D97757]/15 text-[#B85F44]",
+    leftAccent: "bg-[#D97757]",
   },
   pilot: {
     label: "Pilot",
-    badge: "border-emerald-400/15 bg-emerald-400/10 text-emerald-200",
-    accent: "from-emerald-300 via-emerald-300/20 to-transparent",
-    iconTone: "border-emerald-400/15 bg-emerald-400/10 text-emerald-200",
-    meter: "bg-emerald-300/75",
-    card: "border-emerald-400/12 bg-surface-elevated/72",
+    badge: "bg-[#D97757]/15 text-[#B85F44]",
+    leftAccent: "bg-[#D97757]",
   },
   deployed: {
     label: "Deployed",
-    badge: "border-violet-400/15 bg-violet-400/10 text-violet-200",
-    accent: "from-violet-300 via-violet-300/20 to-transparent",
-    iconTone: "border-violet-400/15 bg-violet-400/10 text-violet-200",
-    meter: "bg-violet-300/75",
-    card: "border-violet-400/12 bg-surface-elevated/72",
+    badge: "bg-[#788C5D]/15 text-[#5D6F45]",
+    leftAccent: "bg-[#788C5D]",
   },
 };
 
@@ -120,10 +102,8 @@ export function OrgNodeCard({
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
       className={cn(
-        "group relative overflow-hidden rounded-[20px] border p-3 shadow-[0_24px_60px_rgba(0,0,0,0.12)] transition-all duration-300 sm:rounded-[24px] sm:p-4",
-        style.card,
-        isActive && "shadow-[0_24px_70px_rgba(218,119,86,0.12)]",
-        onClick && "cursor-pointer hover:-translate-y-[1px] hover:border-surface-border/70",
+        "group relative overflow-hidden rounded-[12px] bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.04)] transition-transform duration-200",
+        onClick && "cursor-pointer hover:-translate-y-[1px]",
         className
       )}
       role={onClick ? "button" : undefined}
@@ -137,20 +117,10 @@ export function OrgNodeCard({
         }
       }}
     >
-      <div
-        className={cn(
-          "pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r opacity-80",
-          style.accent
-        )}
-      />
+      <div className={cn("pointer-events-none absolute inset-y-0 left-0 w-1", style.leftAccent)} />
 
       <div className="flex items-start gap-3">
-        <div
-          className={cn(
-            "flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border",
-            style.iconTone
-          )}
-        >
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[#F5F4EE] text-[#141413]">
           <Icon className="h-4 w-4" strokeWidth={1.8} />
         </div>
 
@@ -158,68 +128,42 @@ export function OrgNodeCard({
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                {rank ? (
-                  <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.08em] text-text-faint">
-                    #{rank} priority
-                  </span>
-                ) : null}
-                <span className={cn("rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.08em]", style.badge)}>
+                <span
+                  className={cn(
+                    "rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-[0.12em]",
+                    style.badge
+                  )}
+                >
                   {style.label}
                 </span>
               </div>
 
               <h3
                 className={cn(
-                  "mt-3 text-[15px] font-semibold leading-snug",
-                  isActive ? "text-text-primary" : "text-text-secondary"
+                  "mt-3 text-[16px] font-semibold leading-snug text-text-primary"
                 )}
               >
                 {node.name}
               </h3>
-              <p className="mt-1 text-[12px] leading-relaxed text-text-muted">
+              <p className="mt-1 line-clamp-2 text-[14px] leading-relaxed text-text-muted">
                 {node.useCase}
               </p>
             </div>
           </div>
 
-          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl border border-white/5 bg-black/10 px-3 py-2.5">
-              <p className="text-[10px] uppercase tracking-[0.08em] text-text-faint">
-                ARR potential
-              </p>
-              <p className={cn("mt-1 text-[14px] font-semibold tabular-nums", isActive ? "text-accent" : "text-text-secondary")}>
-                ${node.arrPotential.toFixed(2)}M
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-white/5 bg-black/10 px-3 py-2.5">
-              <p className="text-[10px] uppercase tracking-[0.08em] text-text-faint">
-                Likelihood
-              </p>
-              <p className="mt-1 text-[14px] font-semibold tabular-nums text-text-secondary">
-                {node.buyingLikelihood}%
-              </p>
-            </div>
+          <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-[13px] text-text-muted">
+            <span className="tabular-nums">
+              <span className="text-text-faint">ARR</span>{" "}
+              <span className="font-semibold text-text-primary">${node.arrPotential.toFixed(2)}M</span>
+            </span>
+            <span className="tabular-nums">
+              <span className="text-text-faint">Likelihood</span>{" "}
+              <span className="font-semibold text-text-primary">{node.buyingLikelihood}%</span>
+            </span>
           </div>
 
-          <div className="mt-4">
-            <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.08em] text-text-faint">
-              <span>Momentum</span>
-              <span>{node.buyingLikelihood}%</span>
-            </div>
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/5">
-              <div
-                className={cn("h-full rounded-full", style.meter)}
-                style={{ width: `${Math.max(node.buyingLikelihood, 8)}%` }}
-              />
-            </div>
-          </div>
-
-          <div className="mt-4 border-t border-white/5 pt-3">
-            <p className="text-[10px] uppercase tracking-[0.08em] text-text-faint">
-              Next move
-            </p>
-            <p className="mt-1 text-[12px] leading-relaxed text-text-secondary">
+          <div className="mt-4 border-t border-surface-border/70 pt-3">
+            <p className="text-[12px] leading-relaxed text-text-muted">
               {node.recommendedNextStep}
             </p>
           </div>
