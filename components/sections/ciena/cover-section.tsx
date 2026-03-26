@@ -16,7 +16,7 @@ export function CoverSection() {
             This is how I land a wedge, prove value fast and expand across an enterprise account. Ciena is the example.
           </p>
 
-          <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px] text-text-muted">
+          <div className="flex flex-nowrap items-center gap-2 overflow-x-auto pt-1 text-[11px] text-text-muted [-webkit-overflow-scrolling:touch]">
             <span className="rounded-full bg-white/70 px-3 py-1.5 text-text-secondary shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
               Wedge
             </span>
@@ -34,12 +34,12 @@ export function CoverSection() {
             </span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 pt-2 text-[12px] text-text-secondary">
+          <div className="flex flex-nowrap items-center gap-2 overflow-x-auto pt-2 text-[12px] text-text-secondary [-webkit-overflow-scrolling:touch]">
             <span className="rounded-full bg-white/70 px-3 py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
               George Trosley
             </span>
             <span className="rounded-full bg-white/70 px-3 py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
-              Enterprise Account Executive
+              Enterprise GTM
             </span>
             <span className="rounded-full bg-accent/15 px-3 py-1.5 font-medium text-accent">
               Ciena
