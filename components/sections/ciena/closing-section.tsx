@@ -10,7 +10,7 @@ export function ClosingSection() {
         subtitle="If this lands: prove value fast, expand with intent, and scale what works."
       />
 
-      <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-6 sm:p-8">
+      <div className="ds-card p-6 sm:p-8">
         <p className="text-[14px] font-semibold tracking-tight text-text-primary">
           The ask
         </p>
@@ -28,7 +28,7 @@ export function ClosingSection() {
           ].map((card) => (
             <div
               key={card.label}
-              className="rounded-[22px] border border-surface-border/45 bg-surface-elevated/25 p-4"
+              className="rounded-[12px] bg-[#FAF9F5] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]"
             >
               <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-text-faint">
                 {card.label}
@@ -40,7 +40,7 @@ export function ClosingSection() {
           ))}
         </div>
 
-        <div className="mt-8 flex flex-col gap-2 border-t border-surface-border/40 pt-5 text-[12px] text-text-muted sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col gap-2 border-t border-surface-border/70 pt-5 text-[12px] text-text-muted sm:flex-row sm:items-center sm:justify-between">
           <span>George Trosley · March 2026</span>
           <span className="text-text-faint">Built with Cursor and Claude · March 2026</span>
         </div>

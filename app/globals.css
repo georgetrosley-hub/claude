@@ -23,6 +23,11 @@
 
   --gradient-warm-start: 255 255 255;
   --gradient-warm-end: 250 249 245;
+
+  /* Elevation (Snowflake-style restraint, tuned for light surfaces) */
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
+  --shadow-card-strong: 0 1px 3px rgba(0,0,0,0.06), 0 10px 28px rgba(0,0,0,0.08);
+  --shadow-inset: inset 0 1px 0 rgba(255,255,255,0.9);
 }
 
 /* Keep theme toggles harmless: treat dark as light for the body surfaces. */
@@ -68,6 +73,39 @@ body {
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
   line-height: 1.5;
+}
+
+@layer components {
+  .ds-card {
+    @apply rounded-[12px] bg-white;
+    box-shadow: var(--shadow-card);
+  }
+
+  .ds-card-strong {
+    @apply rounded-[12px] bg-white;
+    box-shadow: var(--shadow-card-strong);
+  }
+
+  .ds-card-muted {
+    @apply rounded-[12px];
+    background: rgb(var(--surface-muted));
+    box-shadow: var(--shadow-card);
+  }
+
+  .ds-panel-accent {
+    @apply relative overflow-hidden rounded-[12px];
+    background: linear-gradient(
+      135deg,
+      rgba(217, 119, 87, 0.14) 0%,
+      rgba(245, 244, 238, 0.55) 45%,
+      rgba(255, 255, 255, 1) 100%
+    );
+    box-shadow: var(--shadow-card-strong);
+  }
+
+  .ds-inset {
+    box-shadow: var(--shadow-inset);
+  }
 }
 
 @media (pointer: coarse) {
@@ -130,7 +168,7 @@ input[type="range"].value-slider::-webkit-slider-thumb {
   border-radius: 9999px;
   background: rgb(var(--accent));
   border: 2px solid rgb(var(--surface-elevated));
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
   margin-top: -5px;
 }
 input[type="range"].value-slider::-webkit-slider-runnable-track {

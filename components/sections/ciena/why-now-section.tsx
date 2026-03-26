@@ -12,7 +12,7 @@ function Callout({
   body: string;
 }) {
   return (
-    <div className="rounded-[24px] border border-accent/12 bg-accent/[0.05] p-5">
+    <div className="ds-card p-6">
       <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-accent/70">
         {eyebrow}
       </p>
@@ -52,7 +52,7 @@ export function WhyNowSection() {
         ].map((card) => (
           <div
             key={card.title}
-            className="rounded-[24px] border border-white/8 bg-white/[0.03] p-5"
+            className="ds-card p-6"
           >
             <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
               {card.title}
@@ -63,7 +63,7 @@ export function WhyNowSection() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-5">
+        <div className="ds-card p-6">
           <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
             What’s actually broken
           </p>
@@ -74,7 +74,7 @@ export function WhyNowSection() {
               "RFP teams manually assembling proposals across a product portfolio that has doubled in complexity",
             ].map((b) => (
               <li key={b} className="flex gap-2">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/35" />
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-surface-border" />
                 <span className="min-w-0">{b}</span>
               </li>
             ))}

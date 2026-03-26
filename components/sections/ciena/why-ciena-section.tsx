@@ -11,7 +11,7 @@ export function WhyCienaSection() {
         subtitle="Ciena builds the networking infrastructure AI runs on, but their teams aren't using frontier AI to operate the business. That gap between what they enable for others and what they use themselves is the opportunity."
       />
 
-      <div className="rounded-2xl border border-surface-border/50 bg-surface-elevated/25 p-5 sm:p-6">
+      <div className="ds-card p-6 sm:p-7">
         <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-text-faint">
           Account thesis
         </p>
@@ -59,7 +59,7 @@ export function WhyCienaSection() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 * index, duration: 0.45 }}
-            className="rounded-[24px] border border-white/8 bg-white/[0.03] p-5"
+            className="ds-card p-6"
           >
             <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
               {card.title}

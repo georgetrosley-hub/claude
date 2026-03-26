@@ -11,7 +11,7 @@ export function ExecutionSection() {
       />
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-5">
+        <div className="ds-card p-6">
           <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
             First workload
           </p>
@@ -30,7 +30,7 @@ export function ExecutionSection() {
           </ul>
         </div>
 
-        <div className="rounded-[24px] border border-accent/12 bg-accent/[0.04] p-5">
+        <div className="ds-panel-accent p-6">
           <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-accent/70">
             POV plan (2 weeks)
           </p>
@@ -49,7 +49,7 @@ export function ExecutionSection() {
           </ul>
         </div>
 
-        <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-5">
+        <div className="ds-card p-6">
           <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
             Who I’d engage
           </p>
@@ -61,7 +61,7 @@ export function ExecutionSection() {
               "CIO / CISO (enterprise-wide: security, governance, SSO)",
             ].map((b) => (
               <li key={b} className="flex gap-2">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/35" />
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-surface-border" />
                 <span className="min-w-0">{b}</span>
               </li>
             ))}
@@ -70,7 +70,7 @@ export function ExecutionSection() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-5">
+        <div className="ds-card p-6">
           <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
             Why Claude (enterprise)
           </p>
@@ -81,7 +81,7 @@ export function ExecutionSection() {
           </p>
         </div>
 
-        <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-5">
+        <div className="ds-card p-6">
           <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
             Competitive positioning
           </p>
@@ -92,7 +92,7 @@ export function ExecutionSection() {
               "vs Databricks: Claude is the productivity layer, not the data layer. Complementary play",
             ].map((b) => (
               <li key={b} className="flex gap-2">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/35" />
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-surface-border" />
                 <span className="min-w-0">{b}</span>
               </li>
             ))}

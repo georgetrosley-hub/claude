@@ -51,7 +51,7 @@ function RangeSlider({
           </p>
           {hint && <p className="mt-1 text-[12px] text-text-muted">{hint}</p>}
         </div>
-        <div className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[12px] text-text-secondary">
+        <div className="shrink-0 rounded-full bg-[#F5F4EE] px-3 py-1.5 text-[12px] text-text-secondary shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]">
           {formatInt(value)}
           {suffix ?? ""}
         </div>
@@ -121,12 +121,13 @@ export function DollarsSection() {
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_420px]">
         <div className="space-y-4">
-          <div className="rounded-[26px] border border-accent/12 bg-gradient-to-br from-accent/[0.06] via-surface-elevated/70 to-surface/60 p-5 sm:p-6">
-            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-accent/70">
+          <div className="ds-panel-accent p-6 sm:p-7">
+            <div className="ds-inset pointer-events-none absolute inset-x-0 top-0 h-px opacity-70" aria-hidden />
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-accent/80">
               Year 1 ARR potential (interactive)
             </p>
             <div className="mt-3 flex flex-wrap items-end gap-3">
-              <p className="text-[30px] font-semibold tracking-tight text-text-primary">
+              <p className="text-[34px] font-semibold tracking-tight text-text-primary">
                 {formatMoneyCompact(totals.minArr)} – {formatMoneyCompact(totals.maxArr)}
               </p>
               <p className="pb-1 text-[12px] text-text-muted">
@@ -143,7 +144,7 @@ export function DollarsSection() {
               const min = p.seats * p.minArrPerSeat;
               const max = p.seats * p.maxArrPerSeat;
               return (
-                <div key={p.label} className="rounded-[24px] border border-white/8 bg-white/[0.03] p-5">
+                <div key={p.label} className="ds-card p-6">
                   <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
                     {p.label}
                   </p>
@@ -159,7 +160,7 @@ export function DollarsSection() {
         </div>
 
         <div className="space-y-4">
-          <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-5">
+          <div className="ds-card p-6">
             <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
               Tune the model
             </p>
@@ -192,7 +193,7 @@ export function DollarsSection() {
                 onChange={(n) => setPhase3Seats(clamp(Math.round(n / 50) * 50, 600, 4000))}
               />
 
-              <div className="pt-2 border-t border-surface-border/40" />
+              <div className="pt-2 border-t border-surface-border/70" />
 
               <RangeSlider
                 label="Min ARR per seat"
