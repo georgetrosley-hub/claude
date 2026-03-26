@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Snowflake Field Execution — premium internal territory OS */
+/* Claude Enterprise — premium account strategy deck */
 
-/* Snowflake Blue #29B5E8 (41, 181, 232) */
+/* Accent: warm Claude-inspired orange */
 :root,
 html[data-theme="dark"] {
   --surface: 12 14 17;
@@ -16,11 +16,11 @@ html[data-theme="dark"] {
   --text-secondary: 203 213 225;
   --text-muted: 148 163 184;
   --text-faint: 100 116 139;
-  --accent: 41 181 232;
-  --accent-muted: 56 189 248;
-  --accent-subtle: 17 86 127;
-  --gradient-warm-start: 224 242 254;
-  --gradient-warm-end: 186 230 253;
+  --accent: 218 119 86;
+  --accent-muted: 240 154 120;
+  --accent-subtle: 84 44 34;
+  --gradient-warm-start: 255 237 213;
+  --gradient-warm-end: 254 215 170;
 }
 
 html[data-theme="light"] {

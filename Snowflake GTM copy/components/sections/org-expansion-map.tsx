@@ -268,7 +268,7 @@ export function OrgExpansionMap({ nodes, account, competitors }: OrgExpansionMap
                       <OrgNodeCard
                         key={node.id}
                         node={node}
-                        onGeneratePitch={() => generateExpansionPitch(node.name)}
+                        onClick={() => generateExpansionPitch(node.name)}
                       />
                     ))
                   ) : (

@@ -1,29 +1,28 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AppProvider, useApp } from "@/app/context/app-context";
+import { CienaDeck } from "@/components/sections/ciena/deck";
 import { Sidebar, type SectionId } from "@/components/layout/sidebar";
-import { StatusBar } from "@/components/layout/status-bar";
-import { ChatPanel } from "@/components/layout/chat-panel";
-import { Overview } from "@/components/sections/overview";
 
 const ORDERED_SECTIONS: ReadonlyArray<{ sectionId: SectionId; anchorId: string }> = [
-  { sectionId: "overview", anchorId: "overview" },
-  { sectionId: "povPlan", anchorId: "pov-plan" },
-  { sectionId: "businessImpact", anchorId: "business-impact" },
+  { sectionId: "cover", anchorId: "cover" },
+  { sectionId: "whyCiena", anchorId: "why-ciena" },
+  { sectionId: "whyNow", anchorId: "why-now" },
+  { sectionId: "execution", anchorId: "execution" },
+  { sectionId: "dollars", anchorId: "dollars" },
+  { sectionId: "expansion", anchorId: "expansion" },
+  { sectionId: "prioritization", anchorId: "prioritization" },
+  { sectionId: "closing", anchorId: "closing" },
 ] as const;
 const ACTIVATION_OFFSET_PX = 120;
 
 function MainContent() {
-  const [activeSection, setActiveSection] = useState<SectionId>("overview");
-  const [chatOpen, setChatOpen] = useState(false);
-  const [strategyPrompt, setStrategyPrompt] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<SectionId>("cover");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const mainScrollRef = useRef<HTMLElement | null>(null);
-  const activeSectionRef = useRef<SectionId>("overview");
-  const { account, accounts, competitors, setAccountId } = useApp();
+  const activeSectionRef = useRef<SectionId>("cover");
 
   const handleSectionChange = (section: SectionId) => {
     setActiveSection(section);
@@ -33,35 +32,6 @@ function MainContent() {
     const targetElement = targetId ? document.getElementById(targetId) : null;
     targetElement?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-
-  const handleOpenChat = () => {
-    setStrategyPrompt(null);
-    setChatOpen(true);
-    setMobileNavOpen(false);
-  };
-
-  const handleOpenChatWithPrompt = (prompt: string) => {
-    setStrategyPrompt(prompt);
-    setChatOpen(true);
-    setMobileNavOpen(false);
-  };
-
-  const handleStrategyPromptConsumed = () => {
-    setStrategyPrompt(null);
-  };
-
-  const handleAccountChange = (accountId: string) => {
-    setAccountId(accountId);
-    setMobileNavOpen(false);
-  };
-
-  const overviewNode = (
-    <Overview
-      account={account}
-      onSelectAccount={handleAccountChange}
-      onOpenStrategyWithPrompt={handleOpenChatWithPrompt}
-    />
-  );
 
   useEffect(() => {
     const scrollContainer = mainScrollRef.current;
@@ -154,7 +124,6 @@ function MainContent() {
       <Sidebar
         activeSection={activeSection}
         onSectionChange={handleSectionChange}
-        onOpenChat={handleOpenChat}
         collapsed={sidebarCollapsed}
         scrollProgress={scrollProgress}
         mobileOpen={mobileNavOpen}
@@ -164,40 +133,37 @@ function MainContent() {
       <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(41,181,232,0.03),transparent_60%)]" />
 
-        <StatusBar
-          account={account}
-          accounts={accounts}
-          onAccountChange={handleAccountChange}
-          onOpenChat={handleOpenChat}
-          onOpenMobileNav={() => setMobileNavOpen(true)}
-          sidebarCollapsed={sidebarCollapsed}
-          onToggleSidebar={() => setSidebarCollapsed((prev) => !prev)}
-        />
         <main
           ref={mainScrollRef as unknown as React.RefObject<HTMLElement>}
           className="relative flex-1 overflow-y-auto overflow-x-hidden px-6 py-8 sm:px-8 sm:py-10 lg:px-12 lg:py-12 xl:px-16 xl:py-14"
         >
-          <div className="mx-auto w-full max-w-6xl min-w-0">{overviewNode}</div>
+          <div className="mx-auto w-full max-w-6xl min-w-0">
+            <div className="flex items-center justify-between gap-3 pb-6 sm:pb-8">
+              <div className="min-w-0">
+                <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-text-faint">
+                  Claude Enterprise
+                </p>
+                <p className="mt-1 truncate text-[13px] text-text-muted">
+                  Ciena Account Strategy · Presentation site
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMobileNavOpen(true)}
+                className="touch-target inline-flex min-h-[40px] items-center justify-center rounded-lg border border-surface-border/50 bg-surface-elevated/30 px-3 py-2 text-[12px] text-text-secondary transition-colors hover:border-surface-border/70 hover:bg-surface-elevated/45 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25 lg:hidden"
+              >
+                Deck nav
+              </button>
+            </div>
+
+            <CienaDeck />
+          </div>
         </main>
       </div>
-
-      <ChatPanel
-        isOpen={chatOpen}
-        onClose={() => setChatOpen(false)}
-        account={account}
-        competitors={competitors}
-        activeSection={activeSection}
-        pendingUserMessage={strategyPrompt}
-        onPendingUserMessageConsumed={handleStrategyPromptConsumed}
-      />
     </div>
   );
 }
 
 export default function Page() {
-  return (
-    <AppProvider>
-      <MainContent />
-    </AppProvider>
-  );
+  return <MainContent />;
 }

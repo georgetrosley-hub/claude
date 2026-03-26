@@ -16,7 +16,6 @@ import {
   ShieldCheck,
   Boxes,
 } from "lucide-react";
-import { OpenAILogo } from "@/components/ui/openai-logo";
 import { cn } from "@/lib/utils";
 import type { OrgNode } from "@/types";
 
@@ -25,7 +24,7 @@ interface OrgNodeCardProps {
   index?: number;
   className?: string;
   rank?: number;
-  onGeneratePitch?: () => void;
+  onClick?: () => void;
 }
 
 const departmentIcons: Record<string, LucideIcon> = {
@@ -100,7 +99,7 @@ export function OrgNodeCard({
   index = 0,
   className,
   rank,
-  onGeneratePitch,
+  onClick,
 }: OrgNodeCardProps) {
   const isActive =
     node.status === "engaged" || node.status === "pilot" || node.status === "deployed";
@@ -124,8 +123,19 @@ export function OrgNodeCard({
         "group relative overflow-hidden rounded-[20px] border p-3 shadow-[0_24px_60px_rgba(0,0,0,0.12)] transition-all duration-300 sm:rounded-[24px] sm:p-4",
         style.card,
         isActive && "shadow-[0_24px_70px_rgba(218,119,86,0.12)]",
+        onClick && "cursor-pointer hover:-translate-y-[1px] hover:border-surface-border/70",
         className
       )}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (!onClick) return;
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick();
+        }
+      }}
     >
       <div
         className={cn(
@@ -170,16 +180,6 @@ export function OrgNodeCard({
                 {node.useCase}
               </p>
             </div>
-
-            {onGeneratePitch ? (
-              <button
-                onClick={onGeneratePitch}
-                className="self-start rounded-full border border-accent/15 bg-accent/[0.08] p-2 text-accent/80 transition-colors hover:bg-accent/[0.14] sm:self-auto"
-                title={`Generate expansion pitch for ${node.name}`}
-              >
-                <OpenAILogo size={12} />
-              </button>
-            ) : null}
           </div>
 
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">

@@ -27,38 +27,38 @@ const jetbrainsMono = JetBrains_Mono({
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://www.snowflake.com/en/");
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://www.anthropic.com/");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Enterprise Territory Execution | Snowflake Enterprise AE",
+  title: "Ciena Account Strategy | Claude Enterprise",
   description:
-    "Priority accounts, account briefs, discovery prep, POV plans, expansion path. Internal territory execution workspace.",
+    "A presentation-style account strategy site: how I’d win Ciena for Claude Enterprise with a proof plan, value model, and expansion map.",
   icons: {
-    icon: [{ url: "/snowflake-logo.png", type: "image/png", sizes: "any" }],
-    apple: [{ url: "/snowflake-logo.png", type: "image/png", sizes: "180x180" }],
+    icon: [{ url: "/adaptive-logo-dark.png", type: "image/png", sizes: "any" }],
+    apple: [{ url: "/adaptive-logo-dark.png", type: "image/png", sizes: "180x180" }],
   },
   openGraph: {
-    title: "Enterprise Territory Execution | Snowflake",
+    title: "Ciena Account Strategy | Claude Enterprise",
     description:
-      "Internal territory execution workspace for enterprise AEs. Priority accounts, briefs, POV, expansion.",
+      "How I’d win Ciena for Claude Enterprise: thesis, why now, execution plan, interactive dollars, and expansion map.",
     url: "/",
-    siteName: "Enterprise Territory Execution",
+    siteName: "Ciena Account Strategy",
     type: "website",
     images: [
       {
-        url: "/snowflake-logo.png",
+        url: "/adaptive-logo-dark.png",
         width: 512,
         height: 512,
-        alt: "Snowflake",
+        alt: "Claude",
       },
     ],
   },
   twitter: {
     card: "summary",
-    title: "Enterprise Territory Execution | Snowflake",
-    description: "Internal territory execution workspace. Priority accounts, briefs, POV, expansion.",
-    images: ["/snowflake-logo.png"],
+    title: "Ciena Account Strategy | Claude Enterprise",
+    description: "Thesis → why now → execution → interactive dollars → expansion map.",
+    images: ["/adaptive-logo-dark.png"],
   },
 };
 
@@ -70,7 +70,7 @@ export default function RootLayout({
   const themeScript = `
     (() => {
       try {
-        var s = localStorage.getItem("snowflake-gtm-theme");
+        var s = localStorage.getItem("ciena-claude-theme");
         var theme = (s === "light" || s === "dark") ? s : "dark";
         document.documentElement.dataset.theme = theme;
         document.documentElement.classList.toggle("dark", theme === "dark");

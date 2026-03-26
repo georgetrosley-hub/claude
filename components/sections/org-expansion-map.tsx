@@ -1,13 +1,11 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, CircleAlert, Target, TrendingUp, Users } from "lucide-react";
 import { SectionHeader } from "@/components/ui/section-header";
 import { OrgNodeCard } from "@/components/ui/org-node-card";
-import { StreamingContent } from "@/components/ui/streaming-content";
-import { useStreaming } from "@/lib/hooks/use-streaming";
-import { OpenAILogo } from "@/components/ui/openai-logo";
+import { clamp } from "@/lib/value-model-format";
 import type { OrgNode, Account, Competitor } from "@/types";
 
 interface OrgExpansionMapProps {
@@ -81,8 +79,8 @@ const laneConfig = [
   },
 ] as const;
 
-export function OrgExpansionMap({ nodes, account, competitors }: OrgExpansionMapProps) {
-  const normalizedNodes = useMemo<OrgNode[]>(
+export function OrgExpansionMap({ nodes, account }: OrgExpansionMapProps) {
+  const normalizedSeed = useMemo<OrgNode[]>(
     () =>
       departmentOrder.map((name) => {
         const existing = nodes.find((node) => node.name === name);
@@ -99,6 +97,22 @@ export function OrgExpansionMap({ nodes, account, competitors }: OrgExpansionMap
       }),
     [nodes]
   );
+
+  const [nodeState, setNodeState] = useState<OrgNode[]>(normalizedSeed);
+  const [selectedDeptId, setSelectedDeptId] = useState<string | null>(null);
+
+  // Keep state in sync when the caller provides a different seed list (rare).
+  // We intentionally preserve local edits while the user is interacting; reset only when seed identity changes.
+  const seedSignature = useMemo(
+    () => normalizedSeed.map((n) => `${n.id}:${n.arrPotential}:${n.buyingLikelihood}:${n.status}`).join("|"),
+    [normalizedSeed]
+  );
+  useEffect(() => {
+    setNodeState(normalizedSeed);
+    setSelectedDeptId(null);
+  }, [seedSignature]);
+
+  const normalizedNodes = nodeState;
 
   const rankedNodes = useMemo(
     () =>
@@ -125,25 +139,20 @@ export function OrgExpansionMap({ nodes, account, competitors }: OrgExpansionMap
     nodes: lane.items(rankedNodes),
   }));
 
-  const expansionPitch = useStreaming();
-  const [selectedDept, setSelectedDept] = useState<string | null>(null);
-
-  const generateExpansionPitch = useCallback(
-    (deptName: string) => {
-      setSelectedDept(deptName);
-      const node = normalizedNodes.find((n) => n.name === deptName);
-      expansionPitch.startStream({
-        url: "/api/generate",
-        body: {
-          type: "expansion_pitch",
-          account,
-          competitors,
-          context: `Department: ${deptName}\nUse case: ${node?.useCase ?? "General"}\nCurrent status: ${node?.status ?? "latent"}\nBuying likelihood: ${node?.buyingLikelihood ?? 50}%\nARR potential: $${(node?.arrPotential ?? 0).toFixed(2)}M`,
-        },
-      });
-    },
-    [normalizedNodes, account, competitors, expansionPitch]
+  const selectedNode = useMemo(
+    () => (selectedDeptId ? normalizedNodes.find((n) => n.id === selectedDeptId) ?? null : null),
+    [normalizedNodes, selectedDeptId]
   );
+
+  const updateSelected = (patch: Partial<Pick<OrgNode, "buyingLikelihood" | "arrPotential" | "status">>) => {
+    if (!selectedDeptId) return;
+    setNodeState((prev) =>
+      prev.map((n) => {
+        if (n.id !== selectedDeptId) return n;
+        return { ...n, ...patch };
+      })
+    );
+  };
 
   return (
     <motion.div
@@ -268,7 +277,8 @@ export function OrgExpansionMap({ nodes, account, competitors }: OrgExpansionMap
                       <OrgNodeCard
                         key={node.id}
                         node={node}
-                        onGeneratePitch={() => generateExpansionPitch(node.name)}
+                        className={node.id === selectedDeptId ? "ring-1 ring-accent/25" : ""}
+                        onClick={() => setSelectedDeptId(node.id)}
                       />
                     ))
                   ) : (
@@ -285,9 +295,6 @@ export function OrgExpansionMap({ nodes, account, competitors }: OrgExpansionMap
         <div className="space-y-4">
           <div className="rounded-[24px] border border-accent/12 bg-gradient-to-br from-accent/[0.06] via-surface-elevated/70 to-surface/60 p-4 sm:rounded-[30px] sm:p-6">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-2xl bg-accent/[0.12]">
-                <OpenAILogo size={14} className="text-accent" />
-              </div>
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-accent/65">
                   Expansion brief
@@ -353,10 +360,7 @@ export function OrgExpansionMap({ nodes, account, competitors }: OrgExpansionMap
             </div>
             <div className="mt-4 space-y-3">
               {account.topExpansionPaths.slice(0, 3).map((path, index) => (
-                <div
-                  key={path}
-                  className="px-1 py-1"
-                >
+                <div key={path} className="px-1 py-1">
                   <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.08em] text-text-faint">
                     <span>Path {index + 1}</span>
                     <ArrowRight className="h-3 w-3" strokeWidth={1.8} />
@@ -369,46 +373,81 @@ export function OrgExpansionMap({ nodes, account, competitors }: OrgExpansionMap
 
           <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-4 sm:p-5">
             <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
-              Top opportunities
+              Department details (interactive)
             </p>
-            <div className="mt-4 space-y-3">
-              {rankedNodes.slice(0, 3).map((node, index) => (
-                <div
-                  key={node.id}
-                  className="flex flex-col gap-3 rounded-[20px] border border-white/8 bg-white/[0.03] px-4 py-3 sm:flex-row sm:items-center"
-                >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/[0.04] text-[11px] font-semibold text-text-secondary">
-                    {index + 1}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[13px] font-medium text-text-primary">{node.name}</p>
-                    <p className="mt-0.5 text-[11px] text-text-muted">
-                      {node.buyingLikelihood}% likelihood · ${node.arrPotential.toFixed(2)}M ARR
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => generateExpansionPitch(node.name)}
-                    className="self-start rounded-full border border-accent/15 bg-accent/[0.08] p-2 text-accent/80 transition-colors hover:bg-accent/[0.14] sm:self-auto"
-                    title={`Generate expansion pitch for ${node.name}`}
-                  >
-                    <OpenAILogo size={11} />
-                  </button>
+
+            {!selectedNode ? (
+              <div className="mt-4 rounded-xl border border-dashed border-surface-border/45 bg-surface-elevated/20 px-4 py-6 text-[12px] leading-relaxed text-text-muted">
+                Click a department card to tune likelihood and ARR potential.
+              </div>
+            ) : (
+              <div className="mt-4 space-y-4">
+                <div className="rounded-[20px] border border-white/8 bg-white/[0.03] p-4">
+                  <p className="text-[12px] font-semibold text-text-primary">{selectedNode.name}</p>
+                  <p className="mt-2 text-[12px] leading-relaxed text-text-secondary">{selectedNode.useCase}</p>
+                  <p className="mt-3 text-[11px] text-text-muted">
+                    Next move: <span className="text-text-secondary">{selectedNode.recommendedNextStep}</span>
+                  </p>
                 </div>
-              ))}
-            </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-end justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
+                        Buying likelihood
+                      </p>
+                      <p className="mt-1 text-[12px] text-text-muted">Directional readiness. Tune based on stakeholder mapping.</p>
+                    </div>
+                    <div className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[12px] text-text-secondary">
+                      {selectedNode.buyingLikelihood}%
+                    </div>
+                  </div>
+                  <input
+                    className="value-slider w-full"
+                    type="range"
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={selectedNode.buyingLikelihood}
+                    onChange={(e) =>
+                      updateSelected({
+                        buyingLikelihood: clamp(Number(e.target.value), 0, 100),
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-end justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-text-faint">
+                        ARR potential
+                      </p>
+                      <p className="mt-1 text-[12px] text-text-muted">Directional $M estimate for this department’s motion.</p>
+                    </div>
+                    <div className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-[12px] text-text-secondary">
+                      ${selectedNode.arrPotential.toFixed(2)}M
+                    </div>
+                  </div>
+                  <input
+                    className="value-slider w-full"
+                    type="range"
+                    min={0}
+                    max={0.6}
+                    step={0.01}
+                    value={selectedNode.arrPotential}
+                    onChange={(e) =>
+                      updateSelected({
+                        arrPotential: clamp(Number(e.target.value), 0, 0.6),
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
-
-      {/* Expansion pitch */}
-      {(expansionPitch.content || expansionPitch.isStreaming) && (
-        <StreamingContent
-          content={expansionPitch.content}
-          isStreaming={expansionPitch.isStreaming}
-          onRegenerate={() => selectedDept && generateExpansionPitch(selectedDept)}
-          label={`Expansion: ${selectedDept}`}
-        />
-      )}
     </motion.div>
   );
 }

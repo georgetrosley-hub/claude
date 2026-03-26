@@ -2,24 +2,31 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { SnowflakeBrandmark, SnowflakeLogoIcon } from "@/components/ui/snowflake-logo";
 import {
-  MessageCircle,
-  LayoutDashboard,
   PanelLeftClose,
   PanelLeftOpen,
   X,
-  BookOpenCheck,
-  TrendingUp,
+  Presentation,
+  Target,
+  Zap,
+  DollarSign,
+  Map,
+  ListChecks,
+  Flag,
 } from "lucide-react";
 
 const sectionGroups = [
   {
-    label: "Territory",
+    label: "Ciena deck",
     items: [
-      { id: "overview", label: "Overview", icon: LayoutDashboard },
-      { id: "povPlan", label: "POV", icon: BookOpenCheck },
-      { id: "businessImpact", label: "Business Impact", icon: TrendingUp },
+      { id: "cover", label: "Cover", icon: Presentation },
+      { id: "whyCiena", label: "Why Ciena", icon: Target },
+      { id: "whyNow", label: "Why now", icon: Zap },
+      { id: "execution", label: "Execution plan", icon: Flag },
+      { id: "dollars", label: "Value in dollars", icon: DollarSign },
+      { id: "expansion", label: "Expansion map", icon: Map },
+      { id: "prioritization", label: "Prioritization", icon: ListChecks },
+      { id: "closing", label: "Close", icon: Presentation },
     ],
   },
 ] as const;
@@ -30,7 +37,6 @@ export type SectionId = SectionItem["id"];
 interface SidebarProps {
   activeSection: SectionId;
   onSectionChange: (id: SectionId) => void;
-  onOpenChat: () => void;
   collapsed: boolean;
   scrollProgress: number;
   mobileOpen: boolean;
@@ -41,7 +47,6 @@ interface SidebarProps {
 interface SidebarBodyProps {
   activeSection: SectionId;
   onSectionChange: (id: SectionId) => void;
-  onOpenChat: () => void;
   scrollProgress: number;
   compact?: boolean;
   onToggleCollapsed?: () => void;
@@ -51,7 +56,6 @@ interface SidebarBodyProps {
 function SidebarBody({
   activeSection,
   onSectionChange,
-  onOpenChat,
   scrollProgress,
   compact = false,
   onToggleCollapsed,
@@ -67,16 +71,14 @@ function SidebarBody({
       <div className={cn("relative px-5 py-5", compact && "px-3 py-4")}>
         <div className="flex items-center justify-between gap-2">
           <div className={cn("flex min-w-0 items-center gap-2", compact && "justify-center")}>
-            {compact ? (
-              <div className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-md">
-                <SnowflakeLogoIcon size={24} className="h-full w-full" />
-              </div>
-            ) : (
-              <div className="min-w-0">
-                <SnowflakeBrandmark height={26} priority className="max-w-[min(100%,11rem)]" />
-                <p className="mt-1 text-[11px] text-text-muted">Enterprise Territory Execution</p>
-              </div>
-            )}
+            <div className={cn("min-w-0", compact ? "text-center" : "")}>
+              <p className={cn("text-[12px] font-semibold tracking-tight text-text-primary", compact && "text-[11px]")}>
+                Claude Enterprise
+              </p>
+              {!compact && (
+                <p className="mt-1 text-[11px] text-text-muted">Ciena account strategy (March 2026)</p>
+              )}
+            </div>
           </div>
           {onToggleCollapsed && (
             <button
@@ -106,25 +108,6 @@ function SidebarBody({
         </div>
       </div>
 
-      <div className={cn("px-3 pb-3", compact && "px-2")}>
-        <button
-          type="button"
-          onClick={() => {
-            onOpenChat();
-            onCloseMobile?.();
-          }}
-          className={cn(
-            "flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg border border-accent/20 bg-accent/[0.06] px-3 py-3 text-[12px] font-medium text-accent transition-colors active:bg-accent/10 hover:bg-accent/10 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent/25",
-            compact && "justify-center px-0 py-2 min-h-[40px]"
-          )}
-          aria-label="Execution Desk"
-          title="Execution Desk"
-        >
-          <MessageCircle className="h-3.5 w-3.5" strokeWidth={1.8} />
-          {!compact && "Execution Desk"}
-        </button>
-      </div>
-
       <nav className={cn("relative flex-1 overflow-y-auto px-3 py-1", compact && "px-2")}>
         {!compact && (
           <div className="pointer-events-none absolute bottom-5 left-2 top-2 w-px rounded-full bg-surface-border/50">
@@ -145,7 +128,6 @@ function SidebarBody({
             <div className="space-y-0.5">
               {group.items.map(({ id, label, icon: Icon }) => {
                 const isActive = activeSection === id;
-                const isImpact = id === "businessImpact";
                 return (
                   <button
                     key={id}
@@ -157,7 +139,7 @@ function SidebarBody({
                       isActive
                         ? "border-accent/35 bg-surface-muted/60 text-accent font-semibold"
                         : "text-text-muted hover:bg-surface-muted/30 hover:text-text-secondary hover:border-surface-border/50",
-                      !isActive && isImpact && "font-medium text-text-secondary/95"
+                      !isActive && id === "dollars" && "font-medium text-text-secondary/95"
                     )}
                     aria-label={label}
                     title={label}
@@ -165,13 +147,12 @@ function SidebarBody({
                     <Icon
                       className={cn(
                         "h-[14px] w-[14px] shrink-0 transition-colors duration-200",
-                        isActive ? "text-accent" : "opacity-45 group-hover:opacity-70",
-                        !isActive && isImpact && "opacity-70"
+                        isActive ? "text-accent" : "opacity-45 group-hover:opacity-70"
                       )}
                       strokeWidth={1.8}
                     />
                     {!compact && (
-                      <span className={cn(isImpact && !isActive && "tracking-tight")}>{label}</span>
+                      <span className={cn(id === "dollars" && !isActive && "tracking-tight")}>{label}</span>
                     )}
                     {isActive && !compact && (
                       <span className="ml-auto h-1 w-1 rounded-full bg-accent" />
@@ -186,13 +167,15 @@ function SidebarBody({
 
       <div className={cn("mt-auto border-t border-surface-border/30 px-5 py-4", compact && "px-3")}>
         <div className={cn("flex items-center gap-2.5", compact && "justify-center")}>
-          <SnowflakeLogoIcon size={20} className="shrink-0 opacity-80" />
+          <div className="h-8 w-8 shrink-0 rounded-2xl border border-white/8 bg-white/[0.04] p-1.5">
+            <div className="h-full w-full rounded-xl bg-gradient-to-br from-accent/40 via-accent/15 to-transparent" />
+          </div>
           {!compact && (
             <div className="min-w-0">
               <p className="truncate text-[12px] font-medium text-text-secondary">
-                Snowflake Enterprise AE
+                George Trosley
               </p>
-              <p className="text-[10px] text-text-faint">Land & expand · Strategic accounts</p>
+              <p className="text-[10px] text-text-faint">Enterprise AE · Account strategy site</p>
             </div>
           )}
         </div>
@@ -201,9 +184,9 @@ function SidebarBody({
       {!compact && (
         <div className="space-y-1 px-5 pb-4">
           <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-text-faint/70">
-            AE narrative
+            Narrative
           </p>
-          <p className="text-[10px] text-text-faint/60">Account strategy, execution, and business value.</p>
+          <p className="text-[10px] text-text-faint/60">Thesis → why now → execution → value → expansion.</p>
         </div>
       )}
     </>
@@ -213,7 +196,6 @@ function SidebarBody({
 export function Sidebar({
   activeSection,
   onSectionChange,
-  onOpenChat,
   collapsed,
   scrollProgress,
   mobileOpen,
@@ -231,7 +213,6 @@ export function Sidebar({
         <SidebarBody
           activeSection={activeSection}
           onSectionChange={onSectionChange}
-          onOpenChat={onOpenChat}
           scrollProgress={scrollProgress}
           compact={collapsed}
           onToggleCollapsed={onToggleCollapsed}
@@ -261,7 +242,6 @@ export function Sidebar({
               <SidebarBody
                 activeSection={activeSection}
                 onSectionChange={onSectionChange}
-                onOpenChat={onOpenChat}
                 scrollProgress={scrollProgress}
                 onCloseMobile={onCloseMobile}
               />
